@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import 'simple-line-icons/css/simple-line-icons.css';
 
 :root {
   --background: #ffffff;
