@@ -1,4 +1,5 @@
 import { UserCircle, FolderOpen, FileText, Mail, Terminal } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 
 export default function TaskBar({ onAboutClick }: { onAboutClick: () => void }) {
   const buttons = [
@@ -8,9 +9,16 @@ export default function TaskBar({ onAboutClick }: { onAboutClick: () => void }) 
     { icon: Mail, label: 'Contact' },
     { icon: Terminal, label: 'Terminal' },
   ];
+  const [isMounted, setIsMounted] = useState(false);
+  
+  useEffect(() => {
+      setIsMounted(true);
+    }, []);
 
   return (
-    <div className="grid grid-cols-5 items-center justify-center gap-15 border rounded-[100px] bg-white/8 backdrop-blur-lg px-4 py-3 text-sm">
+    <div className={`grid grid-cols-5 items-center justify-center gap-15 border rounded-[100px] bg-white/8 backdrop-blur-lg px-4 py-3 text-sm transition-opacity duration-900 ease-in ${
+        isMounted ? "opacity-100" : "opacity-0"
+      }`}>
       {buttons.map(({ icon: Icon, label, onClick }, index) => (
         <div key={index} className="relative group flex flex-col items-center">
           <button
