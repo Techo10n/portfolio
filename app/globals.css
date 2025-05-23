@@ -25,3 +25,20 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes gradient-radial {
+  0%, 100% {
+    background-position: 0% 100%;
+  }
+  50% {
+    background-position: 100% 0%;
+  }
+}
+.animate-gradient-radial {
+  background: radial-gradient(circle at 20% 30%, black, transparent 70%),
+              radial-gradient(circle at 50% 50%, #ff62e8, transparent 40%),
+              radial-gradient(circle at center, #9d3bd2, black);
+  background-size: 200% 200%;
+  animation: gradient-radial 30s ease-in-out infinite, move-circles 10s linear infinite;
+  opacity: 0.5;
+}

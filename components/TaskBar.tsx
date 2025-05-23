@@ -1,13 +1,13 @@
 import { UserCircle, FolderOpen, FileText, Mail, Terminal } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 
-export default function TaskBar({ onAboutClick }: { onAboutClick: () => void }) {
+export default function TaskBar({ onAboutClick, onProjectsClick, onResumeClick, onContactsClick, onTerminalClick }: { onAboutClick: () => void, onProjectsClick: () => void, onResumeClick: () => void, onContactsClick: () => void, onTerminalClick: () => void }) {
   const buttons = [
     { icon: UserCircle, label: 'About Me', onClick: onAboutClick },
-    { icon: FolderOpen, label: 'Projects' },
-    { icon: FileText, label: 'Resume' },
-    { icon: Mail, label: 'Contact' },
-    { icon: Terminal, label: 'Terminal' },
+    { icon: FolderOpen, label: 'Projects', onClick: onProjectsClick },
+    { icon: FileText, label: 'Resume', onClick: onResumeClick },
+    { icon: Mail, label: 'Contact', onClick: onContactsClick },
+    { icon: Terminal, label: 'Terminal', onClick: onTerminalClick },
   ];
   const [isMounted, setIsMounted] = useState(false);
   
