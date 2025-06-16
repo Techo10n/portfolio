@@ -4,6 +4,7 @@ import { MapPin, GraduationCap, BookOpen } from "lucide-react";
 import { siReact, siNextdotjs, siTailwindcss, siTypescript, siJavascript, siExpress, siMongodb, siPython, siFigma } from "simple-icons/icons";
 import SimpleIcon from "@/components/SimpleIcon";
 import { FaJava } from "react-icons/fa";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 
 export default function About({ onClose }: { onClose: () => void }) {
@@ -31,7 +32,7 @@ export default function About({ onClose }: { onClose: () => void }) {
   
 
   return (
-    <div className="flex flex-col items-start justify-start border rounded-[20px] bg-white/8 backdrop-blur-lg w-full h-full overflow-y-scroll scrollbar-thin scrollbar-thumb-white/40 scrollbar-track-transparent">
+    <ScrollArea className="flex flex-col items-start justify-start border rounded-[20px] bg-white/8 backdrop-blur-lg w-full h-full">
       <main className="w-full mb-8">
         <div className="flex flex-row items-start justify-between w-full">
           <p className="text-white text-xs pt-2.5 pl-3">
@@ -220,6 +221,6 @@ export default function About({ onClose }: { onClose: () => void }) {
           </div>
         </div>
       </main>
-    </div>
+    </ScrollArea>
   );
 }
