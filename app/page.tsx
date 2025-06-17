@@ -22,7 +22,6 @@ export default function Home() {
   const [showResume, setShowResume] = useState(false);
   const [showContacts, setShowContacts] = useState(false);
   const [showTerminal, setShowTerminal] = useState(false);
-  const [windowCount, setWindowCount] = useState(0);
 
   return (
     <div suppressHydrationWarning className="relative min-h-screen font-[family-name:var(--font-jetbrains-mono)]">
@@ -40,61 +39,105 @@ export default function Home() {
             ${showTerminal ? "scale-100" : "scale-30"}
             ${showAbout || showProjects || showResume || showContacts || showTerminal ? "opacity-100" : "opacity-0"}`}
         >
-          <ResizablePanelGroup direction="horizontal" className={`w-full h-full`}>
-            <ResizablePanel defaultSize={100} className="mr-1.5">
-              <ResizablePanelGroup direction="vertical">
-                <ResizablePanel defaultSize={100} className="mb-1.5">
-                  <ResizablePanelGroup direction="horizontal">
-                    <ResizablePanel defaultSize={100} className="mr-1.5">
-                      {showAbout && <About onClose={() => { setShowAbout(false); setWindowCount(windowCount - 1); }} />}
-                    </ResizablePanel>
-                    <ResizableHandle className="!border-none !bg-transparent" />
-                    <ResizablePanel defaultSize={100} className={`ml-1.5`}>
-                      {showProjects && <Projects onClose={() => { setShowProjects(false); setWindowCount(windowCount - 1); }} />}
-                    </ResizablePanel>
-                  </ResizablePanelGroup>
-                </ResizablePanel>
-                <ResizableHandle className="!border-none !bg-transparent" />
-                <ResizablePanel defaultSize={100} className={`mt-1.5`}>
-                  <ResizablePanelGroup direction="horizontal" className="h-full w-full">
-                    <ResizablePanel defaultSize={100} className="mr-1.5">
-                      {showResume && <Resume onClose={() => { setShowResume(false); setWindowCount(windowCount - 1); }} />}
-                    </ResizablePanel>
-                    <ResizableHandle className="!border-none !bg-transparent" />
-                    <ResizablePanel defaultSize={100} className={`ml-1.5`}>
-                      {showContacts && <Contacts onClose={() => { setShowContacts(false); setWindowCount(windowCount - 1); }} />}
-                    </ResizablePanel>
-                  </ResizablePanelGroup>
-                </ResizablePanel>
-              </ResizablePanelGroup>
-            </ResizablePanel>
-            <ResizableHandle className="!border-none !bg-transparent" />
-            <ResizablePanel defaultSize={100} className={`ml-1.5`}>
-              {showTerminal && <Terminal onClose={() => { setShowTerminal(false); setWindowCount(windowCount - 1); }} />}
-            </ResizablePanel>
-          </ResizablePanelGroup>
+          {(() => {
+            const openWindows: { key: string; component: React.ReactElement }[] = [
+              showAbout ? { key: "about", component: <About onClose={() => { setShowAbout(false) }} /> } : null,
+              showProjects ? { key: "projects", component: <Projects onClose={() => { setShowProjects(false) }} /> } : null,
+              showResume ? { key: "resume", component: <Resume onClose={() => { setShowResume(false) }} /> } : null,
+              showContacts ? { key: "contacts", component: <Contacts onClose={() => { setShowContacts(false) }} /> } : null,
+              showTerminal ? { key: "terminal", component: <Terminal onClose={() => { setShowTerminal(false) }} /> } : null,
+            ].filter(Boolean) as { key: string; component: React.ReactElement }[]; 
+
+            function renderPanels(windows: { key: string; component: React.ReactElement }[]): React.ReactNode {
+              switch (windows.length) {
+                case 0:
+                  return null;
+
+                case 1:
+                  return (
+                    <ResizablePanelGroup direction="horizontal" className="w-full h-full">
+                      <ResizablePanel defaultSize={100} className="w-full h-full">
+                        {windows[0].component}
+                      </ResizablePanel>
+                    </ResizablePanelGroup>
+                  );
+
+                case 2:
+                  return (
+                    <ResizablePanelGroup direction="horizontal" className="w-full h-full">
+                      <ResizablePanel defaultSize={50} className="mr-1.5">
+                        {windows[0].component}
+                      </ResizablePanel>
+                      <ResizableHandle className="!border-none !bg-transparent" />
+                      <ResizablePanel defaultSize={50} className="ml-1.5">
+                        {windows[1].component}
+                      </ResizablePanel>
+                    </ResizablePanelGroup>
+                  );
+
+                case 3:
+                case 4:
+                  return (
+                    <ResizablePanelGroup direction="vertical" className="w-full h-full">
+                      <ResizablePanel defaultSize={50} className="mb-1.5">
+                        {renderPanels(windows.slice(0, 2))}
+                      </ResizablePanel>
+                      <ResizableHandle className="!border-none !bg-transparent" />
+                      <ResizablePanel defaultSize={50} className="mt-1.5">
+                        {renderPanels(windows.slice(2))}
+                      </ResizablePanel>
+                    </ResizablePanelGroup>
+                  );
+
+                case 5:
+                  return (
+                    <ResizablePanelGroup direction="horizontal" className="w-full h-full">
+                      <ResizablePanel defaultSize={80} className="mr-1.5">
+                        {renderPanels(windows.slice(0, 4))}
+                      </ResizablePanel>
+                      <ResizableHandle className="!border-none !bg-transparent" />
+                      <ResizablePanel defaultSize={20} className="ml-1.5">
+                        {windows[4].component}
+                      </ResizablePanel>
+                    </ResizablePanelGroup>
+                  );
+
+                default: {
+                  const half = Math.ceil(windows.length / 2);
+                  return (
+                    <ResizablePanelGroup direction="horizontal" className="w-full h-full">
+                      <ResizablePanel defaultSize={50} className="mr-1.5">
+                        {renderPanels(windows.slice(0, half))}
+                      </ResizablePanel>
+                      <ResizableHandle className="!border-none !bg-transparent" />
+                      <ResizablePanel defaultSize={50} className="ml-1.5">
+                        {renderPanels(windows.slice(half))}
+                      </ResizablePanel>
+                    </ResizablePanelGroup>
+                  );
+                }
+              }
+            }
+
+            return renderPanels(openWindows);
+          })()}
         </main>
         <div className="row-start-3">
           <TaskBar
             onAboutClick={() => {
-              setShowAbout(true);
-              setWindowCount(windowCount + 1);
+              setShowAbout(true)
             }}
             onProjectsClick={() => {
-              setShowProjects(true);
-              setWindowCount(windowCount + 1);
+              setShowProjects(true)
             }}
             onResumeClick={() => {
-              setShowResume(true);
-              setWindowCount(windowCount + 1);
+              setShowResume(true)
             }}
             onContactsClick={() => {
-              setShowContacts(true);
-              setWindowCount(windowCount + 1);
+              setShowContacts(true)
             }}
             onTerminalClick={() => {
-              setShowTerminal(true);
-              setWindowCount(windowCount + 1);
+              setShowTerminal(true)
             }}
           />
         </div>

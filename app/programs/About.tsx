@@ -42,7 +42,7 @@ export default function About({ onClose }: { onClose: () => void }) {
             <WindowControlButtons onClose={onClose} />
           </div>
         </div>
-        <div className="flex flex-col justify-start items-start w-full h-full px-14 py-8">
+        <div className="flex flex-col justify-center items-start w-full h-full px-14 py-8">
           <div className="flex flex-row items-start justify-start w-full">
             <Image
               src="/pfp.jpg"
@@ -51,7 +51,7 @@ export default function About({ onClose }: { onClose: () => void }) {
               height={200}
               className="w-[200px] h-[200px] object-cover rounded-full border border-white"
             />
-            <div className="flex flex-col items-start justify-center w-full h-full pl-6">
+            <div className="flex flex-col items-start justify-center w-full h-[200px] pl-6">
               <h1 className="text-white text-3xl font-extrabold">
                 Zechariah Frierson
               </h1>

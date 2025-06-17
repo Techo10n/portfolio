@@ -16,9 +16,14 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
         </div>
         <div className="flex flex-col justify-start items-start w-full h-full px-14 py-8">
           <div className="flex flex-row items-start justify-start w-full">
-            <h1 className="text-white text-3xl font-extrabold">
-              Stuff I've Been Working On
-            </h1>
+            <p className="w-auto flex-shrink-0">
+              user@portfolio ~ %
+            </p>
+            <input
+              className="bg-transparent border-none outline-none text-white placeholder:text-gray ml-3 flex-1"
+              placeholder="type help to get started"
+              autoFocus
+            />
           </div>
         </div>
       </main>
