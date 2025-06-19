@@ -38,9 +38,11 @@ export default function TopBar() {
     >
       {/* Left buttons */}
       <div className="flex flex-row items-start col-span-1 col-start-1 gap-4">
-        <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="hover:scale-110 transition-transform cursor-pointer">
-          {theme === "dark" ? <Sun className="w-6 h-6 text-white stroke-1" /> : <Moon className="w-6 h-6 text-white stroke-1" />}
-        </button>
+        {isMounted && (
+          <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="hover:scale-110 transition-transform cursor-pointer">
+            {theme === "dark" ? <Sun className="w-6 h-6 text-white stroke-1" /> : <Moon className="w-6 h-6 text-white stroke-1" />}
+          </button>
+        )}
         <button onClick={() => setIsMuted(!isMuted)} className="hover:scale-110 transition-transform cursor-pointer">
           {isMuted ? <VolumeX className="w-6 h-6 text-white stroke-1" /> : <Volume2 className="w-6 h-6 text-white stroke-1" />}
         </button>
