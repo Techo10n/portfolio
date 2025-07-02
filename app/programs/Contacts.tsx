@@ -1,5 +1,6 @@
 import WindowControlButtons from "@/components/WindowControlButtons";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import ContactForm from "@/components/ContactForm";
 
 
 export default function Contacts({ onClose }: { onClose: () => void }) {
@@ -17,8 +18,11 @@ export default function Contacts({ onClose }: { onClose: () => void }) {
         <div className="flex flex-col justify-start items-start w-full h-full px-14 py-8">
           <div className="flex flex-row items-start justify-start w-full">
             <h1 className="text-white text-3xl font-extrabold">
-              Stuff I've Been Working On
+              Contact Me!
             </h1>
+          </div>
+          <div className="flex flex-col items-start justify-start w-full mt-6">
+            <ContactForm/>
           </div>
         </div>
       </main>
