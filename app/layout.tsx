@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/ui/theme-provider";
 import "./globals.css";
 
 const jetBrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
   variable: "--font-jetbrains-mono",
 });
 
