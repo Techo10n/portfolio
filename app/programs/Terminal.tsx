@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import WindowControlButtons from "@/components/WindowControlButtons";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const COMMANDS = {
+const COMMANDS: { [key: string]: string[] } = {
   help: [
     "Available commands:",
     "help        Show this help message",
