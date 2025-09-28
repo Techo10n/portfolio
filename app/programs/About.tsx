@@ -79,7 +79,7 @@ export default function About({ onClose }: { onClose: () => void }) {
 
           <div className="w-full mt-4 text-white text-sm">
             <p className="mb-4">
-              Hey, I'm Zechariah, often known as Zach or "Zech," and I'm a Sophomore at Georgia Institute of Technology in Atlanta. I am extremely passionate about computer programming, along with video editing and web design.
+              Hey, I&apos;m Zechariah, often known as Zach or &ldquo;Zech,&rdquo; and I&apos;m a Sophomore at Georgia Institute of Technology in Atlanta. I am extremely passionate about computer programming, along with video editing and web design.
             </p>
             <p className="mb-4">
               Alongside my STEM interests, I also enjoy soccer, volleyball, and music.

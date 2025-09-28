@@ -20,7 +20,7 @@ export default function Projects({ onClose }: { onClose: () => void }) {
           <div className="flex flex-col justify-start items-start w-full h-full px-14 py-8">
             <div className="flex flex-col items-start justify-start w-full">
               <h1 className="text-white text-3xl font-extrabold">
-                Stuff I've Been Working On
+                Stuff I&apos;ve Been Working On
               </h1>
               <h2 className="text-white text-lg font-extrabold mt-8">
                 Personal Projects
@@ -98,7 +98,7 @@ export default function Projects({ onClose }: { onClose: () => void }) {
                       SimpliEarn
                     </h3>
                     <p className="text-white text-xs">
-                      //description here
+                      {/* description here */}
                     </p>
                     <div className="flex flex-row items-center justify-start my-3 gap-3">
                       <button className="text-white text-xs px-2 py-1 rounded-2xl border border-white border-0.5 hover:bg-white/10 transition-colors cursor-pointer">
@@ -116,7 +116,7 @@ export default function Projects({ onClose }: { onClose: () => void }) {
                       JourneyJar
                     </h3>
                     <p className="text-white text-xs">
-                      //description here
+                      {/* description here */}
                     </p>
                     <div className="flex flex-row items-center justify-start my-3 gap-3">
                       <button className="text-white text-xs px-2 py-1 rounded-2xl border border-white border-0.5 hover:bg-white/10 transition-colors cursor-pointer">
@@ -169,7 +169,7 @@ export default function Projects({ onClose }: { onClose: () => void }) {
                       GameLogs
                     </h3>
                     <p className="text-white text-xs">
-                      //description here
+                      {/* description here */}
                     </p>
                     <div className="flex flex-row items-center justify-start my-3 gap-3">
                       <button className="text-white text-xs px-2 py-1 rounded-2xl border border-white border-0.5 hover:bg-white/10 transition-colors cursor-pointer">
@@ -217,7 +217,7 @@ export default function Projects({ onClose }: { onClose: () => void }) {
                       ILJCW Website Design
                     </h3>
                     <p className="text-white text-xs">
-                      //description here
+                      {/* description here */}
                     </p>
                     <div className="flex flex-row items-center justify-start my-3 gap-3">
                       <button className="text-white text-xs px-2 py-1 rounded-2xl border border-white border-0.5 hover:bg-white/10 transition-colors cursor-pointer">
@@ -235,7 +235,7 @@ export default function Projects({ onClose }: { onClose: () => void }) {
                       Inland Octopus Website Development
                     </h3>
                     <p className="text-white text-xs">
-                      //description here
+                      {/* description here */}
                     </p>
                     <div className="flex flex-row items-center justify-start my-3 gap-3">
                       <button className="text-white text-xs px-2 py-1 rounded-2xl border border-white border-0.5 hover:bg-white/10 transition-colors cursor-pointer">
@@ -253,7 +253,7 @@ export default function Projects({ onClose }: { onClose: () => void }) {
                       Welcome Home Properties Database Software
                     </h3>
                     <p className="text-white text-xs">
-                      //description here
+                      {/* description here */}
                     </p>
                     <div className="flex flex-row items-center justify-start my-3 gap-3">
                       <button className="text-white text-xs px-2 py-1 rounded-2xl border border-white border-0.5 hover:bg-white/10 transition-colors cursor-pointer">
@@ -276,7 +276,7 @@ export default function Projects({ onClose }: { onClose: () => void }) {
                       GT VGDev Trailers
                     </h3>
                     <p className="text-white text-xs">
-                      //description here
+                      {/* description here */}
                     </p>
                     <div className="flex flex-row items-center justify-start my-3 gap-3">
                       <button className="text-white text-xs px-2 py-1 rounded-2xl border border-white border-0.5 hover:bg-white/10 transition-colors cursor-pointer">
