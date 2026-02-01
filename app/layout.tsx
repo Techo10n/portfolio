@@ -17,7 +17,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${jetBrainsMono.variable} ${jetBrainsMono.variable} antialiased`}
+        className={`${jetBrainsMono.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"

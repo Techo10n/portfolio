@@ -52,13 +52,25 @@
     background-position: 100% 0%;
   }
 }
-.animate-gradient-radial {
+
+/* Dark mode gradient */
+.dark .animate-gradient-radial {
   background: radial-gradient(circle at 20% 30%, black, transparent 70%),
               radial-gradient(circle at 50% 50%, #ff62e8, transparent 40%),
               radial-gradient(circle at center, #9d3bd2, black);
   background-size: 200% 200%;
-  animation: gradient-radial 30s ease-in-out infinite, move-circles 10s linear infinite;
+  animation: gradient-radial 30s ease-in-out infinite;
   opacity: 0.5;
+}
+
+/* Light mode gradient */
+.animate-gradient-radial {
+  background: radial-gradient(circle at 20% 30%, #f8f9fa, transparent 70%),
+              radial-gradient(circle at 50% 50%, #e8b4ff, transparent 40%),
+              radial-gradient(circle at center, #d4a5ff, #f0f0f5);
+  background-size: 200% 200%;
+  animation: gradient-radial 30s ease-in-out infinite;
+  opacity: 0.6;
 }
 
 :root {

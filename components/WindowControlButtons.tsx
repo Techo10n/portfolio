@@ -8,7 +8,7 @@ export default function WindowControlButtons({ onClose }: { onClose?: () => void
   return (
     <div className="flex flex-wrap items-center justify-center gap-2">
       <button
-        className="w-3 h-3 border border-white rounded-full relative"
+        className="w-3 h-3 border border-foreground/50 rounded-full relative"
         onMouseEnter={() => setHoveredButton("minimize")}
         onMouseLeave={() => setHoveredButton(null)}
       >
@@ -17,7 +17,7 @@ export default function WindowControlButtons({ onClose }: { onClose?: () => void
         )}
       </button>
       <button
-        className="w-3 h-3 border border-white rounded-full relative"
+        className="w-3 h-3 border border-foreground/50 rounded-full relative"
         onMouseEnter={() => setHoveredButton("maximize")}
         onMouseLeave={() => setHoveredButton(null)}
       >
@@ -26,7 +26,7 @@ export default function WindowControlButtons({ onClose }: { onClose?: () => void
         )}
       </button>
       <button
-        className="w-3 h-3 border border-white rounded-full relative"
+        className="w-3 h-3 border border-foreground/50 rounded-full relative"
         onMouseEnter={() => setHoveredButton("close")}
         onMouseLeave={() => setHoveredButton(null)}
         onClick={onClose}

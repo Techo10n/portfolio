@@ -27,46 +27,46 @@ export default function About({ onClose }: { onClose: () => void }) {
     { component: FaJava, label: "Java", link: "https://www.java.com/" },
     { icon: siPython, label: "Python", link: "https://www.python.org/" },
     { icon: siFigma, label: "Figma", link: "https://www.figma.com/" },
-    // { icon: siAdobeaftereffects, label: "After Effects", link: "https://www.adobe.com/products/aftereffects.html" },
   ];
-  
+
 
   return (
-    <ScrollArea className="flex flex-col items-start justify-start border rounded-[20px] bg-white/8 backdrop-blur-lg w-full h-full">
+    <ScrollArea className="flex flex-col items-start justify-start border border-foreground/20 rounded-[20px] bg-foreground/8 backdrop-blur-lg w-full h-full">
       <main className="w-full mb-8">
         <div className="flex flex-row items-start justify-between w-full">
-          <p className="text-white text-xs pt-2.5 pl-3">
+          <p className="text-foreground text-xs pt-2.5 pl-3">
             About Me
           </p>
           <div className="flex flex-col items-center justify-center pt-3 pr-3">
             <WindowControlButtons onClose={onClose} />
           </div>
         </div>
-        <div className="flex flex-col justify-center items-start w-full h-full px-14 py-8">
-          <div className="flex flex-row items-start justify-start w-full">
+        <div className="flex flex-col justify-center items-start w-full h-full px-4 sm:px-8 md:px-14 py-4 sm:py-6 md:py-8">
+          {/* Profile Section - Stack on mobile, side by side on larger screens */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-start w-full gap-4 sm:gap-0">
             <Image
               src="/pfp.jpg"
               alt="Portfolio"
               width={200}
               height={200}
-              className="w-[200px] h-[200px] object-cover rounded-full border border-white"
+              className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] md:w-[200px] md:h-[200px] object-cover rounded-full border border-foreground/50 flex-shrink-0"
             />
-            <div className="flex flex-col items-start justify-center w-full h-[200px] pl-6">
-              <h1 className="text-white text-3xl font-extrabold">
+            <div className="flex flex-col items-center sm:items-start justify-center w-full sm:h-[150px] md:h-[200px] sm:pl-6 text-center sm:text-left">
+              <h1 className="text-foreground text-xl sm:text-2xl md:text-3xl font-extrabold">
                 Zechariah Frierson
               </h1>
-              <h2 className="text-white text-lg">
+              <h2 className="text-foreground text-sm sm:text-base md:text-lg">
                 Full Stack Web Developer & Designer
               </h2>
-              <span className="text-white text-sm mt-2">
-                <MapPin className="inline-block w-4 h-4 mr-2 stroke-1" />
+              <span className="text-foreground text-xs sm:text-sm mt-2">
+                <MapPin className="inline-block w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 stroke-1" />
                 Walla Walla, WA | United States
               </span>
-              <div className="flex flex-row items-center justify-start gap-2.5 mt-4">
+              <div className="flex flex-row items-center justify-center sm:justify-start gap-2 sm:gap-2.5 mt-3 sm:mt-4">
                 {socials.map(({ icon, link }, index) => (
                 <div key={index} className="relative group flex flex-col items-center">
-                  <button className="transform transition-transform duration-200 hover:scale-110 cursor-pointer flex items-center justify-center w-8 h-8 border border-white rounded-full">
-                    <a href={link} className={`${icon} text-white text-lg`} target="_blank" rel="noopener noreferrer"></a>
+                  <button className="transform transition-transform duration-200 hover:scale-110 cursor-pointer flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 border border-foreground/50 rounded-full">
+                    <a href={link} className={`${icon} text-foreground text-base sm:text-lg`} target="_blank" rel="noopener noreferrer"></a>
                   </button>
                 </div>
                 ))}
@@ -75,31 +75,35 @@ export default function About({ onClose }: { onClose: () => void }) {
           </div>
 
           {/* divider */}
-          <div className="w-full h-px bg-white/50 mt-10"></div>
+          <div className="w-full h-px bg-foreground/50 mt-6 sm:mt-8 md:mt-10"></div>
 
-          <div className="w-full mt-4 text-white text-sm">
-            <p className="mb-4">
+          <div className="w-full mt-4 text-foreground text-xs sm:text-sm">
+            <p className="mb-3 sm:mb-4">
               Hey, I&apos;m Zechariah, often known as Zach or &ldquo;Zech,&rdquo; and I&apos;m a Sophomore at Georgia Institute of Technology in Atlanta. I am extremely passionate about computer programming, along with video editing and web design.
             </p>
-            <p className="mb-4">
+            <p className="mb-3 sm:mb-4">
               Alongside my STEM interests, I also enjoy soccer, volleyball, and music.
             </p>
             <p>
               I am obsessed with seeing my work come to life before my eyes, and I dream of working in a field that allows me to create something out of nothing.
             </p>
           </div>
-          <div className="flex flex-col items-start justify-start w-full mt-6">
-            <h3 className="text-white text-lg font-extrabold">
+
+          {/* Skills Section */}
+          <div className="flex flex-col items-start justify-start w-full mt-4 sm:mt-6">
+            <h3 className="text-foreground text-base sm:text-lg font-extrabold">
                 What I Work With
             </h3>
-            <div className="flex flex-row flex-wrap gap-3 mt-2">
+            <div className="flex flex-row flex-wrap gap-2 sm:gap-3 mt-2">
               {tools.map(({ icon, component, label, link }, index) => (
                 <SimpleIcon key={index} icon={icon} component={component} label={label} link={link} />
               ))}
             </div>
           </div>
-          <div className="flex flex-col items-start justify-start w-full mt-6">
-            <h3 className="text-white text-lg font-extrabold">Experience</h3>
+
+          {/* Experience Section */}
+          <div className="flex flex-col items-start justify-start w-full mt-4 sm:mt-6">
+            <h3 className="text-foreground text-base sm:text-lg font-extrabold">Experience</h3>
             <div className="flex flex-col w-full mt-2 relative">
               {[
                 {
@@ -133,25 +137,25 @@ export default function About({ onClose }: { onClose: () => void }) {
                 },
               ].map((exp, idx, arr) => (
                 <div key={idx} className="flex w-full relative">
-                  <div className="flex flex-col items-center mr-4">
-                    <div className="w-3 h-3 rounded-full bg-white mt-1" />
+                  <div className="flex flex-col items-center mr-3 sm:mr-4">
+                    <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-foreground mt-1" />
                     {idx !== arr.length - 1 && (
-                      <div className="w-[2px] flex-1 bg-white -mb-1" />
+                      <div className="w-[2px] flex-1 bg-foreground -mb-1" />
                     )}
                   </div>
-                  <div className="pb-6">
-                    <h4 className="text-white text-md font-bold">{exp.title}</h4>
-                    <p className="text-white text-sm">{exp.org}</p>
-                    <p className="text-white/75 text-xs pt-1">{exp.time}</p>
-                    <ul className="list-disc list-inside text-white text-sm pt-1">
+                  <div className="pb-4 sm:pb-6">
+                    <h4 className="text-foreground text-sm sm:text-md font-bold">{exp.title}</h4>
+                    <p className="text-foreground text-xs sm:text-sm">{exp.org}</p>
+                    <p className="text-foreground/75 text-[10px] sm:text-xs pt-1">{exp.time}</p>
+                    <ul className="list-disc list-inside text-foreground text-xs sm:text-sm pt-1">
                       {exp.bullets.map((b, i) => (
-                        <li key={i} className={i !== 0 ? "pt-1.5" : ""}>
+                        <li key={i} className={i !== 0 ? "pt-1 sm:pt-1.5" : ""}>
                           {b.split(" ").map((word, idx) =>
                           word.startsWith("https") ? (
                             <a
                             key={idx}
                             href={word}
-                            className="hover:underline"
+                            className="hover:underline break-all"
                             target="_blank"
                             rel="noopener noreferrer"
                             >
@@ -169,12 +173,14 @@ export default function About({ onClose }: { onClose: () => void }) {
               ))}
             </div>
           </div>
+
+          {/* Education Section */}
           <div className="flex flex-col items-start justify-start w-full">
-            <h3 className="text-white text-lg font-extrabold">Education</h3>
+            <h3 className="text-foreground text-base sm:text-lg font-extrabold">Education</h3>
             <div className="flex flex-col w-full mt-2">
               {[
                 {
-                  icon: <GraduationCap className="w-6 h-6 stroke-1" />,
+                  icon: <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 stroke-1" />,
                   school: "Georgia Institute of Technology",
                   degree: "Bachelor of Science - BS, Computer Science",
                   time: "Aug 2024 - May 2027",
@@ -186,7 +192,7 @@ export default function About({ onClose }: { onClose: () => void }) {
                   ],
                 },
                 {
-                  icon: <BookOpen className="w-5 h-5 stroke-1 mt-0.5 mr-1" />,
+                  icon: <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 stroke-1 mt-0.5 mr-1" />,
                   school: "Whitman College",
                   degree: "High School Enrichment Program",
                   time: "Aug 2022 - May 2024",
@@ -196,7 +202,7 @@ export default function About({ onClose }: { onClose: () => void }) {
                   ],
                 },
               ].map((edu, idx) => (
-                <div key={idx} className={`flex flex-row items-start justify-start w-full ${idx > 0 ? "pt-6" : ""}`}>
+                <div key={idx} className={`flex flex-row items-start justify-start w-full ${idx > 0 ? "pt-4 sm:pt-6" : ""}`}>
                   {/* Icon */}
                   <div className="flex flex-col items-center pr-2">
                     {edu.icon}
@@ -204,12 +210,12 @@ export default function About({ onClose }: { onClose: () => void }) {
 
                   {/* Text Content */}
                   <div className="flex flex-col items-start justify-start">
-                    <h4 className="text-white text-md font-bold">{edu.school}</h4>
-                    <p className="text-white text-sm">{edu.degree}</p>
-                    <p className="text-white/75 text-xs pt-1">{edu.time}</p>
-                    <div className="list-disc list-inside text-white text-sm pt-1 space-y-1.5">
+                    <h4 className="text-foreground text-sm sm:text-md font-bold">{edu.school}</h4>
+                    <p className="text-foreground text-xs sm:text-sm">{edu.degree}</p>
+                    <p className="text-foreground/75 text-[10px] sm:text-xs pt-1">{edu.time}</p>
+                    <div className="list-disc list-inside text-foreground text-xs sm:text-sm pt-1 space-y-1 sm:space-y-1.5">
                       {edu.details.map(([label, value], i) => (
-                        <span key={i} className="text-white text-sm block">
+                        <span key={i} className="text-foreground text-xs sm:text-sm block">
                           <span className="font-bold">{label}</span> {value}
                         </span>
                       ))}

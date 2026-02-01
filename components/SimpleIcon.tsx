@@ -13,14 +13,14 @@ export default function SimpleIcon({ icon, component: IconComponent, label, link
       href={link}
       target="_blank"
       rel="noopener noreferrer"
-      className="transform transition-transform duration-200 hover:scale-110 cursor-pointer flex items-center gap-2 px-3 py-1 border border-white rounded-[10px]"
+      className="transform transition-transform duration-200 hover:scale-110 cursor-pointer flex items-center gap-2 px-3 py-1 border border-foreground/50 rounded-[10px]"
     >
       {icon && (
         <svg
           role="img"
           viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          fill="white"
+          fill="currentColor"
           className="w-5 h-5"
         >
           <title>{label}</title>
@@ -28,9 +28,9 @@ export default function SimpleIcon({ icon, component: IconComponent, label, link
         </svg>
       )}
       {IconComponent && (
-        <IconComponent className="text-white w-5 h-5" />
+        <IconComponent className="text-foreground w-5 h-5" />
       )}
-      <span className="text-white text-sm">{label}</span>
+      <span className="text-foreground text-sm">{label}</span>
     </a>
   );
 }
