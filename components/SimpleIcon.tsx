@@ -1,13 +1,12 @@
-import { ElementType } from "react";
+import type { LucideIcon } from "lucide-react";
 
 type SimpleIconProps = {
-  icon?: { path: string }; // from simple-icons
-  component?: ElementType; // from react-icons
+  icon: LucideIcon;
   label: string;
   link: string;
 };
 
-export default function SimpleIcon({ icon, component: IconComponent, label, link }: SimpleIconProps) {
+export default function SimpleIcon({ icon: Icon, label, link }: SimpleIconProps) {
   return (
     <a
       href={link}
@@ -15,21 +14,7 @@ export default function SimpleIcon({ icon, component: IconComponent, label, link
       rel="noopener noreferrer"
       className="transform transition-transform duration-200 hover:scale-110 cursor-pointer flex items-center gap-2 px-3 py-1 border border-foreground/50 rounded-[10px]"
     >
-      {icon && (
-        <svg
-          role="img"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="currentColor"
-          className="w-5 h-5"
-        >
-          <title>{label}</title>
-          <path d={icon.path} />
-        </svg>
-      )}
-      {IconComponent && (
-        <IconComponent className="text-foreground w-5 h-5" />
-      )}
+      <Icon className="text-foreground w-5 h-5 stroke-1.5" aria-hidden="true" />
       <span className="text-foreground text-sm">{label}</span>
     </a>
   );

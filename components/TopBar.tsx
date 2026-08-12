@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Sun, Volume2, VolumeX } from 'lucide-react';
+import { Github, Linkedin, Moon, Sun, Volume2, VolumeX, Youtube } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
 
@@ -85,22 +85,31 @@ export default function TopBar() {
       <div className="flex flex-row items-center gap-2 sm:gap-4">
         <a
           href="https://www.linkedin.com/in/zechariah-frierson/"
-          className="icon-social-linkedin text-foreground text-lg sm:text-xl hover:scale-110 transition-transform"
+          className="text-foreground hover:scale-110 transition-transform"
+          aria-label="LinkedIn"
           target="_blank"
           rel="noopener noreferrer"
-        />
+        >
+          <Linkedin className="w-5 h-5 sm:w-6 sm:h-6 stroke-1" />
+        </a>
         <a
           href="https://github.com/Techo10n"
-          className="icon-social-github text-foreground text-lg sm:text-xl hover:scale-110 transition-transform"
+          className="text-foreground hover:scale-110 transition-transform"
+          aria-label="GitHub"
           target="_blank"
           rel="noopener noreferrer"
-        />
+        >
+          <Github className="w-5 h-5 sm:w-6 sm:h-6 stroke-1" />
+        </a>
         <a
           href="https://www.youtube.com/@techolon"
-          className="icon-social-youtube text-foreground text-lg sm:text-xl hover:scale-110 transition-transform"
+          className="text-foreground hover:scale-110 transition-transform"
+          aria-label="YouTube"
           target="_blank"
           rel="noopener noreferrer"
-        />
+        >
+          <Youtube className="w-5 h-5 sm:w-6 sm:h-6 stroke-1" />
+        </a>
       </div>
     </div>
   );

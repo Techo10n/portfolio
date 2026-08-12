@@ -103,15 +103,15 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
   }, [history]);
 
   const handleCommand = (cmd: string) => {
-    const trimmedCmd = cmd.trim().toLowerCase();
-    const parts = trimmedCmd.split(" ");
+    const displayCmd = cmd.trim();
+    const normalizedCmd = displayCmd.toLowerCase();
+    const parts = normalizedCmd.split(/\s+/);
     const command = parts[0];
-    const args = parts.slice(1).join(" ");
 
-    if (trimmedCmd === "") return;
+    if (displayCmd === "") return;
 
     // Add to command history
-    setCommandHistory((prev) => [...prev, trimmedCmd]);
+    setCommandHistory((prev) => [...prev, displayCmd]);
     setHistoryIndex(-1);
 
     if (command === "clear") {
@@ -129,12 +129,12 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
         minute: "2-digit",
         second: "2-digit",
       });
-      setHistory((h) => [...h, `guest@portfolio ~ % ${trimmedCmd}`, now, ""]);
+      setHistory((h) => [...h, `guest@portfolio ~ % ${displayCmd}`, now, ""]);
       return;
     }
 
     if (command === "echo") {
-      setHistory((h) => [...h, `guest@portfolio ~ % ${cmd.trim()}`, args || "", ""]);
+      setHistory((h) => [...h, `guest@portfolio ~ % ${displayCmd}`, displayCmd.split(/\s+/).slice(1).join(" ") || "", ""]);
       return;
     }
 
@@ -142,15 +142,15 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
     if (output === undefined) {
       setHistory((h) => [
         ...h,
-        `guest@portfolio ~ % ${trimmedCmd}`,
+        `guest@portfolio ~ % ${displayCmd}`,
         `Command not found: ${command}`,
         "Type 'help' for available commands.",
         "",
       ]);
     } else if (Array.isArray(output)) {
-      setHistory((h) => [...h, `guest@portfolio ~ % ${trimmedCmd}`, ...output, ""]);
+      setHistory((h) => [...h, `guest@portfolio ~ % ${displayCmd}`, ...output, ""]);
     } else {
-      setHistory((h) => [...h, `guest@portfolio ~ % ${trimmedCmd}`, output, ""]);
+      setHistory((h) => [...h, `guest@portfolio ~ % ${displayCmd}`, output, ""]);
     }
   };
 
@@ -158,6 +158,7 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
     e.preventDefault();
     handleCommand(input);
     setInput("");
+    requestAnimationFrame(() => inputRef.current?.focus());
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

@@ -1,29 +1,32 @@
 "use client";
 
 import { useState, useMemo } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 import Footer from "@/components/Footer";
 import TaskBar from "@/components/TaskBar";
+import TopBar from "@/components/TopBar";
+import WindowWrapper from "@/components/WindowWrapper";
 import About from "./programs/About";
 import Projects from "./programs/Projects";
 import Resume from "./programs/Resume";
 import Contacts from "./programs/Contacts";
 import Terminal from "./programs/Terminal";
-import TopBar from "@/components/TopBar";
-import WindowWrapper from "@/components/WindowWrapper";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
-import "./globals.css";
 
 type WindowConfig = {
   key: string;
   isOpen: boolean;
-  component: React.ReactElement;
+  component: ReactElement;
 };
 
+type WindowKey = "about" | "projects" | "resume" | "contacts" | "terminal";
+
 export default function Home() {
+  const [activeWindow, setActiveWindow] = useState<WindowKey>("about");
   const [showAbout, setShowAbout] = useState(false);
   const [showProjects, setShowProjects] = useState(false);
   const [showResume, setShowResume] = useState(false);
@@ -32,7 +35,11 @@ export default function Home() {
 
   const anyWindowOpen = showAbout || showProjects || showResume || showContacts || showTerminal;
 
-  // Memoize window configurations to prevent unnecessary re-renders
+  const openWindow = (key: WindowKey, setter: (v: boolean) => void) => {
+    setter(true);
+    setActiveWindow(key);
+  };
+
   const windowConfigs: WindowConfig[] = useMemo(() => [
     {
       key: "about",
@@ -62,8 +69,9 @@ export default function Home() {
   ], [showAbout, showProjects, showResume, showContacts, showTerminal]);
 
   const openWindows = windowConfigs.filter(w => w.isOpen);
+  const activeMobileWindow = openWindows.find((w) => w.key === activeWindow) ?? openWindows.at(-1);
 
-  function renderPanels(windows: WindowConfig[]): React.ReactNode {
+  function renderPanels(windows: WindowConfig[]): ReactNode {
     switch (windows.length) {
       case 0:
         return null;
@@ -143,29 +151,38 @@ export default function Home() {
   }
 
   return (
-    <div suppressHydrationWarning className="relative min-h-screen font-[family-name:var(--font-jetbrains-mono)]">
+    <div suppressHydrationWarning className="relative h-screen overflow-hidden font-[family-name:var(--font-jetbrains-mono)]">
       <div className="absolute inset-0 -z-20 animate-gradient-radial" />
-      <div className="grid grid-rows-[20px_1fr_auto_auto] items-center justify-items-center min-h-screen gap-4 sm:gap-6 md:gap-8">
-        <nav className="row-start-1 pt-4 sm:pt-6 md:pt-8 w-full">
+      <div className="grid grid-rows-[auto_1fr_auto_auto] h-full items-center justify-items-center gap-2 sm:gap-3 pt-3 sm:pt-4 md:pt-5 pb-2 sm:pb-3">
+        <nav className="w-full">
           <TopBar />
         </nav>
         <main
-          className={`row-start-2 w-[calc(100%-16px)] sm:w-[calc(100%-32px)] md:w-[calc(100%-40px)] mx-2 sm:mx-4 md:mx-5 flex flex-col h-[75vh] sm:h-[78vh] md:h-[81vh] transition-opacity duration-300 ease-out ${
+          className={`w-[calc(100%-16px)] sm:w-[calc(100%-32px)] md:w-[calc(100%-40px)] mx-2 sm:mx-4 md:mx-5 flex flex-col h-full min-h-0 transition-opacity duration-300 ease-out ${
             anyWindowOpen ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         >
-          {renderPanels(openWindows)}
+          <div className="hidden md:flex w-full h-full min-h-0">
+            {renderPanels(openWindows)}
+          </div>
+          <div className="md:hidden w-full h-full min-h-0">
+            {activeMobileWindow && (
+              <WindowWrapper isOpen={activeMobileWindow.isOpen}>
+                {activeMobileWindow.component}
+              </WindowWrapper>
+            )}
+          </div>
         </main>
-        <div className="row-start-3">
+        <div>
           <TaskBar
-            onAboutClick={() => setShowAbout(true)}
-            onProjectsClick={() => setShowProjects(true)}
-            onResumeClick={() => setShowResume(true)}
-            onContactsClick={() => setShowContacts(true)}
-            onTerminalClick={() => setShowTerminal(true)}
+            onAboutClick={() => openWindow("about", setShowAbout)}
+            onProjectsClick={() => openWindow("projects", setShowProjects)}
+            onResumeClick={() => openWindow("resume", setShowResume)}
+            onContactsClick={() => openWindow("contacts", setShowContacts)}
+            onTerminalClick={() => openWindow("terminal", setShowTerminal)}
           />
         </div>
-        <footer className="row-start-4 mb-5">
+        <footer>
           <Footer />
         </footer>
       </div>

@@ -1,32 +1,46 @@
 import WindowControlButtons from "@/components/WindowControlButtons";
 import Image from "next/image";
-import { MapPin, GraduationCap, BookOpen } from "lucide-react";
-import { siReact, siNextdotjs, siTailwindcss, siTypescript, siJavascript, siExpress, siMongodb, siPython, siFigma } from "simple-icons/icons";
+import {
+  BookOpen,
+  Braces,
+  Code2,
+  Coffee,
+  Database,
+  FileCode2,
+  Github,
+  GraduationCap,
+  Instagram,
+  Linkedin,
+  Mail,
+  MapPin,
+  Palette,
+  Server,
+  Youtube,
+} from "lucide-react";
 import SimpleIcon from "@/components/SimpleIcon";
-import { FaJava } from "react-icons/fa";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 
 export default function About({ onClose }: { onClose: () => void }) {
   const socials = [
-    { icon: 'icon-social-linkedin', label: 'LinkedIn', link: 'https://www.linkedin.com/in/zechariah-frierson/' },
-    { icon: 'icon-social-github', label: 'GitHub', link: 'https://github.com/Techo10n' },
-    { icon: 'icon-social-youtube', label: 'YouTube', link: 'https://www.youtube.com/@techolon' },
-    { icon: 'icon-envelope', label: 'Email', link: 'mailto:zechariahfrierson@gmail.com' },
-    { icon: 'icon-social-instagram', label: 'Instagram', link: 'https://www.instagram.com/techolon_/' },
+    { icon: Linkedin, label: 'LinkedIn', link: 'https://www.linkedin.com/in/zechariah-frierson/' },
+    { icon: Github, label: 'GitHub', link: 'https://github.com/Techo10n' },
+    { icon: Youtube, label: 'YouTube', link: 'https://www.youtube.com/@techolon' },
+    { icon: Mail, label: 'Email', link: 'mailto:zechariahfrierson@gmail.com' },
+    { icon: Instagram, label: 'Instagram', link: 'https://www.instagram.com/techolon_/' },
   ];
 
   const tools = [
-    { icon: siReact, label: "React", link: "https://reactjs.org/" },
-    { icon: siNextdotjs, label: "Next.js", link: "https://nextjs.org/" },
-    { icon: siTailwindcss, label: "Tailwind CSS", link: "https://tailwindcss.com/" },
-    { icon: siTypescript, label: "TypeScript", link: "https://www.typescriptlang.org/" },
-    { icon: siJavascript, label: "JavaScript", link: "https://www.javascript.com/" },
-    { icon: siExpress, label: "Express", link: "https://expressjs.com/" },
-    { icon: siMongodb, label: "MongoDB", link: "https://www.mongodb.com/" },
-    { component: FaJava, label: "Java", link: "https://www.java.com/" },
-    { icon: siPython, label: "Python", link: "https://www.python.org/" },
-    { icon: siFigma, label: "Figma", link: "https://www.figma.com/" },
+    { icon: Code2, label: "React", link: "https://reactjs.org/" },
+    { icon: Code2, label: "Next.js", link: "https://nextjs.org/" },
+    { icon: Palette, label: "Tailwind CSS", link: "https://tailwindcss.com/" },
+    { icon: FileCode2, label: "TypeScript", link: "https://www.typescriptlang.org/" },
+    { icon: Braces, label: "JavaScript", link: "https://www.javascript.com/" },
+    { icon: Server, label: "Express", link: "https://expressjs.com/" },
+    { icon: Database, label: "MongoDB", link: "https://www.mongodb.com/" },
+    { icon: Coffee, label: "Java", link: "https://www.java.com/" },
+    { icon: Braces, label: "Python", link: "https://www.python.org/" },
+    { icon: Palette, label: "Figma", link: "https://www.figma.com/" },
   ];
 
 
@@ -63,12 +77,17 @@ export default function About({ onClose }: { onClose: () => void }) {
                 Walla Walla, WA | United States
               </span>
               <div className="flex flex-row items-center justify-center sm:justify-start gap-2 sm:gap-2.5 mt-3 sm:mt-4">
-                {socials.map(({ icon, link }, index) => (
-                <div key={index} className="relative group flex flex-col items-center">
-                  <button className="transform transition-transform duration-200 hover:scale-110 cursor-pointer flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 border border-foreground/50 rounded-full">
-                    <a href={link} className={`${icon} text-foreground text-base sm:text-lg`} target="_blank" rel="noopener noreferrer"></a>
-                  </button>
-                </div>
+                {socials.map(({ icon: Icon, label, link }, index) => (
+                <a
+                  key={index}
+                  href={link}
+                  aria-label={label}
+                  className="transform transition-transform duration-200 hover:scale-110 cursor-pointer flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 border border-foreground/50 rounded-full"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-foreground stroke-1.5" />
+                </a>
                 ))}
               </div>
             </div>
@@ -95,8 +114,8 @@ export default function About({ onClose }: { onClose: () => void }) {
                 What I Work With
             </h3>
             <div className="flex flex-row flex-wrap gap-2 sm:gap-3 mt-2">
-              {tools.map(({ icon, component, label, link }, index) => (
-                <SimpleIcon key={index} icon={icon} component={component} label={label} link={link} />
+              {tools.map(({ icon, label, link }, index) => (
+                <SimpleIcon key={index} icon={icon} label={label} link={link} />
               ))}
             </div>
           </div>
