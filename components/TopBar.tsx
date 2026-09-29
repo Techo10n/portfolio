@@ -1,6 +1,7 @@
 "use client";
 
-import { Github, Linkedin, Moon, Sun, Youtube } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
+import { Github, Linkedin, Youtube } from '@/components/brand-icons';
 import { useSyncExternalStore } from 'react';
 import { useTheme } from 'next-themes';
 

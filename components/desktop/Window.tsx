@@ -79,9 +79,9 @@ export default function Window({
         </div>
       </header>
       {scroll ? (
-        <ScrollArea className="min-h-0 flex-1">{children}</ScrollArea>
+        <ScrollArea className="@container min-h-0 flex-1">{children}</ScrollArea>
       ) : (
-        <div className="flex min-h-0 flex-1 flex-col">{children}</div>
+        <div className="@container flex min-h-0 flex-1 flex-col">{children}</div>
       )}
     </section>
   );

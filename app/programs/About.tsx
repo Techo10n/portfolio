@@ -6,16 +6,13 @@ import {
   Coffee,
   Database,
   FileCode2,
-  Github,
   GraduationCap,
-  Instagram,
-  Linkedin,
   Mail,
   MapPin,
   Palette,
   Server,
-  Youtube,
 } from "lucide-react";
+import { Github, Instagram, Linkedin, Youtube } from "@/components/brand-icons";
 import SimpleIcon from "@/components/SimpleIcon";
 
 export default function About() {
@@ -43,38 +40,38 @@ export default function About() {
 
   return (
     <div className="w-full pb-8">
-      <div className="flex flex-col justify-center items-start w-full h-full px-4 sm:px-8 md:px-14 py-4 sm:py-6 md:py-8">
+      <div className="flex flex-col justify-center items-start w-full h-full px-4 @xl:px-8 @3xl:px-14 py-4 @xl:py-6 @3xl:py-8">
         {/* Profile Section - Stack on mobile, side by side on larger screens */}
-        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-start w-full gap-4 sm:gap-0">
+        <div className="flex flex-col @xl:flex-row items-center @xl:items-start justify-start w-full gap-4 @xl:gap-0">
           <Image
             src="/pfp.jpg"
             alt="Zechariah Frierson"
             width={200}
             height={200}
-            className="w-[120px] h-[120px] sm:w-[150px] sm:h-[150px] md:w-[200px] md:h-[200px] object-cover rounded-full border border-foreground/50 flex-shrink-0"
+            className="w-[120px] h-[120px] @xl:w-[150px] @xl:h-[150px] @3xl:w-[200px] @3xl:h-[200px] object-cover rounded-full border border-foreground/50 flex-shrink-0"
           />
-          <div className="flex flex-col items-center sm:items-start justify-center w-full sm:h-[150px] md:h-[200px] sm:pl-6 text-center sm:text-left">
-            <h1 className="text-foreground text-xl sm:text-2xl md:text-3xl font-extrabold">
+          <div className="flex flex-col items-center @xl:items-start justify-center w-full @xl:h-[150px] @3xl:h-[200px] @xl:pl-6 text-center @xl:text-left">
+            <h1 className="text-foreground text-xl @xl:text-2xl @3xl:text-3xl font-extrabold">
               Zechariah Frierson
             </h1>
-            <h2 className="text-foreground text-sm sm:text-base md:text-lg">
+            <h2 className="text-foreground text-sm @xl:text-base @3xl:text-lg">
               Full Stack Web Developer & Designer
             </h2>
-            <span className="text-foreground text-xs sm:text-sm mt-2">
-              <MapPin className="inline-block w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 stroke-1" />
+            <span className="text-foreground text-xs @xl:text-sm mt-2">
+              <MapPin className="inline-block w-3 h-3 @xl:w-4 @xl:h-4 mr-1 @xl:mr-2 stroke-1" />
               Walla Walla, WA | United States
             </span>
-            <div className="flex flex-row items-center justify-center sm:justify-start gap-2 sm:gap-2.5 mt-3 sm:mt-4">
+            <div className="flex flex-row items-center justify-center @xl:justify-start gap-2 @xl:gap-2.5 mt-3 @xl:mt-4">
               {socials.map(({ icon: Icon, label, link }, index) => (
               <a
                 key={index}
                 href={link}
                 aria-label={label}
-                className="transform transition-transform duration-200 hover:scale-110 cursor-pointer flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 border border-foreground/50 rounded-full"
+                className="transform transition-transform duration-200 hover:scale-110 cursor-pointer flex items-center justify-center w-7 h-7 @xl:w-8 @xl:h-8 border border-foreground/50 rounded-full"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-foreground stroke-1.5" />
+                <Icon className="w-4 h-4 @xl:w-5 @xl:h-5 text-foreground stroke-1.5" />
               </a>
               ))}
             </div>
@@ -82,13 +79,13 @@ export default function About() {
         </div>
 
         {/* divider */}
-        <div className="w-full h-px bg-foreground/50 mt-6 sm:mt-8 md:mt-10"></div>
+        <div className="w-full h-px bg-foreground/50 mt-6 @xl:mt-8 @3xl:mt-10"></div>
 
-        <div className="w-full mt-4 text-foreground text-xs sm:text-sm">
-          <p className="mb-3 sm:mb-4">
+        <div className="w-full mt-4 text-foreground text-xs @xl:text-sm">
+          <p className="mb-3 @xl:mb-4">
             Hey, I&apos;m Zechariah, often known as Zach or &ldquo;Zech,&rdquo; and I&apos;m a Sophomore at Georgia Institute of Technology in Atlanta. I am extremely passionate about computer programming, along with video editing and web design.
           </p>
-          <p className="mb-3 sm:mb-4">
+          <p className="mb-3 @xl:mb-4">
             Alongside my STEM interests, I also enjoy soccer, volleyball, and music.
           </p>
           <p>
@@ -97,11 +94,11 @@ export default function About() {
         </div>
 
         {/* Skills Section */}
-        <div className="flex flex-col items-start justify-start w-full mt-4 sm:mt-6">
-          <h3 className="text-foreground text-base sm:text-lg font-extrabold">
+        <div className="flex flex-col items-start justify-start w-full mt-4 @xl:mt-6">
+          <h3 className="text-foreground text-base @xl:text-lg font-extrabold">
               What I Work With
           </h3>
-          <div className="flex flex-row flex-wrap gap-2 sm:gap-3 mt-2">
+          <div className="flex flex-row flex-wrap gap-2 @xl:gap-3 mt-2">
             {tools.map(({ icon, label, link }, index) => (
               <SimpleIcon key={index} icon={icon} label={label} link={link} />
             ))}
@@ -109,8 +106,8 @@ export default function About() {
         </div>
 
         {/* Experience Section */}
-        <div className="flex flex-col items-start justify-start w-full mt-4 sm:mt-6">
-          <h3 className="text-foreground text-base sm:text-lg font-extrabold">Experience</h3>
+        <div className="flex flex-col items-start justify-start w-full mt-4 @xl:mt-6">
+          <h3 className="text-foreground text-base @xl:text-lg font-extrabold">Experience</h3>
           <div className="flex flex-col w-full mt-2 relative">
             {[
               {
@@ -144,19 +141,19 @@ export default function About() {
               },
             ].map((exp, idx, arr) => (
               <div key={idx} className="flex w-full relative">
-                <div className="flex flex-col items-center mr-3 sm:mr-4">
-                  <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-foreground mt-1" />
+                <div className="flex flex-col items-center mr-3 @xl:mr-4">
+                  <div className="w-2.5 h-2.5 @xl:w-3 @xl:h-3 rounded-full bg-foreground mt-1" />
                   {idx !== arr.length - 1 && (
                     <div className="w-[2px] flex-1 bg-foreground -mb-1" />
                   )}
                 </div>
-                <div className="pb-4 sm:pb-6">
-                  <h4 className="text-foreground text-sm sm:text-md font-bold">{exp.title}</h4>
-                  <p className="text-foreground text-xs sm:text-sm">{exp.org}</p>
-                  <p className="text-foreground/75 text-[10px] sm:text-xs pt-1">{exp.time}</p>
-                  <ul className="list-disc list-inside text-foreground text-xs sm:text-sm pt-1">
+                <div className="pb-4 @xl:pb-6">
+                  <h4 className="text-foreground text-sm @xl:text-md font-bold">{exp.title}</h4>
+                  <p className="text-foreground text-xs @xl:text-sm">{exp.org}</p>
+                  <p className="text-foreground/75 text-[10px] @xl:text-xs pt-1">{exp.time}</p>
+                  <ul className="list-disc list-inside text-foreground text-xs @xl:text-sm pt-1">
                     {exp.bullets.map((b, i) => (
-                      <li key={i} className={i !== 0 ? "pt-1 sm:pt-1.5" : ""}>
+                      <li key={i} className={i !== 0 ? "pt-1 @xl:pt-1.5" : ""}>
                         {b.split(" ").map((word, idx) =>
                         word.startsWith("https") ? (
                           <a
@@ -183,11 +180,11 @@ export default function About() {
 
         {/* Education Section */}
         <div className="flex flex-col items-start justify-start w-full">
-          <h3 className="text-foreground text-base sm:text-lg font-extrabold">Education</h3>
+          <h3 className="text-foreground text-base @xl:text-lg font-extrabold">Education</h3>
           <div className="flex flex-col w-full mt-2">
             {[
               {
-                icon: <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 stroke-1" />,
+                icon: <GraduationCap className="w-5 h-5 @xl:w-6 @xl:h-6 stroke-1" />,
                 school: "Georgia Institute of Technology",
                 degree: "Bachelor of Science - BS, Computer Science",
                 time: "Aug 2024 - May 2027",
@@ -199,7 +196,7 @@ export default function About() {
                 ],
               },
               {
-                icon: <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 stroke-1 mt-0.5 mr-1" />,
+                icon: <BookOpen className="w-4 h-4 @xl:w-5 @xl:h-5 stroke-1 mt-0.5 mr-1" />,
                 school: "Whitman College",
                 degree: "High School Enrichment Program",
                 time: "Aug 2022 - May 2024",
@@ -209,7 +206,7 @@ export default function About() {
                 ],
               },
             ].map((edu, idx) => (
-              <div key={idx} className={`flex flex-row items-start justify-start w-full ${idx > 0 ? "pt-4 sm:pt-6" : ""}`}>
+              <div key={idx} className={`flex flex-row items-start justify-start w-full ${idx > 0 ? "pt-4 @xl:pt-6" : ""}`}>
                 {/* Icon */}
                 <div className="flex flex-col items-center pr-2">
                   {edu.icon}
@@ -217,12 +214,12 @@ export default function About() {
 
                 {/* Text Content */}
                 <div className="flex flex-col items-start justify-start">
-                  <h4 className="text-foreground text-sm sm:text-md font-bold">{edu.school}</h4>
-                  <p className="text-foreground text-xs sm:text-sm">{edu.degree}</p>
-                  <p className="text-foreground/75 text-[10px] sm:text-xs pt-1">{edu.time}</p>
-                  <div className="list-disc list-inside text-foreground text-xs sm:text-sm pt-1 space-y-1 sm:space-y-1.5">
+                  <h4 className="text-foreground text-sm @xl:text-md font-bold">{edu.school}</h4>
+                  <p className="text-foreground text-xs @xl:text-sm">{edu.degree}</p>
+                  <p className="text-foreground/75 text-[10px] @xl:text-xs pt-1">{edu.time}</p>
+                  <div className="list-disc list-inside text-foreground text-xs @xl:text-sm pt-1 space-y-1 @xl:space-y-1.5">
                     {edu.details.map(([label, value], i) => (
-                      <span key={i} className="text-foreground text-xs sm:text-sm block">
+                      <span key={i} className="text-foreground text-xs @xl:text-sm block">
                         <span className="font-bold">{label}</span> {value}
                       </span>
                     ))}

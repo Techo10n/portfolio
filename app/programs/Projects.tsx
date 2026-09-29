@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 
 type ProjectAction = {
   label: string;
@@ -18,7 +20,7 @@ type ProjectSection = {
 };
 
 const actionClass =
-  "text-foreground text-xs px-2 py-1 rounded-2xl border border-foreground/50 hover:bg-white/10 transition-colors cursor-pointer";
+  "text-foreground text-xs px-2 py-1 rounded-2xl border border-foreground/50 hover:bg-foreground/10 transition-colors cursor-pointer";
 
 const sections: ProjectSection[] = [
   {
@@ -125,47 +127,52 @@ const sections: ProjectSection[] = [
 ];
 
 function ProjectCard({ project }: { project: Project }) {
-  const hasActions = Boolean(project.actions?.length);
-  const backgroundStyle = project.image
-    ? {
-        backgroundImage: `url(${project.image})`,
-        backgroundSize: "cover",
-        backgroundPosition: project.imagePosition ?? "center",
-      }
-    : undefined;
+  const body = (
+    <div
+      data-testid="card-body"
+      className={`relative flex flex-col items-start w-full px-6 pt-3 pb-4 bg-background/85 ${project.image ? "" : "flex-1"}`}
+    >
+      <h3 className="text-foreground text-lg font-extrabold leading-tight">
+        {project.title}
+      </h3>
+      <p className="text-foreground text-xs mt-1">
+        {project.description}
+      </p>
+      {project.actions?.length ? (
+        <div className="flex flex-row flex-wrap items-center justify-start mt-3 gap-3">
+          {project.actions.map((action) => (
+            <a
+              key={action.label}
+              className={actionClass}
+              href={action.href}
+              target={action.href.startsWith("http") ? "_blank" : undefined}
+              rel={action.href.startsWith("http") ? "noopener noreferrer" : undefined}
+            >
+              {action.label} <span className="ml-1">-&gt;</span>
+            </a>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
 
   return (
     <article
-      className="flex flex-col items-center justify-end w-full min-h-[220px] sm:min-h-[240px] md:min-h-[256px] border border-foreground/50 rounded-2xl overflow-hidden transition-colors group"
-      style={backgroundStyle}
+      className={`relative flex flex-col justify-end w-full border border-foreground/50 rounded-2xl overflow-hidden ${
+        project.image ? "min-h-[220px] @xl:min-h-[240px] @3xl:min-h-[256px]" : ""
+      }`}
     >
-      <div
-        className={`flex flex-col items-start justify-start w-full min-h-[122px] px-6 pt-2 pb-3 transition-all duration-300 ${
-          project.image ? "bg-black/85" : "bg-black/20"
-        } ${hasActions ? "[@media(hover:hover)]:group-hover:min-h-[154px]" : ""}`}
-      >
-        <h3 className="text-foreground text-lg font-extrabold leading-tight">
-          {project.title}
-        </h3>
-        <p className="text-foreground text-xs mt-1">
-          {project.description}
-        </p>
-        {hasActions && (
-          <div className="flex flex-row flex-wrap items-center justify-start mt-3 gap-3">
-            {project.actions?.map((action) => (
-              <a
-                key={action.label}
-                className={actionClass}
-                href={action.href}
-                target={action.href.startsWith("http") ? "_blank" : undefined}
-                rel={action.href.startsWith("http") ? "noopener noreferrer" : undefined}
-              >
-                {action.label} <span className="ml-1">-&gt;</span>
-              </a>
-            ))}
-          </div>
-        )}
-      </div>
+      {project.image && (
+        <Image
+          src={project.image}
+          alt=""
+          fill
+          sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
+          className="object-cover"
+          style={{ objectPosition: project.imagePosition ?? "center" }}
+        />
+      )}
+      {body}
     </article>
   );
 }
@@ -173,18 +180,18 @@ function ProjectCard({ project }: { project: Project }) {
 export default function Projects() {
   return (
     <div className="w-full pb-8">
-      <div className="flex flex-col justify-start items-start w-full h-full px-4 sm:px-8 md:px-14 py-4 sm:py-6 md:py-8">
+      <div className="flex flex-col justify-start items-start w-full h-full px-4 @xl:px-8 @3xl:px-14 py-4 @xl:py-6 @3xl:py-8">
         <div className="flex flex-col items-start justify-start w-full">
-          <h1 className="text-foreground text-xl sm:text-2xl md:text-3xl font-extrabold">
+          <h1 className="text-foreground text-xl @xl:text-2xl @3xl:text-3xl font-extrabold">
             Stuff I&apos;ve Been Working On
           </h1>
 
           {sections.map((section) => (
             <section key={section.title} className="w-full">
-              <h2 className="text-foreground text-base sm:text-lg font-extrabold mt-4 sm:mt-6 md:mt-8">
+              <h2 className="text-foreground text-base @xl:text-lg font-extrabold mt-4 @xl:mt-6 @3xl:mt-8">
                 {section.title}
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 md:gap-8 w-full mt-4">
+              <div className="grid grid-cols-1 @2xl:grid-cols-2 @5xl:grid-cols-3 gap-4 @xl:gap-6 @3xl:gap-8 w-full mt-4">
                 {section.projects.map((project) => (
                   <ProjectCard key={project.title} project={project} />
                 ))}

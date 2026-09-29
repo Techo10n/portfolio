@@ -9,7 +9,7 @@ import Terminal from "./programs/Terminal";
 
 export default function Home() {
   return (
-    <div className="relative h-dvh overflow-hidden font-[family-name:var(--font-jetbrains-mono)]">
+    <div className="relative h-dvh overflow-hidden">
       <div className="absolute inset-0 -z-20 animate-gradient-radial" />
       <div className="grid grid-rows-[auto_1fr_auto_auto] h-full items-center justify-items-center gap-2 sm:gap-3 pt-3 sm:pt-4 md:pt-5 pb-2 sm:pb-3">
         <header className="w-full">
