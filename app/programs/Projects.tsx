@@ -85,7 +85,7 @@ const sections: ProjectSection[] = [
         title: "Blue Mountain Law Office Website",
         description:
           "A modern website for a local law office, built in Framer, featuring service details and online appointment booking.",
-        image: "/bml-screenshot.png",
+        image: "/bml-screenshot.jpg",
         imagePosition: "center",
         actions: [{ label: "View Site", href: "https://www.bluemountainlawoffice.com" }],
       },
@@ -118,7 +118,7 @@ const sections: ProjectSection[] = [
         title: "Techolon",
         description:
           "My personal YouTube channel where I post video game montages and edits.",
-        image: "/yt-screenshot.png",
+        image: "/yt-screenshot.jpg",
         imagePosition: "left",
         actions: [{ label: "View Channel", href: "https://www.youtube.com/@techolon" }],
       },
