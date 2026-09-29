@@ -1,58 +1,69 @@
 import { Resend } from "resend"
 import { NextResponse } from "next/server"
+import { contactSchema } from "@/lib/contact-schema"
+import { createRateLimiter } from "@/lib/rate-limit"
+
+const allow = createRateLimiter({ limit: 5, windowMs: 10 * 60 * 1000 })
+
+// Resend's shared test sender only delivers to the Resend account owner's address.
+// Set CONTACT_FROM to an address on a verified domain once one exists.
+const FROM = process.env.CONTACT_FROM ?? "Portfolio Contact <onboarding@resend.dev>"
+const TO = process.env.CONTACT_TO ?? "zechariahfrierson@gmail.com"
 
 export async function POST(request: Request) {
-  // Check for API key at runtime
-  if (!process.env.RESEND_API_KEY) {
-    console.error("RESEND_API_KEY is not configured")
+  // Vercel sets x-forwarded-for at the edge; the first entry is the client.
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown"
+  if (!allow(ip)) {
+    return NextResponse.json({ error: "Too many messages. Please try again later." }, { status: 429 })
+  }
+
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 })
+  }
+
+  const parsed = contactSchema.safeParse(body)
+  if (!parsed.success) {
     return NextResponse.json(
-      { error: "Email service not configured" },
-      { status: 500 }
+      { error: "Invalid submission", fields: parsed.error.flatten().fieldErrors },
+      { status: 400 }
     )
   }
 
-  const resend = new Resend(process.env.RESEND_API_KEY)
+  const { name, email, subject, message, website } = parsed.data
+
+  // Honeypot filled: pretend it worked so bots don't learn to adapt.
+  if (website) {
+    return NextResponse.json({ success: true })
+  }
+
+  // Checked at request time, not module load, so a missing key can't crash the route.
+  if (!process.env.RESEND_API_KEY) {
+    console.error("RESEND_API_KEY is not configured")
+    return NextResponse.json({ error: "Email service not configured" }, { status: 500 })
+  }
+
   try {
-    const { name, email, subject, message } = await request.json()
-
-    // Validate required fields
-    if (!name || !email || !subject || !message) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      )
-    }
-
-    // Send email via Resend
+    const resend = new Resend(process.env.RESEND_API_KEY)
+    // Plain text only: visitor input is never interpreted as HTML.
     const { error } = await resend.emails.send({
-      from: "Portfolio Contact <onboarding@resend.dev>", // Change this to your verified domain email
-      to: "zechariahfrierson@gmail.com", // Your email address
+      from: FROM,
+      to: TO,
       replyTo: email,
       subject: `Portfolio Contact: ${subject}`,
-      html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, "<br>")}</p>
-      `,
+      text: `Name: ${name}\nEmail: ${email}\nSubject: ${subject}\n\n${message}\n`,
     })
 
     if (error) {
       console.error("Resend error:", error)
-      return NextResponse.json(
-        { error: "Failed to send email" },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: "Failed to send email" }, { status: 502 })
     }
 
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error("Contact form error:", error)
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }

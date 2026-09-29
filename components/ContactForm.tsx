@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -14,39 +13,25 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  subject: z.string().min(2, {
-    message: "Subject must be at least 2 characters.",
-  }),
-  message: z.string().min(10, {
-    message: "Message must be at least 10 characters.",
-  }),
-})
-
-type FormValues = z.infer<typeof formSchema>
+import { contactSchema, type ContactInput } from "@/lib/contact-schema"
 
 export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
+  const [errorMessage, setErrorMessage] = useState("")
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<ContactInput>({
+    resolver: zodResolver(contactSchema),
     defaultValues: {
       name: "",
       email: "",
       subject: "",
       message: "",
+      website: "",
     },
   })
 
-  async function onSubmit(values: FormValues) {
+  async function onSubmit(values: ContactInput) {
     setIsSubmitting(true)
     setSubmitStatus("idle")
 
@@ -60,12 +45,19 @@ export default function ContactForm() {
       })
 
       if (!response.ok) {
-        throw new Error("Failed to send message")
+        setErrorMessage(
+          response.status === 429
+            ? "Too many messages. Please try again in a few minutes."
+            : "Failed to send message. Please try again, or email me directly."
+        )
+        setSubmitStatus("error")
+        return
       }
 
       setSubmitStatus("success")
       form.reset()
     } catch {
+      setErrorMessage("Couldn't reach the server. Check your connection and try again.")
       setSubmitStatus("error")
     } finally {
       setIsSubmitting(false)
@@ -74,7 +66,14 @@ export default function ContactForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full max-w-md">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full max-w-md" noValidate>
+        {/* Honeypot: off-screen and skipped by keyboard and assistive tech; bots fill it in. */}
+        <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
+          <label>
+            Website
+            <input type="text" tabIndex={-1} autoComplete="off" {...form.register("website")} />
+          </label>
+        </div>
         <div className="flex flex-col @xl:flex-row gap-4">
           <FormField
             control={form.control}
@@ -84,11 +83,12 @@ export default function ContactForm() {
                 <FormControl>
                   <Input
                     placeholder="Name"
+                    aria-label="Name"
                     className="bg-foreground/10 border-foreground/20 text-foreground placeholder:text-foreground/50"
                     {...field}
                   />
                 </FormControl>
-                <FormMessage className="text-red-400" />
+                <FormMessage className="text-red-600 dark:text-red-400" />
               </FormItem>
             )}
           />
@@ -100,12 +100,13 @@ export default function ContactForm() {
                 <FormControl>
                   <Input
                     placeholder="Email"
+                    aria-label="Email"
                     type="email"
                     className="bg-foreground/10 border-foreground/20 text-foreground placeholder:text-foreground/50"
                     {...field}
                   />
                 </FormControl>
-                <FormMessage className="text-red-400" />
+                <FormMessage className="text-red-600 dark:text-red-400" />
               </FormItem>
             )}
           />
@@ -118,11 +119,12 @@ export default function ContactForm() {
               <FormControl>
                 <Input
                   placeholder="Subject"
+                    aria-label="Subject"
                   className="bg-foreground/10 border-foreground/20 text-foreground placeholder:text-foreground/50"
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-red-400" />
+              <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
           )}
         />
@@ -134,20 +136,21 @@ export default function ContactForm() {
               <FormControl>
                 <textarea
                   placeholder="Message"
-                  className="w-full min-h-[120px] px-3 py-2 rounded-md bg-foreground/10 border border-foreground/20 text-foreground placeholder:text-foreground/50 resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+                  aria-label="Message"
+                  className="w-full min-h-[120px] px-3 py-2 rounded-md bg-foreground/10 border border-foreground/20 text-foreground placeholder:text-foreground/50 resize-none focus:outline-none focus:ring-2 focus:ring-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40"
                   {...field}
                 />
               </FormControl>
-              <FormMessage className="text-red-400" />
+              <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
           )}
         />
 
         {submitStatus === "success" && (
-          <p className="text-green-400 text-sm">Message sent successfully!</p>
+          <p role="status" className="text-green-700 dark:text-green-400 text-sm">Message sent successfully!</p>
         )}
         {submitStatus === "error" && (
-          <p className="text-red-400 text-sm">Failed to send message. Please try again.</p>
+          <p role="alert" className="text-red-600 dark:text-red-400 text-sm">{errorMessage}</p>
         )}
 
         <Button
