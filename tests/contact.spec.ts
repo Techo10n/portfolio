@@ -21,6 +21,7 @@ const sentEmails = async (request: APIRequestContext) =>
   (await (await request.get(`${MOCK_RESEND_URL}/__emails`)).json()) as Array<Record<string, unknown>>;
 
 const openContact = async (page: Page) => {
+  await page.setExtraHTTPHeaders({ "x-forwarded-for": clientIp() });
   await page.goto("/");
   await page.getByRole("navigation", { name: "Taskbar" }).getByRole("button", { name: "Contact", exact: true }).click();
   return page.getByRole("region", { name: "Contact", exact: true });

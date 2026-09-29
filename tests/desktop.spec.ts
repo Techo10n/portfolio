@@ -110,3 +110,30 @@ test.describe("mobile only", () => {
     await expect(win(page, "My Projects").getByRole("button", { name: "Maximize" })).toBeHidden();
   });
 });
+
+for (const colorScheme of ["light", "dark"] as const) {
+  test.describe(`starting in ${colorScheme}`, () => {
+    test.use({ colorScheme });
+
+    test("theme toggle switches to the other theme on the first click", async ({ page }) => {
+      const html = page.locator("html");
+      const [from, to] = colorScheme === "dark" ? [/\bdark\b/, /\blight\b/] : [/\blight\b/, /\bdark\b/];
+      await expect(html).toHaveClass(from);
+      await page.getByRole("button", { name: "Toggle theme" }).click();
+      await expect(html).toHaveClass(to);
+    });
+  });
+}
+
+test("terminal clear empties the output", async ({ page }) => {
+  await taskbar(page, "Terminal").click();
+  const terminal = win(page, "Terminal");
+  const input = terminal.getByRole("textbox", { name: "Terminal input" });
+  await input.fill("help");
+  await input.press("Enter");
+  await expect(terminal).toContainText("Available commands:");
+  await input.fill("clear");
+  await input.press("Enter");
+  await expect(terminal).not.toContainText("Available commands:");
+  await expect(terminal).not.toContainText("Welcome to Zechariah's Portfolio Terminal!");
+});
