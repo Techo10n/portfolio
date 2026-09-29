@@ -19,17 +19,20 @@ function ControlButton({
   className?: string;
 }) {
   return (
+    // 24px hit target (WCAG 2.2 target size) around a 12px visual circle.
     <button
       type="button"
       aria-label={label}
       title={label}
       onClick={onClick}
-      className={`relative flex items-center justify-center w-3 h-3 border border-foreground/50 rounded-full cursor-pointer before:absolute before:-inset-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground/60 ${className}`}
+      className={`group/button flex items-center justify-center w-6 h-6 rounded-full cursor-pointer focus-visible:outline-none ${className}`}
     >
-      <Icon
-        aria-hidden="true"
-        className="w-2 h-2 stroke-3 text-foreground opacity-0 group-hover/controls:opacity-100 group-focus-within/controls:opacity-100 transition-opacity"
-      />
+      <span className="flex items-center justify-center w-3 h-3 border border-foreground/50 rounded-full group-focus-visible/button:outline-2 group-focus-visible/button:outline-offset-2 group-focus-visible/button:outline-foreground/60">
+        <Icon
+          aria-hidden="true"
+          className="w-2 h-2 stroke-3 text-foreground opacity-0 group-hover/controls:opacity-100 group-focus-within/controls:opacity-100 transition-opacity"
+        />
+      </span>
     </button>
   );
 }
@@ -41,7 +44,7 @@ export default function WindowControlButtons({
   onClose,
 }: WindowControlButtonsProps) {
   return (
-    <div className="group/controls flex items-center justify-center gap-2">
+    <div className="group/controls flex items-center justify-center -m-1.5">
       <ControlButton label="Minimize" icon={Minus} onClick={onMinimize} />
       <ControlButton
         label={maximized ? "Restore" : "Maximize"}
