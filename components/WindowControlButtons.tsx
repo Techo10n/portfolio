@@ -1,40 +1,55 @@
-"use client";
+import { Maximize2, Minimize2, Minus, X, type LucideIcon } from "lucide-react";
 
-import { useState } from "react";
+type WindowControlButtonsProps = {
+  maximized: boolean;
+  onMinimize: () => void;
+  onToggleMaximize: () => void;
+  onClose: () => void;
+};
 
-export default function WindowControlButtons({ onClose }: { onClose?: () => void }) {
-  const [hoveredButton, setHoveredButton] = useState<string | null>(null);
-
+function ControlButton({
+  label,
+  icon: Icon,
+  onClick,
+  className = "",
+}: {
+  label: string;
+  icon: LucideIcon;
+  onClick: () => void;
+  className?: string;
+}) {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2">
-      <button
-        className="w-3 h-3 border border-foreground/50 rounded-full relative"
-        onMouseEnter={() => setHoveredButton("minimize")}
-        onMouseLeave={() => setHoveredButton(null)}
-      >
-        {hoveredButton === "minimize" && (
-          <span className="absolute inset-0 flex items-center justify-center text-xs">-</span>
-        )}
-      </button>
-      <button
-        className="w-3 h-3 border border-foreground/50 rounded-full relative"
-        onMouseEnter={() => setHoveredButton("maximize")}
-        onMouseLeave={() => setHoveredButton(null)}
-      >
-        {hoveredButton === "maximize" && (
-          <span className="absolute inset-0 flex items-center justify-center text-xs">□</span>
-        )}
-      </button>
-      <button
-        className="w-3 h-3 border border-foreground/50 rounded-full relative"
-        onMouseEnter={() => setHoveredButton("close")}
-        onMouseLeave={() => setHoveredButton(null)}
-        onClick={onClose}
-      >
-        {hoveredButton === "close" && (
-          <span className="absolute inset-0 flex items-center justify-center text-xs">×</span>
-        )}
-      </button>
+    <button
+      type="button"
+      aria-label={label}
+      title={label}
+      onClick={onClick}
+      className={`relative flex items-center justify-center w-3 h-3 border border-foreground/50 rounded-full cursor-pointer before:absolute before:-inset-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-foreground/60 ${className}`}
+    >
+      <Icon
+        aria-hidden="true"
+        className="w-2 h-2 stroke-3 text-foreground opacity-0 group-hover/controls:opacity-100 group-focus-within/controls:opacity-100 transition-opacity"
+      />
+    </button>
+  );
+}
+
+export default function WindowControlButtons({
+  maximized,
+  onMinimize,
+  onToggleMaximize,
+  onClose,
+}: WindowControlButtonsProps) {
+  return (
+    <div className="group/controls flex items-center justify-center gap-2">
+      <ControlButton label="Minimize" icon={Minus} onClick={onMinimize} />
+      <ControlButton
+        label={maximized ? "Restore" : "Maximize"}
+        icon={maximized ? Minimize2 : Maximize2}
+        onClick={onToggleMaximize}
+        className="max-md:hidden"
+      />
+      <ControlButton label="Close" icon={X} onClick={onClose} />
     </div>
   );
 }

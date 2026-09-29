@@ -1,187 +1,29 @@
-"use client";
-
-import { useState, useMemo } from 'react';
-import type { ReactElement, ReactNode } from 'react';
 import Footer from "@/components/Footer";
-import TaskBar from "@/components/TaskBar";
 import TopBar from "@/components/TopBar";
-import WindowWrapper from "@/components/WindowWrapper";
+import Desktop from "@/components/desktop/Desktop";
 import About from "./programs/About";
 import Projects from "./programs/Projects";
 import Resume from "./programs/Resume";
-import Contacts from "./programs/Contacts";
+import Contact from "./programs/Contact";
 import Terminal from "./programs/Terminal";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable"
-
-type WindowConfig = {
-  key: string;
-  isOpen: boolean;
-  component: ReactElement;
-};
-
-type WindowKey = "about" | "projects" | "resume" | "contacts" | "terminal";
 
 export default function Home() {
-  const [activeWindow, setActiveWindow] = useState<WindowKey>("about");
-  const [showAbout, setShowAbout] = useState(false);
-  const [showProjects, setShowProjects] = useState(false);
-  const [showResume, setShowResume] = useState(false);
-  const [showContacts, setShowContacts] = useState(false);
-  const [showTerminal, setShowTerminal] = useState(false);
-
-  const anyWindowOpen = showAbout || showProjects || showResume || showContacts || showTerminal;
-
-  const openWindow = (key: WindowKey, setter: (v: boolean) => void) => {
-    setter(true);
-    setActiveWindow(key);
-  };
-
-  const windowConfigs: WindowConfig[] = useMemo(() => [
-    {
-      key: "about",
-      isOpen: showAbout,
-      component: <About onClose={() => setShowAbout(false)} />
-    },
-    {
-      key: "projects",
-      isOpen: showProjects,
-      component: <Projects onClose={() => setShowProjects(false)} />
-    },
-    {
-      key: "resume",
-      isOpen: showResume,
-      component: <Resume onClose={() => setShowResume(false)} />
-    },
-    {
-      key: "contacts",
-      isOpen: showContacts,
-      component: <Contacts onClose={() => setShowContacts(false)} />
-    },
-    {
-      key: "terminal",
-      isOpen: showTerminal,
-      component: <Terminal onClose={() => setShowTerminal(false)} />
-    },
-  ], [showAbout, showProjects, showResume, showContacts, showTerminal]);
-
-  const openWindows = windowConfigs.filter(w => w.isOpen);
-  const activeMobileWindow = openWindows.find((w) => w.key === activeWindow) ?? openWindows.at(-1);
-
-  function renderPanels(windows: WindowConfig[]): ReactNode {
-    switch (windows.length) {
-      case 0:
-        return null;
-
-      case 1:
-        return (
-          <ResizablePanelGroup direction="horizontal" className="w-full h-full">
-            <ResizablePanel defaultSize={100} className="w-full h-full">
-              <WindowWrapper isOpen={windows[0].isOpen}>
-                {windows[0].component}
-              </WindowWrapper>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        );
-
-      case 2:
-        return (
-          <ResizablePanelGroup direction="horizontal" className="w-full h-full">
-            <ResizablePanel defaultSize={50} className="mr-1.5">
-              <WindowWrapper isOpen={windows[0].isOpen}>
-                {windows[0].component}
-              </WindowWrapper>
-            </ResizablePanel>
-            <ResizableHandle className="!border-none !bg-transparent" />
-            <ResizablePanel defaultSize={50} className="ml-1.5">
-              <WindowWrapper isOpen={windows[1].isOpen}>
-                {windows[1].component}
-              </WindowWrapper>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        );
-
-      case 3:
-      case 4:
-        return (
-          <ResizablePanelGroup direction="vertical" className="w-full h-full">
-            <ResizablePanel defaultSize={50} className="mb-1.5">
-              {renderPanels(windows.slice(0, 2))}
-            </ResizablePanel>
-            <ResizableHandle className="!border-none !bg-transparent" />
-            <ResizablePanel defaultSize={50} className="mt-1.5">
-              {renderPanels(windows.slice(2))}
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        );
-
-      case 5:
-        return (
-          <ResizablePanelGroup direction="horizontal" className="w-full h-full">
-            <ResizablePanel defaultSize={80} className="mr-1.5">
-              {renderPanels(windows.slice(0, 4))}
-            </ResizablePanel>
-            <ResizableHandle className="!border-none !bg-transparent" />
-            <ResizablePanel defaultSize={20} className="ml-1.5">
-              <WindowWrapper isOpen={windows[4].isOpen}>
-                {windows[4].component}
-              </WindowWrapper>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        );
-
-      default: {
-        const half = Math.ceil(windows.length / 2);
-        return (
-          <ResizablePanelGroup direction="horizontal" className="w-full h-full">
-            <ResizablePanel defaultSize={50} className="mr-1.5">
-              {renderPanels(windows.slice(0, half))}
-            </ResizablePanel>
-            <ResizableHandle className="!border-none !bg-transparent" />
-            <ResizablePanel defaultSize={50} className="ml-1.5">
-              {renderPanels(windows.slice(half))}
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        );
-      }
-    }
-  }
-
   return (
-    <div suppressHydrationWarning className="relative h-screen overflow-hidden font-[family-name:var(--font-jetbrains-mono)]">
+    <div className="relative h-dvh overflow-hidden font-[family-name:var(--font-jetbrains-mono)]">
       <div className="absolute inset-0 -z-20 animate-gradient-radial" />
       <div className="grid grid-rows-[auto_1fr_auto_auto] h-full items-center justify-items-center gap-2 sm:gap-3 pt-3 sm:pt-4 md:pt-5 pb-2 sm:pb-3">
-        <nav className="w-full">
+        <header className="w-full">
           <TopBar />
-        </nav>
-        <main
-          className={`w-[calc(100%-16px)] sm:w-[calc(100%-32px)] md:w-[calc(100%-40px)] mx-2 sm:mx-4 md:mx-5 flex flex-col h-full min-h-0 transition-opacity duration-300 ease-out ${
-            anyWindowOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-          }`}
-        >
-          <div className="hidden md:flex w-full h-full min-h-0">
-            {renderPanels(openWindows)}
-          </div>
-          <div className="md:hidden w-full h-full min-h-0">
-            {activeMobileWindow && (
-              <WindowWrapper isOpen={activeMobileWindow.isOpen}>
-                {activeMobileWindow.component}
-              </WindowWrapper>
-            )}
-          </div>
-        </main>
-        <div>
-          <TaskBar
-            onAboutClick={() => openWindow("about", setShowAbout)}
-            onProjectsClick={() => openWindow("projects", setShowProjects)}
-            onResumeClick={() => openWindow("resume", setShowResume)}
-            onContactsClick={() => openWindow("contacts", setShowContacts)}
-            onTerminalClick={() => openWindow("terminal", setShowTerminal)}
-          />
-        </div>
+        </header>
+        <Desktop
+          programs={{
+            about: <About />,
+            projects: <Projects />,
+            resume: <Resume />,
+            contact: <Contact />,
+            terminal: <Terminal />,
+          }}
+        />
         <footer>
           <Footer />
         </footer>

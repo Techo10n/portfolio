@@ -1,71 +1,54 @@
 "use client";
 
-import { Github, Linkedin, Moon, Sun, Volume2, VolumeX, Youtube } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import { Github, Linkedin, Moon, Sun, Youtube } from 'lucide-react';
+import { useSyncExternalStore } from 'react';
 import { useTheme } from 'next-themes';
 
+// The clock ticks once a second. The server snapshot is null so the first client render
+// matches the prerendered HTML, then the real time takes over.
+const subscribeToClock = (onTick: () => void) => {
+  const interval = setInterval(onTick, 1000);
+  return () => clearInterval(interval);
+};
+const clockSnapshot = () => Math.floor(Date.now() / 1000);
+const serverClockSnapshot = () => null;
+
+const formatDateTime = (date: Date) =>
+  date.toLocaleString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: '2-digit',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  });
+
+const formatDateTimeShort = (date: Date) =>
+  date.toLocaleString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+
 export default function TopBar() {
-  const [currentDateTime, setCurrentDateTime] = useState<Date | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const { theme, setTheme } = useTheme();
-
-  useEffect(() => {
-    setIsMounted(true);
-    const update = () => setCurrentDateTime(new Date());
-    update();
-    const interval = setInterval(update, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const formatDateTime = (date: Date) =>
-    date.toLocaleString('en-US', {
-      weekday: 'short',
-      month: 'short',
-      day: '2-digit',
-      hour: 'numeric',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: true,
-    });
-
-  const formatDateTimeShort = (date: Date) =>
-    date.toLocaleString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
+  const seconds = useSyncExternalStore(subscribeToClock, clockSnapshot, serverClockSnapshot);
+  const currentDateTime = seconds === null ? null : new Date(seconds * 1000);
+  const { resolvedTheme, setTheme } = useTheme();
 
   return (
-    <div
-      suppressHydrationWarning
-      className={`flex items-center justify-between text-sm w-full px-3 sm:px-5 transition-opacity duration-900 ease-in ${
-        isMounted ? "opacity-100" : "opacity-0"
-      }`}
-    >
+    <div className="flex items-center justify-between text-sm w-full px-3 sm:px-5 animate-in fade-in duration-700">
       {/* Left buttons */}
       <div className="flex flex-row items-center gap-2 sm:gap-4">
-        {isMounted && (
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="hover:scale-110 transition-transform cursor-pointer p-1"
-          >
-            {theme === "dark" ? (
-              <Sun className="w-5 h-5 sm:w-6 sm:h-6 text-foreground stroke-1" />
-            ) : (
-              <Moon className="w-5 h-5 sm:w-6 sm:h-6 text-foreground stroke-1" />
-            )}
-          </button>
-        )}
         <button
-          onClick={() => setIsMuted(!isMuted)}
+          type="button"
+          aria-label="Toggle theme"
+          onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
           className="hover:scale-110 transition-transform cursor-pointer p-1"
         >
-          {isMuted ? (
-            <VolumeX className="w-5 h-5 sm:w-6 sm:h-6 text-foreground stroke-1" />
-          ) : (
-            <Volume2 className="w-5 h-5 sm:w-6 sm:h-6 text-foreground stroke-1" />
-          )}
+          {/* Chosen by the .dark class, so the right icon paints before hydration. */}
+          <Sun className="hidden dark:block w-5 h-5 sm:w-6 sm:h-6 text-foreground stroke-1" />
+          <Moon className="dark:hidden w-5 h-5 sm:w-6 sm:h-6 text-foreground stroke-1" />
         </button>
       </div>
 
@@ -77,7 +60,7 @@ export default function TopBar() {
               <span className="hidden sm:inline">{formatDateTime(currentDateTime)}</span>
               <span className="sm:hidden">{formatDateTimeShort(currentDateTime)}</span>
             </>
-          ) : "\u00A0"}
+          ) : " "}
         </div>
       </div>
 

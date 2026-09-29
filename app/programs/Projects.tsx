@@ -1,5 +1,3 @@
-import WindowControlButtons from "@/components/WindowControlButtons";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 type ProjectAction = {
   label: string;
@@ -172,39 +170,29 @@ function ProjectCard({ project }: { project: Project }) {
   );
 }
 
-export default function Projects({ onClose }: { onClose: () => void }) {
+export default function Projects() {
   return (
-    <ScrollArea className="flex flex-col items-start justify-start border border-foreground/20 rounded-[20px] bg-foreground/8 backdrop-blur-lg w-full h-full">
-      <main className="w-full mb-8">
-        <div className="flex flex-row items-start justify-between w-full">
-          <p className="text-foreground text-xs pt-2.5 pl-3">
-            My Projects
-          </p>
-          <div className="flex flex-col items-center justify-center pt-3 pr-3">
-            <WindowControlButtons onClose={onClose} />
-          </div>
-        </div>
-        <div className="flex flex-col justify-start items-start w-full h-full px-4 sm:px-8 md:px-14 py-4 sm:py-6 md:py-8">
-          <div className="flex flex-col items-start justify-start w-full">
-            <h1 className="text-foreground text-xl sm:text-2xl md:text-3xl font-extrabold">
-              Stuff I&apos;ve Been Working On
-            </h1>
+    <div className="w-full pb-8">
+      <div className="flex flex-col justify-start items-start w-full h-full px-4 sm:px-8 md:px-14 py-4 sm:py-6 md:py-8">
+        <div className="flex flex-col items-start justify-start w-full">
+          <h1 className="text-foreground text-xl sm:text-2xl md:text-3xl font-extrabold">
+            Stuff I&apos;ve Been Working On
+          </h1>
 
-            {sections.map((section) => (
-              <section key={section.title} className="w-full">
-                <h2 className="text-foreground text-base sm:text-lg font-extrabold mt-4 sm:mt-6 md:mt-8">
-                  {section.title}
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 md:gap-8 w-full mt-4">
-                  {section.projects.map((project) => (
-                    <ProjectCard key={project.title} project={project} />
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
+          {sections.map((section) => (
+            <section key={section.title} className="w-full">
+              <h2 className="text-foreground text-base sm:text-lg font-extrabold mt-4 sm:mt-6 md:mt-8">
+                {section.title}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 md:gap-8 w-full mt-4">
+                {section.projects.map((project) => (
+                  <ProjectCard key={project.title} project={project} />
+                ))}
+              </div>
+            </section>
+          ))}
         </div>
-      </main>
-    </ScrollArea>
+      </div>
+    </div>
   );
 }

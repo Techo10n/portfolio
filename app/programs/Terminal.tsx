@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState, useRef, useEffect } from "react";
-import WindowControlButtons from "@/components/WindowControlButtons";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 type CommandOutput = string | string[];
@@ -83,7 +82,7 @@ const COMMANDS: Record<string, CommandOutput> = {
   clear: [],
 };
 
-export default function Terminal({ onClose }: { onClose: () => void }) {
+export default function Terminal() {
   const [history, setHistory] = useState<string[]>([
     "Welcome to Zechariah's Portfolio Terminal!",
     "Type 'help' to see available commands.",
@@ -183,17 +182,8 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div
-      className="flex flex-col border border-foreground/20 rounded-[20px] bg-foreground/8 backdrop-blur-lg w-full h-full cursor-text"
-      onClick={() => inputRef.current?.focus()}
-    >
-      <div className="flex flex-row items-start justify-between w-full flex-shrink-0">
-        <p className="text-foreground text-xs pt-2.5 pl-3">Terminal</p>
-        <div className="flex flex-col items-center justify-center pt-3 pr-3">
-          <WindowControlButtons onClose={onClose} />
-        </div>
-      </div>
-      <ScrollArea className="flex-1 w-full" ref={scrollRef}>
+    <div className="flex min-h-0 flex-1 flex-col cursor-text" onClick={() => inputRef.current?.focus()}>
+      <ScrollArea className="min-h-0 flex-1 w-full" viewportRef={scrollRef}>
         <div className="flex flex-col justify-start items-start w-full px-6 py-4 font-mono text-sm">
           {history.map((line, idx) => (
             <div
@@ -213,7 +203,11 @@ export default function Terminal({ onClose }: { onClose: () => void }) {
             <input
               ref={inputRef}
               className="bg-transparent border-none outline-none text-foreground placeholder:text-foreground/40 ml-2 flex-1 font-mono"
+              aria-label="Terminal input"
               placeholder="type a command..."
+              autoComplete="off"
+              autoCapitalize="off"
+              spellCheck={false}
               autoFocus
               value={input}
               onChange={(e) => setInput(e.target.value)}
