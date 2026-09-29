@@ -1,17 +1,44 @@
 # portfolio
 
 > [!NOTE]
-> **Work in progress, and the content is out of date.** The site is still being built, and the About, Projects, and Resume sections reflect 2025. A content refresh is coming soon.
+> **Work in progress, and the content is out of date.** The About, Projects, and Resume sections reflect 2025. A content refresh is coming soon.
 
-My personal website: a desktop-OS-style portfolio where each section (About, Projects, Resume, Contact, Terminal) opens as its own resizable window.
+My personal website: a desktop-OS-style portfolio where each section (About, Projects, Resume, Contact, Terminal) opens as its own window. Windows tile, resize, minimize to the taskbar, and maximize.
 
-**Stack:** Next.js 15, React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Resend (contact form)
+**Stack:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Resend (contact form), Playwright
 
 ## Running locally
 
+Requires Node 22 (see `.node-version`).
+
 ```bash
 npm install
-npm run dev   # http://localhost:3000
+cp .env.example .env.local   # add RESEND_API_KEY
+npm run dev                  # http://localhost:3000
 ```
 
-The contact form needs `RESEND_API_KEY` in `.env.local`. Without it, `/api/contact` returns a 500.
+Without `RESEND_API_KEY`, `/api/contact` returns a 500 and the form shows an error.
+
+## Checks
+
+```bash
+npm run lint
+npx tsc --noEmit
+npm test          # Playwright, desktop + mobile, against a production build
+```
+
+`npm test` builds the app and serves it on port 3100 with Resend pointed at a local mock
+(`tests/mock-resend.mjs`), so tests never send real email. First run: `npx playwright install chromium`.
+
+## Layout
+
+```
+app/page.tsx              server-rendered shell; hands each program to the desktop
+app/programs/             window contents: About, Projects, Resume, Contact, Terminal
+components/desktop/       window manager: state reducer, tiling layout, window chrome, separators
+app/api/contact/          contact form endpoint (validation, honeypot, rate limit, Resend)
+lib/contact-schema.ts     zod schema shared by the form and the API
+lib/site.ts               name, tagline, description, and canonical URL
+```
+
+Set `SITE_URL` in production for canonical and Open Graph URLs (Vercel's production domain is used automatically).
