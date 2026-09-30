@@ -10,6 +10,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -80,11 +81,10 @@ export default function ContactForm() {
             name="name"
             render={({ field }) => (
               <FormItem className="flex-1">
+                <FormLabel className="text-sm">Name</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Name"
-                    aria-label="Name"
-                    className="bg-foreground/10 border-foreground/20 text-foreground placeholder:text-foreground/50"
+                    className="bg-background/70 border-foreground/25 text-foreground"
                     {...field}
                   />
                 </FormControl>
@@ -97,12 +97,11 @@ export default function ContactForm() {
             name="email"
             render={({ field }) => (
               <FormItem className="flex-1">
+                <FormLabel className="text-sm">Email</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Email"
-                    aria-label="Email"
                     type="email"
-                    className="bg-foreground/10 border-foreground/20 text-foreground placeholder:text-foreground/50"
+                    className="bg-background/70 border-foreground/25 text-foreground"
                     {...field}
                   />
                 </FormControl>
@@ -116,11 +115,11 @@ export default function ContactForm() {
           name="subject"
           render={({ field }) => (
             <FormItem>
+              <FormLabel className="text-sm">Subject</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Subject"
                     aria-label="Subject"
-                  className="bg-foreground/10 border-foreground/20 text-foreground placeholder:text-foreground/50"
+                  className="bg-background/70 border-foreground/25 text-foreground"
                   {...field}
                 />
               </FormControl>
@@ -133,11 +132,10 @@ export default function ContactForm() {
           name="message"
           render={({ field }) => (
             <FormItem>
+              <FormLabel className="text-sm">Message</FormLabel>
               <FormControl>
                 <textarea
-                  placeholder="Message"
-                  aria-label="Message"
-                  className="w-full min-h-[120px] px-3 py-2 rounded-md bg-foreground/10 border border-foreground/20 text-foreground placeholder:text-foreground/50 resize-none focus:outline-none focus:ring-2 focus:ring-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40"
+                  className="w-full min-h-[120px] px-3 py-2 rounded-md bg-background/70 border border-foreground/25 text-foreground resize-none focus:outline-none focus:ring-2 focus:ring-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40"
                   {...field}
                 />
               </FormControl>
@@ -156,9 +154,9 @@ export default function ContactForm() {
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="bg-foreground/20 border border-foreground/30 text-foreground hover:bg-foreground/30 cursor-pointer"
+          className="rounded-full bg-foreground text-background hover:bg-foreground/85 cursor-pointer"
         >
-          {isSubmitting ? "Sending..." : "Send"} <span className="ml-1">→</span>
+          {isSubmitting ? "Sending…" : "Send message"}
         </Button>
       </form>
     </Form>

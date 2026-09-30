@@ -2,9 +2,8 @@ import { expect, test } from "./fixtures";
 import { formatRange } from "../lib/dates";
 
 test("resume window links a real PDF and shows its preview", async ({ page, request }) => {
-  await page.goto("/");
-  await page.getByRole("navigation", { name: "Taskbar" }).getByRole("button", { name: "Resume", exact: true }).click();
-  const resume = page.getByRole("region", { name: "My Resume", exact: true });
+  await page.goto("/resume");
+  const resume = page.getByRole("region", { name: "Resume", exact: true });
 
   const open = resume.getByRole("link", { name: "Open PDF" });
   await expect(open).toHaveAttribute("href", "/resume.pdf");

@@ -40,3 +40,15 @@ test("robots.txt and sitemap.xml are served", async ({ request }) => {
   expect(sitemap.status()).toBe(200);
   expect(await sitemap.text()).toContain("<urlset");
 });
+
+test("each window page has its own title and canonical URL", async ({ page }) => {
+  await page.goto("/projects");
+  await expect(page).toHaveTitle("Projects · Zechariah Frierson");
+  expect(await page.locator('link[rel="canonical"]').getAttribute("href")).toMatch(/\/projects$/);
+  expect(await page.locator('meta[property="og:image"]').first().getAttribute("content")).toBeTruthy();
+});
+
+test("sitemap lists every window", async ({ request }) => {
+  const xml = await (await request.get("/sitemap.xml")).text();
+  for (const path of ["/projects", "/experience", "/resume", "/contact", "/terminal"]) expect(xml).toContain(path);
+});

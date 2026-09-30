@@ -22,8 +22,7 @@ const sentEmails = async (request: APIRequestContext) =>
 
 const openContact = async (page: Page) => {
   await page.setExtraHTTPHeaders({ "x-forwarded-for": clientIp() });
-  await page.goto("/");
-  await page.getByRole("navigation", { name: "Taskbar" }).getByRole("button", { name: "Contact", exact: true }).click();
+  await page.goto("/contact");
   return page.getByRole("region", { name: "Contact", exact: true });
 };
 

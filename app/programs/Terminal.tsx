@@ -2,6 +2,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useDesktop } from "@/components/desktop/context";
+import { WINDOW_KEYS, type WindowKey } from "@/components/desktop/programs";
 
 type CommandOutput = string | string[];
 
@@ -20,6 +22,7 @@ const COMMANDS: Record<string, CommandOutput> = {
     "  whoami    Display current user",
     "  date      Show current date and time",
     "  echo      Echo back your message",
+    "  open      Open a window: open projects, open resume, ...",
   ],
   about: [
     "Hey, I'm Zechariah Frierson!",
@@ -85,6 +88,7 @@ const COMMANDS: Record<string, CommandOutput> = {
 };
 
 export default function Terminal() {
+  const { open } = useDesktop();
   const [history, setHistory] = useState<string[]>([
     "Welcome to Zechariah's Portfolio Terminal!",
     "Type 'help' to see available commands.",
@@ -117,6 +121,18 @@ export default function Terminal() {
 
     if (command === "clear") {
       setHistory([]);
+      return;
+    }
+
+    if (command === "open") {
+      const target = parts[1] as WindowKey | undefined;
+      const known = WINDOW_KEYS.filter((k) => k !== "terminal");
+      if (target && (known as readonly string[]).includes(target)) {
+        setHistory((h) => [...h, `guest@portfolio ~ % ${displayCmd}`, `Opening ${target}...`, ""]);
+        open(target);
+      } else {
+        setHistory((h) => [...h, `guest@portfolio ~ % ${displayCmd}`, `Usage: open <${known.join(" | ")}>`, ""]);
+      }
       return;
     }
 
@@ -186,7 +202,7 @@ export default function Terminal() {
   return (
     <div className="flex min-h-0 flex-1 flex-col cursor-text" onClick={() => inputRef.current?.focus()}>
       <ScrollArea className="min-h-0 flex-1 w-full" viewportRef={scrollRef}>
-        <div className="flex flex-col justify-start items-start w-full px-6 py-4 font-mono text-sm">
+        <div className="flex flex-col justify-start items-start w-full px-5 py-4 font-mono text-sm">
           {history.map((line, idx) => (
             <div
               key={idx}

@@ -1,9 +1,6 @@
-import type { Locator, Page } from "@playwright/test";
+import type { Locator } from "@playwright/test";
 import { expect, test } from "./fixtures";
-
-const win = (page: Page, title: string) => page.getByRole("region", { name: title, exact: true });
-const taskbar = (page: Page, label: string) =>
-  page.getByRole("navigation", { name: "Taskbar" }).getByRole("button", { name: label, exact: true });
+import { openApp, win } from "./helpers";
 
 /** WCAG contrast between an element's text colour and the first opaque-ish background behind it. */
 async function textContrast(text: Locator, background: Locator) {
@@ -36,20 +33,21 @@ for (const colorScheme of ["light", "dark"] as const) {
   test.describe(`${colorScheme} theme`, () => {
     test.use({ colorScheme });
 
-    test("project card text is readable over screenshots", async ({ page }) => {
+    test("project card text is readable", async ({ page, isMobile }) => {
       await page.goto("/");
-      await taskbar(page, "Projects").click();
-      const card = win(page, "My Projects").getByRole("article").filter({ hasText: "EmpAIthetic" });
+      await openApp(page, "Projects", isMobile);
+      const card = win(page, "Projects").getByRole("article").filter({ hasText: "EmpAIthetic" });
       const heading = card.getByRole("heading", { name: "EmpAIthetic" });
+      await heading.scrollIntoViewIfNeeded();
       await expect(heading).toBeVisible();
-      expect(await textContrast(heading, card.getByTestId("card-body"))).toBeGreaterThan(7);
+      expect(await textContrast(heading, card)).toBeGreaterThan(7);
     });
   });
 }
 
-test("terminal scrolls to the prompt as output grows", async ({ page }) => {
+test("terminal scrolls to the prompt as output grows", async ({ page, isMobile }) => {
   await page.goto("/");
-  await taskbar(page, "Terminal").click();
+  await openApp(page, "Terminal", isMobile);
   const input = win(page, "Terminal").getByRole("textbox", { name: "Terminal input" });
   for (let i = 0; i < 6; i++) {
     await input.fill("help");
@@ -59,19 +57,14 @@ test("terminal scrolls to the prompt as output grows", async ({ page }) => {
 });
 
 test.describe("desktop only", () => {
-  test.skip(({ isMobile }) => isMobile, "split windows are desktop-only");
+  test.skip(({ isMobile }) => isMobile, "window sizing is desktop-only");
 
   test("project grid responds to the window's width, not the viewport's", async ({ page }) => {
-    await page.goto("/");
-    await taskbar(page, "Projects").click();
-    await taskbar(page, "About Me").click();
-    const cards = win(page, "My Projects").getByRole("article");
-    // In a half-width window the first section's three cards cannot fit on one row.
-    await expect
-      .poll(async () => {
-        const [a, c] = [(await cards.nth(0).boundingBox())!, (await cards.nth(2).boundingBox())!];
-        return c.y > a.y;
-      })
-      .toBe(true);
+    await page.goto("/projects");
+    const section = win(page, "Projects").getByRole("region", { name: "Personal Projects" });
+    const cards = section.getByRole("article");
+    // The 980px window fits two columns, so the section's third card wraps even on a wide screen.
+    const [a, c] = [(await cards.nth(0).boundingBox())!, (await cards.nth(2).boundingBox())!];
+    expect(c.y).toBeGreaterThan(a.y);
   });
 });

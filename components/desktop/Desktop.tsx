@@ -1,120 +1,136 @@
 "use client";
 
-import { useReducer, useRef, useState, type CSSProperties, type ReactNode } from "react";
-import TaskBar from "@/components/TaskBar";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import MenuBar from "@/components/MenuBar";
+import { site } from "@/lib/site";
 import Window from "./Window";
-import Separator from "./Separator";
-import { PROGRAMS, WINDOW_KEYS, type WindowKey } from "./programs";
-import { activeWindow, desktopReducer, initialDesktopState, openWindows } from "./state";
-import { computeLayout, equalSplits, resizeSplits, type SplitTarget, type Splits } from "./layout";
+import { DesktopContext } from "./context";
+import { defaultRectStyle } from "./geometry";
+import { DesktopIcons, TabBar, TaskBar } from "./Navigation";
+import { PROGRAMS, WINDOW_KEYS, keyForPath, type WindowKey } from "./programs";
+import { activeWindow, desktopReducer, initialDesktopState, type Rect, type WindowStatus } from "./state";
 
 type DesktopProps = {
   /** Each program's content, rendered on the server and handed in as a slot. */
   programs: Record<WindowKey, ReactNode>;
+  /** The window this URL points at; opened on top of About. */
+  initial: WindowKey;
 };
 
-const FULL = { x: 0, y: 0, w: 100, h: 100 };
+const documentTitle = (key: WindowKey | null) =>
+  key && key !== "about" ? `${PROGRAMS[key].title} · ${site.name}` : `${site.name} | ${site.tagline}`;
 
 /**
- * Owns window state and lays windows out as absolutely positioned, keyed children of one
- * stage. Windows are never re-parented, so opening, closing, or maximizing another window
- * never re-mounts one that's already open (the terminal keeps its history, the contact
- * form keeps its draft), and layout changes animate.
+ * A floating-window desktop. Windows are keyed, absolutely positioned children of one stage and
+ * are never re-parented, so they never re-mount: a half-typed message or terminal session survives
+ * anything done to other windows. Each window has a URL; the frontmost window's URL is the page's.
  */
-export default function Desktop({ programs }: DesktopProps) {
-  const [state, dispatch] = useReducer(desktopReducer, initialDesktopState);
+export default function Desktop({ programs, initial }: DesktopProps) {
+  const [state, dispatch] = useReducer(desktopReducer, initial, initialDesktopState);
   const stageRef = useRef<HTMLDivElement>(null);
-  const [dragging, setDragging] = useState(false);
-
-  const tiled = openWindows(state);
-  const signature = tiled.join(",");
-  // Custom splits apply only to the set of windows they were made for; any change resets them.
-  const [saved, setSaved] = useState<{ signature: string; splits: Splits } | null>(null);
-  const splits = saved?.signature === signature ? saved.splits : equalSplits(tiled.length);
-  const { rects, separators } = computeLayout(tiled, splits);
+  const slotRefs = useRef<Partial<Record<WindowKey, HTMLDivElement | null>>>({});
+  const [interacting, setInteracting] = useState<WindowKey | null>(null);
 
   const active = activeWindow(state);
-  const { maximized } = state;
+  const status = useMemo(
+    () => Object.fromEntries(WINDOW_KEYS.map((k) => [k, state.windows[k].status])) as Record<WindowKey, WindowStatus>,
+    [state.windows],
+  );
 
-  const resize = (target: SplitTarget, delta: { px: number } | { fraction: number }) => {
-    let fraction: number;
-    if ("fraction" in delta) {
-      fraction = delta.fraction;
-    } else {
-      const stage = stageRef.current;
-      if (!stage) return;
-      fraction = delta.px / (target.kind === "row" ? stage.clientHeight : stage.clientWidth);
-    }
-    setSaved((prev) => {
-      const current = prev?.signature === signature ? prev.splits : equalSplits(tiled.length);
-      return { signature, splits: resizeSplits(current, target, fraction) };
-    });
+  const open = useCallback((key: WindowKey) => {
+    dispatch({ type: "launch", key });
+    if (window.location.pathname !== PROGRAMS[key].path) window.history.pushState(null, "", PROGRAMS[key].path);
+  }, []);
+
+  // The address bar and tab title follow the frontmost window.
+  useEffect(() => {
+    const path = active ? PROGRAMS[active].path : "/";
+    if (window.location.pathname !== path) window.history.replaceState(null, "", path);
+    document.title = documentTitle(active);
+  }, [active]);
+
+  // Back and forward reopen the window for that URL.
+  useEffect(() => {
+    const onPop = () => {
+      const key = keyForPath(window.location.pathname);
+      if (key) dispatch({ type: "launch", key });
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
+  const measure = (key: WindowKey) => () => {
+    const el = slotRefs.current[key]!;
+    const stage = stageRef.current!;
+    const rect: Rect = { x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight };
+    return { rect, stage: { w: stage.clientWidth, h: stage.clientHeight } };
   };
 
+  const zIndex = (key: WindowKey) => 10 + state.zOrder.indexOf(key);
+
   return (
-    <>
-      <main
-        aria-label="Desktop"
-        className="relative w-[calc(100%-16px)] sm:w-[calc(100%-32px)] md:w-[calc(100%-40px)] mx-2 sm:mx-4 md:mx-5 h-full min-h-0"
-      >
-        <div ref={stageRef} className={`absolute -inset-1.5 ${dragging ? "select-none" : ""}`}>
-          {WINDOW_KEYS.filter((key) => state.status[key] !== "closed").map((key) => {
-            const rect = maximized === key ? FULL : (rects[key] ?? FULL);
-            const hiddenByMaximize = maximized !== null && maximized !== key;
-            const style = {
-              "--x": `${rect.x}%`,
-              "--y": `${rect.y}%`,
-              "--w": `${rect.w}%`,
-              "--h": `${rect.h}%`,
-            } as CSSProperties;
+    <DesktopContext.Provider value={useMemo(() => ({ open }), [open])}>
+      <MenuBar />
+      <div className="relative flex flex-1 min-h-0 flex-col">
+        <main id="desktop" tabIndex={-1} aria-label="Desktop" className="relative flex-1 min-h-0 mx-2 md:mx-4 mt-2 mb-2 outline-none">
+          <DesktopIcons onOpen={open} />
 
-            return (
-              <div
-                key={key}
-                style={style}
-                className={[
-                  "absolute p-1.5 inset-0 md:inset-auto md:left-(--x) md:top-(--y) md:w-(--w) md:h-(--h)",
-                  dragging ? "" : "md:transition-[left,top,width,height,opacity] md:duration-300 md:ease-out",
-                  state.status[key] === "minimized" ? "hidden" : "",
-                  // Mobile shows one window at a time: the active one.
-                  key === active ? "" : "max-md:hidden",
-                  hiddenByMaximize ? "md:invisible md:opacity-0" : "",
-                  maximized === key ? "z-10" : "",
-                ].join(" ")}
-              >
-                <Window
-                  id={key}
-                  title={PROGRAMS[key].title}
-                  scroll={PROGRAMS[key].scroll}
-                  active={key === active && tiled.length > 1}
-                  maximized={maximized === key}
-                  entering={state.entering === key}
-                  onFocus={() => dispatch({ type: "focus", key })}
-                  onMinimize={() => dispatch({ type: "minimize", key })}
-                  onToggleMaximize={() => dispatch({ type: "toggleMaximize", key })}
-                  onClose={() => dispatch({ type: "close", key })}
+          <div ref={stageRef} className={`absolute inset-0 md:left-28 pointer-events-none ${interacting ? "select-none" : ""}`}>
+            {WINDOW_KEYS.filter((key) => state.windows[key].status !== "closed").map((key) => {
+              const win = state.windows[key];
+              const program = PROGRAMS[key];
+              const style = {
+                ...(win.rect
+                  ? { "--x": `${win.rect.x}px`, "--y": `${win.rect.y}px`, "--w": `${win.rect.w}px`, "--h": `${win.rect.h}px` }
+                  : defaultRectStyle(program.size, win.slot)),
+                zIndex: zIndex(key),
+              } as CSSProperties;
+
+              return (
+                <div
+                  key={key}
+                  ref={(el) => {
+                    slotRefs.current[key] = el;
+                  }}
+                  style={style}
+                  className={[
+                    "absolute pointer-events-auto inset-0",
+                    win.maximized ? "" : "md:inset-auto md:left-(--x) md:top-(--y) md:w-(--w) md:h-(--h)",
+                    interacting === key ? "" : "md:transition-[left,top,width,height] md:duration-200 md:ease-out",
+                    win.status === "minimized" ? "hidden" : "",
+                    // Phones show one window at a time, full-screen: the frontmost.
+                    key === active ? "" : "max-md:hidden",
+                  ].join(" ")}
                 >
-                  {programs[key]}
-                </Window>
-              </div>
-            );
-          })}
+                  <Window
+                    id={key}
+                    title={program.title}
+                    scroll={program.scroll}
+                    active={key === active}
+                    maximized={win.maximized}
+                    entering={state.entering === key}
+                    measure={measure(key)}
+                    onRect={(rect) => dispatch({ type: "setRect", key, rect })}
+                    onInteractingChange={(on) => setInteracting(on ? key : null)}
+                    onFocus={() => dispatch({ type: "focus", key })}
+                    onMinimize={() => dispatch({ type: "minimize", key })}
+                    onToggleMaximize={() => dispatch({ type: "toggleMaximize", key })}
+                    onClose={() =>
+                      // Phones: closing an app returns to the home screen, like iOS; its state is kept.
+                      dispatch(window.matchMedia("(min-width: 768px)").matches ? { type: "close", key } : { type: "home" })
+                    }
+                  >
+                    {programs[key]}
+                  </Window>
+                </div>
+              );
+            })}
+          </div>
+        </main>
 
-          {maximized === null &&
-            separators.map((spec) => (
-              <Separator
-                key={spec.id}
-                spec={spec}
-                onResize={(delta) => resize(spec.target, delta)}
-                onDragChange={setDragging}
-                onReset={() => setSaved(null)}
-              />
-            ))}
-        </div>
-      </main>
-      <div>
-        <TaskBar status={state.status} onLaunch={(key) => dispatch({ type: "launch", key })} />
+        <TaskBar status={status} active={active} onOpen={open} onMinimize={(key) => dispatch({ type: "minimize", key })} />
+        <TabBar active={active} onOpen={open} />
       </div>
-    </>
+    </DesktopContext.Provider>
   );
 }

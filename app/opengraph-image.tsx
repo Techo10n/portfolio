@@ -21,7 +21,7 @@ async function loadGoogleFont(family: string, weight: number, text: string) {
 
 export default async function OpenGraphImage() {
   const windowTitle = "About Me";
-  const text = site.name + site.tagline + windowTitle;
+  const text = site.name + site.tagline + site.education + windowTitle;
   const [regular, extraBold] = await Promise.all([
     loadGoogleFont("JetBrains+Mono", 400, text),
     loadGoogleFont("JetBrains+Mono", 800, text),
@@ -76,6 +76,7 @@ export default async function OpenGraphImage() {
           >
             <div style={{ fontSize: 76, fontWeight: 800, letterSpacing: -1 }}>{site.name}</div>
             <div style={{ fontSize: 36, marginTop: 16, opacity: 0.9 }}>{site.tagline}</div>
+            <div style={{ fontSize: 26, marginTop: 10, opacity: 0.7 }}>{site.education}</div>
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ArrowUpRight } from "lucide-react";
 
 
 type ProjectAction = {
@@ -9,6 +10,11 @@ type ProjectAction = {
 type Project = {
   title: string;
   description: string;
+  /** Stack, from the resume or the project's vault page. */
+  tags?: string[];
+  period?: string;
+  /** Shown large, above everything else. */
+  featured?: boolean;
   actions?: ProjectAction[];
   image?: string;
   imagePosition?: string;
@@ -19,34 +25,35 @@ type ProjectSection = {
   projects: Project[];
 };
 
-const actionClass =
-  "text-foreground text-xs px-2 py-1 rounded-2xl border border-foreground/50 hover:bg-foreground/10 transition-colors cursor-pointer";
-
-// Every description here is sourced from Zech's resume, the knowledge vault, or his own earlier
-// copy. Projects without a verified description are left out rather than described by guesswork.
 const sections: ProjectSection[] = [
   {
     title: "Personal Projects",
     projects: [
       {
         title: "MusicBridge",
+        featured: true,
+        period: "Jan 2025 – Present",
+        tags: ["React Native", "Expo", "TypeScript", "Supabase"],
         description:
           "Cross-platform playlist sharing app that maps tracks between Spotify, Apple Music, and YouTube Music, with OAuth for each service and Supabase for auth and data. TestFlight beta with 20+ users.",
         actions: [{ label: "Source Code", href: "https://github.com/Techo10n/musicbridge" }],
       },
       {
         title: "SongScraper",
+        tags: ["Expo", "TypeScript", "Supabase"],
         description:
           "iOS app that finds the songs in any Instagram reel, whether tagged in the audio, shown as on-screen text, or just audible. Spun out of MusicBridge's reel importer.",
       },
       {
         title: "EcoShelf",
+        tags: ["WXT", "React", "Express", "OpenAI"],
         description:
           "Chrome extension that estimates a product's shipping emissions while you shop and recommends more sustainable alternatives at a similar price.",
         actions: [{ label: "Source Code", href: "https://github.com/Techo10n/ecoshelf" }],
       },
       {
         title: "This Website",
+        tags: ["Next.js", "TypeScript", "Tailwind CSS"],
         description:
           "A desktop-style portfolio with tiling, resizable windows, built with Next.js, TypeScript, and Tailwind CSS.",
         actions: [{ label: "Source Code", href: "https://github.com/Techo10n/portfolio" }],
@@ -58,18 +65,23 @@ const sections: ProjectSection[] = [
     projects: [
       {
         title: "SimpliEarn",
+        period: "Aug 2025 – Dec 2025",
+        tags: ["Next.js", "React", "Python", "Chart.js"],
         description:
           "AI-powered earnings call analysis platform. Built its sentiment graph, a 48-hour stock chart around each call, and the Next.js dashboard tying together the AI summary engine and a RAG chatbot.",
         actions: [{ label: "View Site", href: "https://simpli-earn-2.vercel.app" }],
       },
       {
         title: "BDBI Website",
+        period: "Aug 2025 – Present",
+        tags: ["React", "Next.js", "TypeScript", "Vercel"],
         description:
           "Official site of Big Data Big Impact at Georgia Tech. As Digital Resources Manager, rebuilt it from Angular to React and Next.js and moved it to Vercel.",
         actions: [{ label: "View Site", href: "https://gtbigdatabigimpact.com" }],
       },
       {
         title: "EmpAIthetic",
+        tags: ["HackGT 11"],
         description:
           "AI-powered journaling app for expressing emotions and receiving support. Built for HackGT 11.",
         image: "/empaithetic-screenshot.jpg",
@@ -86,6 +98,7 @@ const sections: ProjectSection[] = [
     projects: [
       {
         title: "Blue Mountain Law Office",
+        tags: ["Framer"],
         description:
           "Mobile-first Framer site for a local law office, with service details and online appointment booking. Client inquiries rose over 400% in three months.",
         image: "/bml-screenshot.jpg",
@@ -94,17 +107,20 @@ const sections: ProjectSection[] = [
       },
       {
         title: "CWJFON",
+        tags: ["Squarespace"],
         description:
           "Squarespace redesign for Central Washington Justice for Our Neighbors, a regional nonprofit, increasing site visits by 150%.",
         actions: [{ label: "View Site", href: "https://cwjfon.org" }],
       },
       {
         title: "Askin4Baskin",
+        tags: ["WordPress"],
         description: "WordPress site for a lawyer, focused on UX and simple client contact.",
         actions: [{ label: "View Site", href: "https://askin4baskin.attorney" }],
       },
       {
         title: "Inland Octopus",
+        tags: ["Next.js"],
         description:
           "Illustrated marketing site for a toy and novelty store, built around a hand-composed scene with procedurally generated clouds.",
         actions: [
@@ -119,6 +135,7 @@ const sections: ProjectSection[] = [
     projects: [
       {
         title: "Techolon",
+        tags: ["Video editing"],
         description: "My personal YouTube channel where I post video game montages and edits.",
         image: "/yt-screenshot.jpg",
         imagePosition: "left",
@@ -128,80 +145,103 @@ const sections: ProjectSection[] = [
   },
 ];
 
-function ProjectCard({ project }: { project: Project }) {
-  const body = (
-    <div
-      data-testid="card-body"
-      className={`relative flex flex-col items-start w-full px-6 pt-3 pb-4 bg-background/85 ${project.image ? "" : "flex-1"}`}
-    >
-      <h3 className="text-foreground text-lg font-extrabold leading-tight">
-        {project.title}
-      </h3>
-      <p className="text-foreground text-xs mt-1">
-        {project.description}
-      </p>
-      {project.actions?.length ? (
-        <div className="flex flex-row flex-wrap items-center justify-start mt-3 gap-3">
-          {project.actions.map((action) => (
-            <a
-              key={action.label}
-              className={actionClass}
-              href={action.href}
-              target={action.href.startsWith("http") ? "_blank" : undefined}
-              rel={action.href.startsWith("http") ? "noopener noreferrer" : undefined}
-            >
-              {action.label} <span className="ml-1">-&gt;</span>
-            </a>
-          ))}
-        </div>
-      ) : null}
+const sectionLabel = "font-mono text-xs uppercase tracking-widest text-foreground/60";
+
+function Actions({ actions }: { actions?: ProjectAction[] }) {
+  if (!actions?.length) return null;
+  return (
+    <div className="flex flex-wrap gap-2 mt-3">
+      {actions.map((action) => (
+        <a
+          key={action.label}
+          href={action.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full border border-foreground/25 text-sm hover:bg-foreground/10 transition-colors"
+        >
+          {action.label}
+          <ArrowUpRight aria-hidden="true" className="w-3.5 h-3.5" />
+        </a>
+      ))}
     </div>
   );
+}
 
+function Tags({ tags }: { tags?: string[] }) {
+  if (!tags?.length) return null;
+  return (
+    <ul aria-label="Built with" className="flex flex-wrap gap-1.5 mt-3">
+      {tags.map((tag) => (
+        <li key={tag} className="font-mono text-[11px] rounded-md bg-foreground/8 px-1.5 py-0.5 text-foreground/80">
+          {tag}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function ProjectCard({ project }: { project: Project }) {
+  const { title, description, image, imagePosition, period, featured } = project;
   return (
     <article
-      className={`relative flex flex-col justify-end w-full border border-foreground/50 rounded-2xl overflow-hidden ${
-        project.image ? "min-h-[220px] @xl:min-h-[240px] @3xl:min-h-[256px]" : ""
+      className={`flex flex-col h-full overflow-hidden rounded-xl border bg-background ${
+        featured ? "border-foreground/35" : "border-foreground/15"
       }`}
     >
-      {project.image && (
-        <Image
-          src={project.image}
-          alt=""
-          fill
-          sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
-          className="object-cover"
-          style={{ objectPosition: project.imagePosition ?? "center" }}
-        />
+      {image && (
+        <div className="relative aspect-[16/9] border-b border-foreground/10">
+          <Image
+            src={image}
+            alt={`Screenshot of ${title}`}
+            fill
+            sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
+            className="object-cover"
+            style={{ objectPosition: imagePosition ?? "center" }}
+          />
+        </div>
       )}
-      {body}
+      <div data-testid="card-body" className="flex flex-col flex-1 p-4 @xl:p-5">
+        {featured && <p className={`${sectionLabel} mb-2`}>Featured</p>}
+        <h3 className={`font-semibold leading-snug ${featured ? "text-xl" : "text-base"}`}>{title}</h3>
+        {period && <p className="font-mono text-xs text-foreground/65 mt-1">{period}</p>}
+        <p className={`leading-relaxed text-foreground/85 mt-2 ${featured ? "text-[15px] max-w-[70ch]" : "text-sm"}`}>
+          {description}
+        </p>
+        <Tags tags={project.tags} />
+        <div className="mt-auto">
+          <Actions actions={project.actions} />
+        </div>
+      </div>
     </article>
   );
 }
 
 export default function Projects() {
+  const featured = sections.flatMap((s) => s.projects).filter((p) => p.featured);
   return (
-    <div className="w-full pb-8">
-      <div className="flex flex-col justify-start items-start w-full h-full px-4 @xl:px-8 @3xl:px-14 py-4 @xl:py-6 @3xl:py-8">
-        <div className="flex flex-col items-start justify-start w-full">
-          <h1 className="text-foreground text-xl @xl:text-2xl @3xl:text-3xl font-extrabold">
-            Stuff I&apos;ve Been Working On
-          </h1>
+    <div className="w-full px-5 @xl:px-8 @3xl:px-12 py-6 @xl:py-8 pb-10">
+      <h1 className="font-mono text-2xl @xl:text-3xl font-extrabold tracking-tight">Projects</h1>
 
-          {sections.map((section) => (
-            <section key={section.title} className="w-full">
-              <h2 className="text-foreground text-base @xl:text-lg font-extrabold mt-4 @xl:mt-6 @3xl:mt-8">
-                {section.title}
-              </h2>
-              <div className="grid grid-cols-1 @2xl:grid-cols-2 @5xl:grid-cols-3 gap-4 @xl:gap-6 @3xl:gap-8 w-full mt-4">
-                {section.projects.map((project) => (
-                  <ProjectCard key={project.title} project={project} />
-                ))}
-              </div>
-            </section>
-          ))}
+      {featured.map((project) => (
+        <div key={project.title} className="mt-6">
+          <ProjectCard project={project} />
         </div>
-      </div>
+      ))}
+
+      {sections.map((section) => {
+        const projects = section.projects.filter((p) => !p.featured);
+        const id = `${section.title.toLowerCase().replace(/[^a-z]+/g, "-")}-heading`;
+        return (
+          <section key={section.title} aria-labelledby={id} className="mt-9">
+            <h2 id={id} className={sectionLabel}>{section.title}</h2>
+            <div className="grid grid-cols-1 @2xl:grid-cols-2 @5xl:grid-cols-3 gap-3 mt-3">
+              {projects.map((project) => (
+                <ProjectCard key={project.title} project={project} />
+              ))}
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }

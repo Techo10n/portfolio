@@ -1,8 +1,9 @@
 export const site = {
   name: "Zechariah Frierson",
-  tagline: "Full Stack Web Developer & Designer",
+  tagline: "Software Engineer",
+  education: "Computer Science @ Georgia Tech · Class of 2028",
   description:
-    "Portfolio of Zechariah Frierson, a Georgia Tech computer science student and full stack web developer. Projects, resume, and contact, presented as a desktop you can click around.",
+    "Zechariah Frierson is a software engineer and Georgia Tech computer science student (Class of 2028), most recently a software engineering intern at Capital One. Projects, experience, and resume, presented as a desktop you can click around.",
 };
 
 /**

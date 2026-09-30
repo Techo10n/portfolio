@@ -1,6 +1,6 @@
 # portfolio
 
-My personal website: a desktop-OS-style portfolio where each section (About, Projects, Resume, Contact, Terminal) opens as its own window. Windows tile, resize, minimize to the taskbar, and maximize.
+My personal website: a desktop-OS-style portfolio where each section (About, Projects, Experience, Resume, Contact, Terminal) is a window you can drag, resize, stack, minimize, and maximize. Every window has its own URL. On phones, each opens full-screen with a tab bar.
 
 **Stack:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, shadcn/ui, Resend (contact form), Playwright
 
@@ -30,9 +30,9 @@ npm test          # Playwright, desktop + mobile, against a production build
 ## Layout
 
 ```
-app/page.tsx              server-rendered shell; hands each program to the desktop
-app/programs/             window contents: About, Projects, Resume, Contact, Terminal
-components/desktop/       window manager: state reducer, tiling layout, window chrome, separators
+app/[[...slug]]/page.tsx  one static page per window (/, /projects, …); hands each program to the desktop
+app/programs/             window contents: About, Projects, Experience, Resume, Contact, Terminal
+components/desktop/       window manager: state reducer, placement geometry, window chrome, navigation
 app/api/contact/          contact form endpoint (validation, honeypot, rate limit, Resend)
 lib/contact-schema.ts     zod schema shared by the form and the API
 lib/site.ts               name, tagline, description, and canonical URL

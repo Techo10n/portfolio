@@ -5,23 +5,21 @@ import Tilt from "@/components/Tilt";
 const PDF = "/resume.pdf";
 
 const buttonClass =
-  "inline-flex items-center gap-1.5 text-foreground text-xs px-3 py-1.5 rounded-2xl border border-foreground/50 hover:bg-foreground/10 transition-colors";
+  "inline-flex items-center gap-1.5 h-8 px-3 rounded-full border border-foreground/25 text-sm hover:bg-foreground/10 transition-colors";
 
 export default function Resume() {
   return (
-    <div className="w-full pb-8">
-      <div className="flex flex-col justify-start items-start w-full h-full px-4 @xl:px-8 @3xl:px-14 py-4 @xl:py-6 @3xl:py-8">
+    <div className="w-full pb-10">
+      <div className="flex flex-col justify-start items-start w-full h-full px-5 @xl:px-8 @3xl:px-12 py-6 @xl:py-8">
         <div className="flex flex-col @xl:flex-row @xl:items-center justify-between gap-3 w-full">
-          <h1 className="text-foreground text-xl @xl:text-2xl @3xl:text-3xl font-extrabold">
-            My Resume
-          </h1>
+          <h1 className="font-mono text-2xl @xl:text-3xl font-extrabold tracking-tight">Resume</h1>
           <div className="flex flex-row flex-wrap gap-3">
             <a href={PDF} target="_blank" rel="noopener noreferrer" className={buttonClass}>
-              <ExternalLink aria-hidden="true" className="w-3.5 h-3.5 stroke-1.5" />
+              <ExternalLink aria-hidden="true" className="w-4 h-4" />
               Open PDF
             </a>
             <a href={PDF} download="Zechariah Frierson Resume.pdf" className={buttonClass}>
-              <Download aria-hidden="true" className="w-3.5 h-3.5 stroke-1.5" />
+              <Download aria-hidden="true" className="w-4 h-4" />
               Download
             </a>
           </div>
