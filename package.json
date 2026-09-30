@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "test": "playwright test"
+    "test": "playwright test",
+    "resume:preview": "sh scripts/resume-preview.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

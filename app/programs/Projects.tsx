@@ -22,28 +22,34 @@ type ProjectSection = {
 const actionClass =
   "text-foreground text-xs px-2 py-1 rounded-2xl border border-foreground/50 hover:bg-foreground/10 transition-colors cursor-pointer";
 
+// Every description here is sourced from Zech's resume, the knowledge vault, or his own earlier
+// copy. Projects without a verified description are left out rather than described by guesswork.
 const sections: ProjectSection[] = [
   {
     title: "Personal Projects",
     projects: [
       {
+        title: "MusicBridge",
+        description:
+          "Cross-platform playlist sharing app that maps tracks between Spotify, Apple Music, and YouTube Music, with OAuth for each service and Supabase for auth and data. TestFlight beta with 20+ users.",
+        actions: [{ label: "Source Code", href: "https://github.com/Techo10n/musicbridge" }],
+      },
+      {
+        title: "SongScraper",
+        description:
+          "iOS app that finds the songs in any Instagram reel, whether tagged in the audio, shown as on-screen text, or just audible. Spun out of MusicBridge's reel importer.",
+      },
+      {
         title: "EcoShelf",
         description:
-          "Chrome extension concept for surfacing more environmentally friendly product alternatives while people shop online.",
+          "Chrome extension that estimates a product's shipping emissions while you shop and recommends more sustainable alternatives at a similar price.",
+        actions: [{ label: "Source Code", href: "https://github.com/Techo10n/ecoshelf" }],
       },
       {
         title: "This Website",
         description:
-          "A windowed desktop-style portfolio built with Next.js, TypeScript, Tailwind CSS, and resizable panels.",
-        actions: [
-          { label: "View Site", href: "/" },
-          { label: "Source Code", href: "https://github.com/Techo10n/portfolio" },
-        ],
-      },
-      {
-        title: "MusicBridge",
-        description:
-          "Playlist sharing app concept designed to make cross-service music recommendations easier without requiring a destination-service account.",
+          "A desktop-style portfolio with tiling, resizable windows, built with Next.js, TypeScript, and Tailwind CSS.",
+        actions: [{ label: "Source Code", href: "https://github.com/Techo10n/portfolio" }],
       },
     ],
   },
@@ -53,12 +59,14 @@ const sections: ProjectSection[] = [
       {
         title: "SimpliEarn",
         description:
-          "Hackathon project focused on making personal finance and rewards tracking easier to understand at a glance.",
+          "AI-powered earnings call analysis platform. Built its sentiment graph, a 48-hour stock chart around each call, and the Next.js dashboard tying together the AI summary engine and a RAG chatbot.",
+        actions: [{ label: "View Site", href: "https://simpli-earn-2.vercel.app" }],
       },
       {
-        title: "JourneyJar",
+        title: "BDBI Website",
         description:
-          "Collaborative travel planning prototype for saving trip ideas, comparing plans, and organizing shared itineraries.",
+          "Official site of Big Data Big Impact at Georgia Tech. As Digital Resources Manager, rebuilt it from Angular to React and Next.js and moved it to Vercel.",
+        actions: [{ label: "View Site", href: "https://gtbigdatabigimpact.com" }],
       },
       {
         title: "EmpAIthetic",
@@ -71,38 +79,38 @@ const sections: ProjectSection[] = [
           { label: "Source Code", href: "https://github.com/Techo10n/shaz" },
         ],
       },
-      {
-        title: "GameLogs",
-        description:
-          "Game-tracking project for logging play sessions, notes, and progress across games in one organized place.",
-      },
     ],
   },
   {
     title: "Client Work",
     projects: [
       {
-        title: "Blue Mountain Law Office Website",
+        title: "Blue Mountain Law Office",
         description:
-          "A modern website for a local law office, built in Framer, featuring service details and online appointment booking.",
+          "Mobile-first Framer site for a local law office, with service details and online appointment booking. Client inquiries rose over 400% in three months.",
         image: "/bml-screenshot.jpg",
         imagePosition: "center",
-        actions: [{ label: "View Site", href: "https://www.bluemountainlawoffice.com" }],
+        actions: [{ label: "View Site", href: "https://bluemountainlawoffice.com" }],
       },
       {
-        title: "ILJCW Website Design",
+        title: "CWJFON",
         description:
-          "Website redesign work for a legal nonprofit, focused on clearer program information, staff visibility, and partner outreach.",
+          "Squarespace redesign for Central Washington Justice for Our Neighbors, a regional nonprofit, increasing site visits by 150%.",
+        actions: [{ label: "View Site", href: "https://cwjfon.org" }],
       },
       {
-        title: "Inland Octopus Website Development",
-        description:
-          "Website development work for a local business, emphasizing clearer content structure and a more maintainable web presence.",
+        title: "Askin4Baskin",
+        description: "WordPress site for a lawyer, focused on UX and simple client contact.",
+        actions: [{ label: "View Site", href: "https://askin4baskin.attorney" }],
       },
       {
-        title: "Welcome Home Properties Database Software",
+        title: "Inland Octopus",
         description:
-          "Custom database software concept for helping a property team organize records, lookups, and internal workflows.",
+          "Illustrated marketing site for a toy and novelty store, built around a hand-composed scene with procedurally generated clouds.",
+        actions: [
+          { label: "View Site", href: "https://inland-octopus.vercel.app" },
+          { label: "Source Code", href: "https://github.com/Techo10n/inland-octopus" },
+        ],
       },
     ],
   },
@@ -110,14 +118,8 @@ const sections: ProjectSection[] = [
     title: "Other Ventures",
     projects: [
       {
-        title: "GT VGDev Trailers",
-        description:
-          "Video editing work for Georgia Tech VGDev projects, creating short trailers that present student-made games clearly and energetically.",
-      },
-      {
         title: "Techolon",
-        description:
-          "My personal YouTube channel where I post video game montages and edits.",
+        description: "My personal YouTube channel where I post video game montages and edits.",
         image: "/yt-screenshot.jpg",
         imagePosition: "left",
         actions: [{ label: "View Channel", href: "https://www.youtube.com/@techolon" }],
