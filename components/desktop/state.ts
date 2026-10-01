@@ -1,4 +1,5 @@
-import { WINDOW_KEYS, type WindowKey } from "./programs";
+import { snapRect, type Size, type SnapZone } from "./geometry";
+import { PROGRAMS, WINDOW_KEYS, type WindowKey } from "./programs";
 
 /** Position and size in px, relative to the desktop stage. */
 export type Rect = { x: number; y: number; w: number; h: number };
@@ -12,6 +13,8 @@ export type WindowState = {
   maximized: boolean;
   /** Size before the window was snapped; pulling it out of the tile restores it. */
   restore: { w: number; h: number } | null;
+  /** The tile the window is snapped to, if any. */
+  snapped: SnapZone | null;
 };
 
 export type DesktopState = {
@@ -23,7 +26,8 @@ export type DesktopState = {
 };
 
 export type DesktopAction =
-  | { type: "launch"; key: WindowKey; rect?: Rect }
+  /** `stage` (desktop only) lets a newly opened window snap into space left empty by tiled windows. */
+  | { type: "launch"; key: WindowKey; rect?: Rect; stage?: Size }
   | { type: "focus"; key: WindowKey }
   | { type: "close"; key: WindowKey }
   | { type: "minimize"; key: WindowKey }
@@ -31,10 +35,10 @@ export type DesktopAction =
   | { type: "home" }
   | { type: "toggleMaximize"; key: WindowKey }
   | { type: "setRect"; key: WindowKey; rect: Rect }
-  /** Tile a window. `rect: null` maximizes it. `size` is its current size, remembered for later. */
-  | { type: "snap"; key: WindowKey; rect: Rect | null; size: { w: number; h: number } };
+  /** Tile a window into `zone` ("maximize" maximizes it). `size` is its current size, remembered for later. */
+  | { type: "snap"; key: WindowKey; zone: SnapZone; stage: Size; size: Size };
 
-const closed: WindowState = { status: "closed", rect: null, maximized: false, restore: null };
+const closed: WindowState = { status: "closed", rect: null, maximized: false, restore: null, snapped: null };
 
 /** About is always open on load; a deep link opens its window on top. */
 export function initialDesktopState(initial: WindowKey = "about"): DesktopState {
@@ -50,6 +54,39 @@ export function initialDesktopState(initial: WindowKey = "about"): DesktopState 
 
 const raise = (order: WindowKey[], key: WindowKey) => [...order.filter((k) => k !== key), key];
 
+// The desktop as a 2x2 grid of cells, for working out which space tiled windows leave empty.
+type Cell = "tl" | "tr" | "bl" | "br";
+const CELLS: Record<SnapZone, Cell[]> = {
+  left: ["tl", "bl"],
+  right: ["tr", "br"],
+  "top-left": ["tl"],
+  "top-right": ["tr"],
+  "bottom-left": ["bl"],
+  "bottom-right": ["br"],
+  maximize: ["tl", "tr", "bl", "br"],
+};
+const QUARTER: Record<Cell, SnapZone> = { tl: "top-left", tr: "top-right", bl: "bottom-left", br: "bottom-right" };
+
+/**
+ * The tile a newly opened window should take, if other windows are snapped and leave space: a free
+ * half if there is one, otherwise the first free quarter. Null when nothing is snapped or nothing is free.
+ */
+export function emptyTile(state: DesktopState, except: WindowKey): SnapZone | null {
+  const occupied = new Set<Cell>();
+  for (const k of WINDOW_KEYS) {
+    const w = state.windows[k];
+    if (k === except || w.status !== "open") continue;
+    const zone = w.maximized ? "maximize" : w.snapped;
+    if (zone) CELLS[zone].forEach((c) => occupied.add(c));
+  }
+  if (occupied.size === 0 || occupied.size === 4) return null;
+  const free = (c: Cell) => !occupied.has(c);
+  if (free("tl") && free("bl")) return "left";
+  if (free("tr") && free("br")) return "right";
+  const cell = (["tl", "tr", "bl", "br"] as const).find(free)!;
+  return QUARTER[cell];
+}
+
 export function desktopReducer(state: DesktopState, action: DesktopAction): DesktopState {
   if (action.type === "home") {
     const windows = Object.fromEntries(
@@ -64,8 +101,14 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
   switch (action.type) {
     case "launch": {
       const wasClosed = win.status === "closed";
+      // Opening (or restoring) a floating window next to tiled ones fills the space they leave.
+      const tile = action.stage && win.status !== "open" && !win.snapped ? emptyTile(state, key) : null;
+      const reset = wasClosed ? { rect: action.rect ?? null, maximized: false, restore: null, snapped: null } : {};
+      const tiled = tile
+        ? { rect: snapRect(tile, action.stage!), maximized: false, snapped: tile, restore: preferredSize(key, action.stage!) }
+        : {};
       return {
-        windows: set({ status: "open", ...(wasClosed ? { rect: action.rect ?? null, maximized: false, restore: null } : {}) }),
+        windows: set({ status: "open", ...reset, ...tiled }),
         zOrder: raise(state.zOrder, key),
         entering: wasClosed ? key : state.entering,
       };
@@ -77,7 +120,7 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
 
     case "close":
       return {
-        windows: set({ status: "closed", rect: null, maximized: false, restore: null }),
+        windows: set({ status: "closed", rect: null, maximized: false, restore: null, snapped: null }),
         zOrder: state.zOrder.filter((k) => k !== key),
         entering: state.entering === key ? null : state.entering,
       };
@@ -94,20 +137,31 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
       return { ...state, windows: set({ maximized: !win.maximized }), zOrder: raise(state.zOrder, key) };
 
     case "setRect":
-      return { ...state, windows: set({ rect: action.rect, maximized: false, restore: null }) };
+      return { ...state, windows: set({ rect: action.rect, maximized: false, restore: null, snapped: null }) };
 
     case "snap":
       return {
         windows: set(
-          action.rect
-            ? { status: "open", rect: action.rect, maximized: false, restore: win.restore ?? action.size }
-            : { status: "open", maximized: true },
+          action.zone === "maximize"
+            ? { status: "open", maximized: true }
+            : {
+                status: "open",
+                rect: snapRect(action.zone, action.stage),
+                maximized: false,
+                restore: win.restore ?? action.size,
+                snapped: action.zone,
+              },
         ),
         zOrder: raise(state.zOrder, key),
         entering: state.entering,
       };
   }
 }
+
+const preferredSize = (key: WindowKey, stage: Size): Size => ({
+  w: Math.min(PROGRAMS[key].size.w, stage.w),
+  h: Math.min(PROGRAMS[key].size.h, stage.h),
+});
 
 /** The frontmost open window, if any. */
 export const activeWindow = (state: DesktopState): WindowKey | null =>

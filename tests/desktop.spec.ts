@@ -231,45 +231,87 @@ test.describe("desktop windows", () => {
     await expect(win(page, "About Me").getByRole("button", { name: "Maximize" })).toBeVisible();
   });
 
-  test("dragging to the left edge previews and snaps to the left half, then offers the other windows", async ({ page }) => {
-    await openApp(page, "Projects", false);
-    const desktop = await stage(page);
-    const about = await box(page, "About Me");
-    await page.mouse.click(about.x + 60, about.y + 20);
-    await page.mouse.move(about.x + 60, about.y + 20);
+  /** Drags a window by its title bar to a point on the desktop. */
+  const dragTo = async (page: import("@playwright/test").Page, title: string, x: number, y: number) => {
+    const b = await box(page, title);
+    await page.mouse.move(b.x + 60, b.y + 20);
     await page.mouse.down();
-    await page.mouse.move(desktop.x + 2, desktop.y + desktop.height / 2, { steps: 10 });
+    await page.mouse.move(x, y, { steps: 10 });
+  };
+
+  const fillsHalf = async (page: import("@playwright/test").Page, title: string, side: "left" | "right") => {
+    const desktop = await stage(page);
+    const b = await box(page, title);
+    const edge = side === "left" ? Math.abs(b.x - desktop.x) : Math.abs(b.x + b.width - (desktop.x + desktop.width));
+    return edge < 12 && Math.abs(b.width - desktop.width / 2) < 16 && b.height > desktop.height - 24;
+  };
+
+  test("snapping to a side fills the other half with the most recently focused window", async ({ page }) => {
+    await openApp(page, "Projects", false);
+    await openApp(page, "Resume", false);
+    // Focus Projects, so it — not Resume, which was opened last — is the most recently focused.
+    await page.getByRole("navigation", { name: "Open windows" }).getByRole("button", { name: "Projects", exact: true }).click();
+    const desktop = await stage(page);
+
+    await dragTo(page, "About Me", desktop.x + 2, desktop.y + desktop.height / 2);
     await expect(page.getByTestId("snap-preview")).toBeVisible();
     await page.mouse.up();
     await expect(page.getByTestId("snap-preview")).toHaveCount(0);
 
-    await expect.poll(async () => {
-      const b = await box(page, "About Me");
-      return Math.abs(b.x - desktop.x) < 12 && Math.abs(b.width - desktop.width / 2) < 16 && b.height > desktop.height - 24;
-    }).toBe(true);
-
-    const picker = page.getByRole("dialog", { name: "Choose a window for the other half" });
-    await expect(picker).toBeVisible();
-    await picker.getByRole("button", { name: "Projects" }).click();
-    await expect(picker).toBeHidden();
-    await expect.poll(async () => {
-      const b = await box(page, "Projects");
-      return Math.abs(b.x + b.width - (desktop.x + desktop.width)) < 12 && Math.abs(b.width - desktop.width / 2) < 16;
-    }).toBe(true);
+    await expect.poll(() => fillsHalf(page, "About Me", "left")).toBe(true);
+    await expect.poll(() => fillsHalf(page, "Projects", "right")).toBe(true);
+    expect(await fillsHalf(page, "Resume", "right")).toBe(false);
+    // The dragged window stays active.
+    await expect(page).toHaveURL("/");
   });
 
-  test("Escape dismisses the window picker", async ({ page }) => {
-    await openApp(page, "Projects", false);
+  const fillsQuarter = async (page: import("@playwright/test").Page, title: string, corner: "bottom-left") => {
     const desktop = await stage(page);
-    const projects = await box(page, "Projects");
-    await page.mouse.move(projects.x + 60, projects.y + 20);
-    await page.mouse.down();
-    await page.mouse.move(desktop.x + desktop.width - 2, desktop.y + desktop.height / 2, { steps: 10 });
+    const b = await box(page, title);
+    const left = Math.abs(b.x - desktop.x) < 12;
+    const bottom = Math.abs(b.y + b.height - (desktop.y + desktop.height)) < 12;
+    return corner === "bottom-left" && left && bottom && Math.abs(b.height - desktop.height / 2) < 16;
+  };
+
+  test("a window opened next to a snapped one fills the empty half", async ({ page }) => {
+    const desktop = await stage(page);
+    await dragTo(page, "About Me", desktop.x + 2, desktop.y + desktop.height / 2);
     await page.mouse.up();
-    const picker = page.getByRole("dialog", { name: "Choose a window for the other half" });
-    await expect(picker).toBeVisible();
-    await page.keyboard.press("Escape");
-    await expect(picker).toBeHidden();
+    await expect.poll(() => fillsHalf(page, "About Me", "left")).toBe(true);
+
+    await openApp(page, "Projects", false);
+    await expect.poll(() => fillsHalf(page, "Projects", "right")).toBe(true);
+    await expect(page).toHaveURL("/projects");
+
+    // Both halves taken: the next window floats at its home spot.
+    await openApp(page, "Contact", false);
+    expect(await fillsHalf(page, "Contact", "left")).toBe(false);
+    expect(await fillsHalf(page, "Contact", "right")).toBe(false);
+  });
+
+  test("new windows fill whichever tiles are left: a half first, then quarters", async ({ page }) => {
+    const desktop = await stage(page);
+    await dragTo(page, "About Me", desktop.x + 2, desktop.y + 2);
+    await page.mouse.up();
+    await expect.poll(async () => (await box(page, "About Me")).height).toBeLessThan(desktop.height / 2 + 4);
+
+    // Top-left taken: the whole right half is free, so that's what the next window gets.
+    await openApp(page, "Projects", false);
+    await expect.poll(() => fillsHalf(page, "Projects", "right")).toBe(true);
+    // Only the bottom-left quarter remains.
+    await openApp(page, "Resume", false);
+    await expect.poll(() => fillsQuarter(page, "Resume", "bottom-left")).toBe(true);
+  });
+
+  test("minimized windows are not pulled in to fill the other half", async ({ page }) => {
+    await openApp(page, "Projects", false);
+    await win(page, "Projects").getByRole("button", { name: "Minimize" }).click();
+    await expect(win(page, "Projects")).toBeHidden();
+    const desktop = await stage(page);
+    await dragTo(page, "About Me", desktop.x + desktop.width - 2, desktop.y + desktop.height / 2);
+    await page.mouse.up();
+    await expect.poll(() => fillsHalf(page, "About Me", "right")).toBe(true);
+    await expect(win(page, "Projects")).toBeHidden();
   });
 
   test("dragging to the top maximizes; dragging a snapped window out restores its size", async ({ page }) => {

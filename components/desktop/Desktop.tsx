@@ -6,7 +6,6 @@ import { site } from "@/lib/site";
 import Window from "./Window";
 import { DesktopContext } from "./context";
 import { homeRectStyle, oppositeHalf, snapRect, type Size, type SnapZone } from "./geometry";
-import SnapAssist from "./SnapAssist";
 import { DesktopIcons, TabBar, TaskBar } from "./Navigation";
 import { PROGRAMS, WINDOW_KEYS, keyForPath, type WindowKey } from "./programs";
 import { activeWindow, desktopReducer, initialDesktopState, type Rect, type WindowStatus } from "./state";
@@ -28,15 +27,16 @@ const documentTitle = (key: WindowKey | null) =>
  * are never re-parented, so they never re-mount: a half-typed message or terminal session survives
  * anything done to other windows. Each window has a URL; the frontmost window's URL is the page's.
  */
+const stageSizeOf = (el: HTMLDivElement): Size => ({ w: el.clientWidth, h: el.clientHeight });
+
 export default function Desktop({ programs, initial }: DesktopProps) {
   const [state, dispatch] = useReducer(desktopReducer, initial, initialDesktopState);
   const stageRef = useRef<HTMLDivElement>(null);
   const slotRefs = useRef<Partial<Record<WindowKey, HTMLDivElement | null>>>({});
   const [interacting, setInteracting] = useState<WindowKey | null>(null);
+  const stageSize = useCallback(() => stageSizeOf(stageRef.current!), []);
   /** Where the dragged window would tile if dropped now. */
   const [snapPreview, setSnapPreview] = useState<Rect | null>(null);
-  /** After a half-screen snap: offer the other windows for the opposite half. */
-  const [assist, setAssist] = useState<{ side: "left" | "right"; rect: Rect; exclude: WindowKey } | null>(null);
 
   const active = activeWindow(state);
   const status = useMemo(
@@ -45,9 +45,11 @@ export default function Desktop({ programs, initial }: DesktopProps) {
   );
 
   const open = useCallback((key: WindowKey) => {
-    dispatch({ type: "launch", key });
+    // Tiling only exists on desktop; phones show windows full-screen.
+    const desktop = window.matchMedia("(min-width: 768px)").matches && stageRef.current;
+    dispatch({ type: "launch", key, stage: desktop ? stageSize() : undefined });
     if (window.location.pathname !== PROGRAMS[key].path) window.history.pushState(null, "", PROGRAMS[key].path);
-  }, []);
+  }, [stageSize]);
 
   // The address bar and tab title follow the frontmost window.
   useEffect(() => {
@@ -66,7 +68,6 @@ export default function Desktop({ programs, initial }: DesktopProps) {
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
-  const stageSize = (): Size => ({ w: stageRef.current!.clientWidth, h: stageRef.current!.clientHeight });
 
   const measure = (key: WindowKey) => () => {
     const el = slotRefs.current[key]!;
@@ -84,12 +85,21 @@ export default function Desktop({ programs, initial }: DesktopProps) {
     return { w: Math.min(PROGRAMS[key].size.w, stage.w), h: Math.min(PROGRAMS[key].size.h, stage.h) };
   };
 
+  const sizeBeforeSnap = (key: WindowKey): Size =>
+    state.windows[key].maximized || state.windows[key].restore ? naturalSize(key) : measure(key)().rect;
+
+  /**
+   * Tile a window. A half snap also fills the opposite half with the most recently focused other
+   * open window, like Snap Assist picking for you. The dragged window stays in front.
+   */
   const snap = (key: WindowKey, zone: SnapZone) => {
-    const size = state.windows[key].maximized || state.windows[key].restore ? naturalSize(key) : measure(key)().rect;
-    dispatch({ type: "snap", key, rect: zone === "maximize" ? null : snapRect(zone, stageSize()), size });
+    const stage = stageSize();
     const side = oppositeHalf(zone);
-    const others = WINDOW_KEYS.some((k) => k !== key && state.windows[k].status !== "closed");
-    setAssist(side && others ? { side, rect: snapRect(side, stageSize()), exclude: key } : null);
+    const partner = side
+      ? [...state.zOrder].reverse().find((k) => k !== key && state.windows[k].status === "open")
+      : undefined;
+    if (side && partner) dispatch({ type: "snap", key: partner, zone: side, stage, size: sizeBeforeSnap(partner) });
+    dispatch({ type: "snap", key, zone, stage, size: sizeBeforeSnap(key) });
   };
 
   // Windows sit on even z-indexes so the snap preview can slide in just under the one being dragged.
@@ -166,17 +176,6 @@ export default function Desktop({ programs, initial }: DesktopProps) {
               />
             )}
 
-            {assist && (
-              <SnapAssist
-                style={{ ...rectStyle(assist.rect), zIndex: topZ }}
-                windows={WINDOW_KEYS.filter((k) => k !== assist.exclude && state.windows[k].status !== "closed")}
-                onPick={(key) => {
-                  snap(key, assist.side);
-                  setAssist(null);
-                }}
-                onDismiss={() => setAssist(null)}
-              />
-            )}
           </div>
         </main>
 
