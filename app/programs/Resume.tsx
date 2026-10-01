@@ -24,13 +24,8 @@ export default function Resume() {
             </a>
           </div>
         </div>
-        <a
-          href={PDF}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Open resume PDF"
-          className="block w-full max-w-[620px] mx-auto mt-6 @xl:mt-8"
-        >
+        {/* A preview only; the PDF opens from the buttons above. */}
+        <div className="w-full max-w-[620px] mx-auto mt-6 @xl:mt-8">
           <Tilt
             scale={1.0}
             transitionSpeed={2000}
@@ -47,7 +42,7 @@ export default function Resume() {
               className="w-full h-auto bg-white"
             />
           </Tilt>
-        </a>
+        </div>
       </div>
     </div>
   );

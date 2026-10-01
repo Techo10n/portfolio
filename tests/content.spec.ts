@@ -12,6 +12,9 @@ test("resume window links a real PDF and shows its preview", async ({ page, requ
   expect(pdf.headers()["content-type"]).toContain("application/pdf");
   await expect(resume.getByRole("link", { name: "Download" })).toHaveAttribute("download", /\.pdf$/);
 
+  // Only the buttons open the PDF; the preview itself is not a link.
+  await expect(resume.getByRole("link")).toHaveCount(2);
+
   const preview = resume.getByRole("img", { name: /resume/i });
   // Lazy-loaded below the fold on small screens, so bring it into view first.
   await preview.scrollIntoViewIfNeeded();

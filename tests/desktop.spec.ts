@@ -1,6 +1,10 @@
 import { expect, test } from "./fixtures";
 import { box, openApp, win } from "./helpers";
 
+/** The area windows live in (the desktop minus the icon column). */
+const stage = async (page: import("@playwright/test").Page) =>
+  (await page.locator("#desktop > div.absolute").boundingBox())!;
+
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
 });
@@ -130,13 +134,18 @@ test.describe("desktop windows", () => {
   const taskbar = (page: import("@playwright/test").Page, title: string) =>
     page.getByRole("navigation", { name: "Open windows" }).getByRole("button", { name: title, exact: true });
 
-  test("new windows open on top, cascaded, without covering the desktop icons", async ({ page }) => {
-    await openApp(page, "Projects", false);
-    const [about, projects] = [await box(page, "About Me"), await box(page, "Projects")];
-    expect(projects.x).toBeGreaterThan(about.x);
-    expect(projects.y).toBeGreaterThan(about.y);
+  test("each window opens in its own spot, clear of the desktop icons", async ({ page }) => {
+    for (const label of ["Projects", "Experience", "Resume", "Contact", "Terminal"]) await openApp(page, label, false);
+    const titles = ["About Me", "Projects", "Experience", "Resume", "Contact", "Terminal"];
+    const boxes = await Promise.all(titles.map((t) => box(page, t)));
+    for (let i = 0; i < boxes.length; i++) {
+      for (let j = i + 1; j < boxes.length; j++) {
+        const apart = Math.abs(boxes[i].x - boxes[j].x) > 40 || Math.abs(boxes[i].y - boxes[j].y) > 40;
+        expect(apart, `${titles[i]} vs ${titles[j]}`).toBe(true);
+      }
+    }
     const icons = (await page.getByRole("navigation", { name: "Apps" }).getByRole("list").boundingBox())!;
-    expect(projects.x).toBeGreaterThanOrEqual(icons.x + icons.width);
+    for (const b of boxes) expect(b.x).toBeGreaterThanOrEqual(icons.x + icons.width);
   });
 
   test("dragging the title bar moves the window", async ({ page }) => {
@@ -189,10 +198,102 @@ test.describe("desktop windows", () => {
   test("maximize fills the desktop; double-clicking the title bar restores", async ({ page }) => {
     const before = await box(page, "About Me");
     await win(page, "About Me").getByRole("button", { name: "Maximize" }).click();
-    const desktop = (await page.getByRole("main").boundingBox())!;
+    const desktop = await stage(page);
     await expect.poll(async () => (await box(page, "About Me")).height).toBeGreaterThan(desktop.height - 2);
     await win(page, "About Me").getByText("About Me", { exact: true }).dblclick();
     await expect.poll(async () => Math.round((await box(page, "About Me")).width)).toBe(Math.round(before.width));
+  });
+
+  test("resizing a maximized window makes it a normal window again", async ({ page }) => {
+    await win(page, "About Me").getByRole("button", { name: "Maximize" }).click();
+    const desktop = await stage(page);
+    await expect.poll(async () => (await box(page, "About Me")).width).toBeGreaterThan(desktop.width - 2);
+    const max = await box(page, "About Me");
+    await page.mouse.move(max.x + max.width - 2, max.y + max.height - 2);
+    await page.mouse.down();
+    await page.mouse.move(max.x + max.width - 302, max.y + max.height - 202, { steps: 6 });
+    await page.mouse.up();
+    await expect(win(page, "About Me").getByRole("button", { name: "Maximize" })).toBeVisible();
+    const after = await box(page, "About Me");
+    expect(Math.round(max.width - after.width)).toBe(300);
+  });
+
+  test("dragging a maximized window out restores its size", async ({ page }) => {
+    const normal = await box(page, "About Me");
+    await win(page, "About Me").getByRole("button", { name: "Maximize" }).click();
+    await expect(win(page, "About Me").getByRole("button", { name: "Restore" })).toBeVisible();
+    const max = await box(page, "About Me");
+    await page.mouse.move(max.x + max.width / 2, max.y + 20);
+    await page.mouse.down();
+    await page.mouse.move(max.x + max.width / 2, max.y + 220, { steps: 8 });
+    await page.mouse.up();
+    await expect.poll(async () => Math.round((await box(page, "About Me")).width)).toBe(Math.round(normal.width));
+    await expect(win(page, "About Me").getByRole("button", { name: "Maximize" })).toBeVisible();
+  });
+
+  test("dragging to the left edge previews and snaps to the left half, then offers the other windows", async ({ page }) => {
+    await openApp(page, "Projects", false);
+    const desktop = await stage(page);
+    const about = await box(page, "About Me");
+    await page.mouse.click(about.x + 60, about.y + 20);
+    await page.mouse.move(about.x + 60, about.y + 20);
+    await page.mouse.down();
+    await page.mouse.move(desktop.x + 2, desktop.y + desktop.height / 2, { steps: 10 });
+    await expect(page.getByTestId("snap-preview")).toBeVisible();
+    await page.mouse.up();
+    await expect(page.getByTestId("snap-preview")).toHaveCount(0);
+
+    await expect.poll(async () => {
+      const b = await box(page, "About Me");
+      return Math.abs(b.x - desktop.x) < 12 && Math.abs(b.width - desktop.width / 2) < 16 && b.height > desktop.height - 24;
+    }).toBe(true);
+
+    const picker = page.getByRole("dialog", { name: "Choose a window for the other half" });
+    await expect(picker).toBeVisible();
+    await picker.getByRole("button", { name: "Projects" }).click();
+    await expect(picker).toBeHidden();
+    await expect.poll(async () => {
+      const b = await box(page, "Projects");
+      return Math.abs(b.x + b.width - (desktop.x + desktop.width)) < 12 && Math.abs(b.width - desktop.width / 2) < 16;
+    }).toBe(true);
+  });
+
+  test("Escape dismisses the window picker", async ({ page }) => {
+    await openApp(page, "Projects", false);
+    const desktop = await stage(page);
+    const projects = await box(page, "Projects");
+    await page.mouse.move(projects.x + 60, projects.y + 20);
+    await page.mouse.down();
+    await page.mouse.move(desktop.x + desktop.width - 2, desktop.y + desktop.height / 2, { steps: 10 });
+    await page.mouse.up();
+    const picker = page.getByRole("dialog", { name: "Choose a window for the other half" });
+    await expect(picker).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(picker).toBeHidden();
+  });
+
+  test("dragging to the top maximizes; dragging a snapped window out restores its size", async ({ page }) => {
+    const desktop = await stage(page);
+    const normal = await box(page, "About Me");
+    await page.mouse.move(normal.x + 60, normal.y + 20);
+    await page.mouse.down();
+    await page.mouse.move(desktop.x + desktop.width / 2, desktop.y + 2, { steps: 10 });
+    await page.mouse.up();
+    await expect(win(page, "About Me").getByRole("button", { name: "Restore" })).toBeVisible();
+
+    // Snap to a quarter via the bottom-left corner, then pull it back out.
+    const max = await box(page, "About Me");
+    await page.mouse.move(max.x + 200, max.y + 20);
+    await page.mouse.down();
+    await page.mouse.move(desktop.x + 2, desktop.y + desktop.height - 2, { steps: 10 });
+    await page.mouse.up();
+    await expect.poll(async () => (await box(page, "About Me")).height).toBeLessThan(desktop.height / 2 + 4);
+    const quarter = await box(page, "About Me");
+    await page.mouse.move(quarter.x + 80, quarter.y + 20);
+    await page.mouse.down();
+    await page.mouse.move(quarter.x + 400, quarter.y - 150, { steps: 10 });
+    await page.mouse.up();
+    await expect.poll(async () => Math.round((await box(page, "About Me")).width)).toBe(Math.round(normal.width));
   });
 
   test("the taskbar stays above windows", async ({ page }) => {

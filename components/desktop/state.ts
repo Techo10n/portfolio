@@ -7,14 +7,11 @@ export type WindowStatus = "open" | "minimized" | "closed";
 
 export type WindowState = {
   status: WindowStatus;
-  /**
-   * Null until the window is launched on the client or moved: it then sits in its CSS default
-   * position (centred, cascaded by `slot`), which is what the server renders.
-   */
+  /** Null until the window is moved, resized, or snapped: until then it sits at its home spot. */
   rect: Rect | null;
-  /** Cascade position used for the CSS default placement. */
-  slot: number;
   maximized: boolean;
+  /** Size before the window was snapped; pulling it out of the tile restores it. */
+  restore: { w: number; h: number } | null;
 };
 
 export type DesktopState = {
@@ -33,9 +30,11 @@ export type DesktopAction =
   /** Phones: back to the home screen. Every window stays mounted, so each keeps its state. */
   | { type: "home" }
   | { type: "toggleMaximize"; key: WindowKey }
-  | { type: "setRect"; key: WindowKey; rect: Rect };
+  | { type: "setRect"; key: WindowKey; rect: Rect }
+  /** Tile a window. `rect: null` maximizes it. `size` is its current size, remembered for later. */
+  | { type: "snap"; key: WindowKey; rect: Rect | null; size: { w: number; h: number } };
 
-const closed: WindowState = { status: "closed", rect: null, slot: 0, maximized: false };
+const closed: WindowState = { status: "closed", rect: null, maximized: false, restore: null };
 
 /** About is always open on load; a deep link opens its window on top. */
 export function initialDesktopState(initial: WindowKey = "about"): DesktopState {
@@ -43,7 +42,7 @@ export function initialDesktopState(initial: WindowKey = "about"): DesktopState 
   windows.about = { ...closed, status: "open" };
   const zOrder: WindowKey[] = ["about"];
   if (initial !== "about") {
-    windows[initial] = { ...closed, status: "open", slot: 1 };
+    windows[initial] = { ...closed, status: "open" };
     zOrder.push(initial);
   }
   return { windows, zOrder, entering: null };
@@ -65,18 +64,8 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
   switch (action.type) {
     case "launch": {
       const wasClosed = win.status === "closed";
-      // Cascade into the first slot no other default-placed window is using, so a new window
-      // never lands exactly on top of an existing one.
-      const taken = new Set(
-        state.zOrder.filter((k) => k !== key && state.windows[k].rect === null).map((k) => state.windows[k].slot),
-      );
-      let slot = 0;
-      while (taken.has(slot)) slot++;
       return {
-        windows: set({
-          status: "open",
-          ...(wasClosed ? { rect: action.rect ?? null, slot, maximized: false } : {}),
-        }),
+        windows: set({ status: "open", ...(wasClosed ? { rect: action.rect ?? null, maximized: false, restore: null } : {}) }),
         zOrder: raise(state.zOrder, key),
         entering: wasClosed ? key : state.entering,
       };
@@ -88,7 +77,7 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
 
     case "close":
       return {
-        windows: set({ status: "closed", rect: null, maximized: false }),
+        windows: set({ status: "closed", rect: null, maximized: false, restore: null }),
         zOrder: state.zOrder.filter((k) => k !== key),
         entering: state.entering === key ? null : state.entering,
       };
@@ -105,7 +94,18 @@ export function desktopReducer(state: DesktopState, action: DesktopAction): Desk
       return { ...state, windows: set({ maximized: !win.maximized }), zOrder: raise(state.zOrder, key) };
 
     case "setRect":
-      return { ...state, windows: set({ rect: action.rect, maximized: false }) };
+      return { ...state, windows: set({ rect: action.rect, maximized: false, restore: null }) };
+
+    case "snap":
+      return {
+        windows: set(
+          action.rect
+            ? { status: "open", rect: action.rect, maximized: false, restore: win.restore ?? action.size }
+            : { status: "open", maximized: true },
+        ),
+        zOrder: raise(state.zOrder, key),
+        entering: state.entering,
+      };
   }
 }
 

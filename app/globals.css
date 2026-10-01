@@ -148,6 +148,13 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Theme toggle: the new theme is revealed by a growing circle (see MenuBar), not a cross-fade. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 @layer base {
   * {
     @apply border-border;

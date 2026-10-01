@@ -3,7 +3,7 @@
 import { useRef, useState, type PointerEvent, type ReactNode } from "react";
 import WindowControlButtons from "@/components/WindowControlButtons";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { clampPosition, resizeRect, type Edge, type Size } from "./geometry";
+import { clampPosition, detachRect, resizeRect, snapZoneAt, type Edge, type Point, type Size, type SnapZone } from "./geometry";
 import type { Rect } from "./state";
 
 type WindowProps = {
@@ -14,9 +14,14 @@ type WindowProps = {
   maximized: boolean;
   /** Play the open animation. Only true for a window the visitor just launched. */
   entering: boolean;
-  /** Current rect in px (measured from the DOM if the window is still in its default spot). */
-  measure: () => { rect: Rect; stage: Size };
+  /** Current rect in px, measured from the DOM, plus the desktop's size and page offset. */
+  measure: () => { rect: Rect; stage: Size; origin: Point };
+  /** Size to restore when a snapped or maximized window is pulled out of place; null otherwise. */
+  detachSize: () => Size | null;
   onRect: (rect: Rect) => void;
+  /** The snap zone under the pointer while dragging, or null. */
+  onSnapPreview: (zone: SnapZone | null) => void;
+  onSnap: (zone: SnapZone) => void;
   onInteractingChange: (interacting: boolean) => void;
   onFocus: () => void;
   onMinimize: () => void;
@@ -50,7 +55,10 @@ export default function Window({
   maximized,
   entering,
   measure,
+  detachSize,
   onRect,
+  onSnapPreview,
+  onSnap,
   onInteractingChange,
   onFocus,
   onMinimize,
@@ -60,7 +68,19 @@ export default function Window({
 }: WindowProps) {
   // Close and minimize play an exit animation first, then report to the desktop.
   const [leaving, setLeaving] = useState<null | (() => void)>(null);
-  const gesture = useRef<{ kind: "move" | Edge; x: number; y: number; rect: Rect; stage: Size } | null>(null);
+  const gesture = useRef<{
+    kind: "move" | Edge;
+    /** Pointer position the deltas are measured from. */
+    x: number;
+    y: number;
+    rect: Rect;
+    stage: Size;
+    origin: Point;
+    detach: Size | null;
+    /** A move only starts after a few px, so clicks and double-clicks on the title bar don't detach. */
+    started: boolean;
+    zone: SnapZone | null;
+  } | null>(null);
 
   const leave = (then: () => void) => {
     if (prefersReducedMotion()) then();
@@ -70,28 +90,57 @@ export default function Window({
   const begin = (e: PointerEvent<HTMLElement>) => {
     const kind = e.currentTarget.dataset.gesture as "move" | Edge;
     if (e.button !== 0 || !isDesktop()) return;
-    if (kind === "move" && (maximized || (e.target as HTMLElement).closest("button"))) return;
+    if (kind === "move" && (e.target as HTMLElement).closest("button")) return;
     e.currentTarget.setPointerCapture(e.pointerId);
-    gesture.current = { kind, x: e.clientX, y: e.clientY, ...measure() };
-    onInteractingChange(true);
+    gesture.current = {
+      kind,
+      x: e.clientX,
+      y: e.clientY,
+      ...measure(),
+      detach: kind === "move" ? detachSize() : null,
+      started: kind !== "move",
+      zone: null,
+    };
+    if (kind !== "move") onInteractingChange(true);
   };
 
   const track = (e: PointerEvent<HTMLElement>) => {
     const g = gesture.current;
     if (!g) return;
-    const dx = e.clientX - g.x;
-    const dy = e.clientY - g.y;
-    onRect(
-      g.kind === "move"
-        ? clampPosition({ ...g.rect, x: g.rect.x + dx, y: g.rect.y + dy }, g.stage)
-        : resizeRect(g.rect, g.kind, dx, dy, g.stage),
-    );
+    if (g.kind !== "move") {
+      onRect(resizeRect(g.rect, g.kind, e.clientX - g.x, e.clientY - g.y, g.stage));
+      return;
+    }
+
+    const pointer = { x: e.clientX - g.origin.x, y: e.clientY - g.origin.y };
+    if (!g.started) {
+      if (Math.hypot(e.clientX - g.x, e.clientY - g.y) < 4) return;
+      g.started = true;
+      onInteractingChange(true);
+      if (g.detach) {
+        g.rect = detachRect(g.detach, g.rect, pointer, g.stage);
+        g.x = e.clientX;
+        g.y = e.clientY;
+      }
+    }
+
+    onRect(clampPosition({ ...g.rect, x: g.rect.x + e.clientX - g.x, y: g.rect.y + e.clientY - g.y }, g.stage));
+    const zone = snapZoneAt(pointer, g.stage);
+    if (zone !== g.zone) {
+      g.zone = zone;
+      onSnapPreview(zone);
+    }
   };
 
   const end = () => {
-    if (!gesture.current) return;
+    const g = gesture.current;
+    if (!g) return;
     gesture.current = null;
-    onInteractingChange(false);
+    if (g.started) onInteractingChange(false);
+    if (g.zone) {
+      onSnapPreview(null);
+      onSnap(g.zone);
+    }
   };
 
   const gestureHandlers = {
@@ -136,7 +185,7 @@ export default function Window({
         }}
         className={`flex flex-row items-center justify-between w-full shrink-0 h-10 px-3 border-b select-none touch-none ${
           active ? "border-foreground/15" : "border-foreground/10"
-        } ${maximized ? "" : "md:cursor-grab md:active:cursor-grabbing"}`}
+        } md:cursor-grab md:active:cursor-grabbing`}
       >
         <p id={titleId} className={`font-mono text-xs tracking-wide ${active ? "text-foreground" : "text-foreground/60"}`}>
           {title}
@@ -154,10 +203,10 @@ export default function Window({
         <div className="@container flex min-h-0 flex-1 flex-col">{children}</div>
       )}
     </section>
-    {!maximized &&
-      EDGES.map(({ edge, className }) => (
-        <div key={edge} aria-hidden="true" data-gesture={edge} {...gestureHandlers} className={`absolute z-10 touch-none max-md:hidden ${className}`} />
-      ))}
+    {/* Resizable even when maximized: doing so turns it back into a normal window. */}
+    {EDGES.map(({ edge, className }) => (
+      <div key={edge} aria-hidden="true" data-gesture={edge} {...gestureHandlers} className={`absolute z-10 touch-none max-md:hidden ${className}`} />
+    ))}
     </>
   );
 }

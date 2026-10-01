@@ -5,7 +5,8 @@ import MenuBar from "@/components/MenuBar";
 import { site } from "@/lib/site";
 import Window from "./Window";
 import { DesktopContext } from "./context";
-import { defaultRectStyle } from "./geometry";
+import { homeRectStyle, oppositeHalf, snapRect, type Size, type SnapZone } from "./geometry";
+import SnapAssist from "./SnapAssist";
 import { DesktopIcons, TabBar, TaskBar } from "./Navigation";
 import { PROGRAMS, WINDOW_KEYS, keyForPath, type WindowKey } from "./programs";
 import { activeWindow, desktopReducer, initialDesktopState, type Rect, type WindowStatus } from "./state";
@@ -16,6 +17,8 @@ type DesktopProps = {
   /** The window this URL points at; opened on top of About. */
   initial: WindowKey;
 };
+
+const rectStyle = (r: Rect): CSSProperties => ({ left: r.x, top: r.y, width: r.w, height: r.h });
 
 const documentTitle = (key: WindowKey | null) =>
   key && key !== "about" ? `${PROGRAMS[key].title} · ${site.name}` : `${site.name} | ${site.tagline}`;
@@ -30,6 +33,10 @@ export default function Desktop({ programs, initial }: DesktopProps) {
   const stageRef = useRef<HTMLDivElement>(null);
   const slotRefs = useRef<Partial<Record<WindowKey, HTMLDivElement | null>>>({});
   const [interacting, setInteracting] = useState<WindowKey | null>(null);
+  /** Where the dragged window would tile if dropped now. */
+  const [snapPreview, setSnapPreview] = useState<Rect | null>(null);
+  /** After a half-screen snap: offer the other windows for the opposite half. */
+  const [assist, setAssist] = useState<{ side: "left" | "right"; rect: Rect; exclude: WindowKey } | null>(null);
 
   const active = activeWindow(state);
   const status = useMemo(
@@ -59,14 +66,35 @@ export default function Desktop({ programs, initial }: DesktopProps) {
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
+  const stageSize = (): Size => ({ w: stageRef.current!.clientWidth, h: stageRef.current!.clientHeight });
+
   const measure = (key: WindowKey) => () => {
     const el = slotRefs.current[key]!;
     const stage = stageRef.current!;
+    const box = stage.getBoundingClientRect();
     const rect: Rect = { x: el.offsetLeft, y: el.offsetTop, w: el.offsetWidth, h: el.offsetHeight };
-    return { rect, stage: { w: stage.clientWidth, h: stage.clientHeight } };
+    return { rect, stage: stageSize(), origin: { x: box.left, y: box.top } };
   };
 
-  const zIndex = (key: WindowKey) => 10 + state.zOrder.indexOf(key);
+  /** A window's size as it would be restored: its own rect, or its preferred size if it hasn't moved. */
+  const naturalSize = (key: WindowKey): Size => {
+    const { rect } = state.windows[key];
+    if (rect) return { w: rect.w, h: rect.h };
+    const stage = stageSize();
+    return { w: Math.min(PROGRAMS[key].size.w, stage.w), h: Math.min(PROGRAMS[key].size.h, stage.h) };
+  };
+
+  const snap = (key: WindowKey, zone: SnapZone) => {
+    const size = state.windows[key].maximized || state.windows[key].restore ? naturalSize(key) : measure(key)().rect;
+    dispatch({ type: "snap", key, rect: zone === "maximize" ? null : snapRect(zone, stageSize()), size });
+    const side = oppositeHalf(zone);
+    const others = WINDOW_KEYS.some((k) => k !== key && state.windows[k].status !== "closed");
+    setAssist(side && others ? { side, rect: snapRect(side, stageSize()), exclude: key } : null);
+  };
+
+  // Windows sit on even z-indexes so the snap preview can slide in just under the one being dragged.
+  const zIndex = (key: WindowKey) => 10 + 2 * state.zOrder.indexOf(key);
+  const topZ = 10 + 2 * state.zOrder.length;
 
   return (
     <DesktopContext.Provider value={useMemo(() => ({ open }), [open])}>
@@ -82,7 +110,7 @@ export default function Desktop({ programs, initial }: DesktopProps) {
               const style = {
                 ...(win.rect
                   ? { "--x": `${win.rect.x}px`, "--y": `${win.rect.y}px`, "--w": `${win.rect.w}px`, "--h": `${win.rect.h}px` }
-                  : defaultRectStyle(program.size, win.slot)),
+                  : homeRectStyle(program.size, program.home)),
                 zIndex: zIndex(key),
               } as CSSProperties;
 
@@ -110,7 +138,10 @@ export default function Desktop({ programs, initial }: DesktopProps) {
                     maximized={win.maximized}
                     entering={state.entering === key}
                     measure={measure(key)}
+                    detachSize={() => (win.maximized ? naturalSize(key) : win.restore)}
                     onRect={(rect) => dispatch({ type: "setRect", key, rect })}
+                    onSnapPreview={(zone) => setSnapPreview(zone ? snapRect(zone, stageSize()) : null)}
+                    onSnap={(zone) => snap(key, zone)}
                     onInteractingChange={(on) => setInteracting(on ? key : null)}
                     onFocus={() => dispatch({ type: "focus", key })}
                     onMinimize={() => dispatch({ type: "minimize", key })}
@@ -125,6 +156,27 @@ export default function Desktop({ programs, initial }: DesktopProps) {
                 </div>
               );
             })}
+
+            {snapPreview && (
+              <div
+                aria-hidden="true"
+                data-testid="snap-preview"
+                style={{ ...rectStyle(snapPreview), zIndex: topZ - 3 }}
+                className="absolute max-md:hidden rounded-[16px] border-2 border-foreground/40 bg-foreground/10 transition-all duration-150 ease-out"
+              />
+            )}
+
+            {assist && (
+              <SnapAssist
+                style={{ ...rectStyle(assist.rect), zIndex: topZ }}
+                windows={WINDOW_KEYS.filter((k) => k !== assist.exclude && state.windows[k].status !== "closed")}
+                onPick={(key) => {
+                  snap(key, assist.side);
+                  setAssist(null);
+                }}
+                onDismiss={() => setAssist(null)}
+              />
+            )}
           </div>
         </main>
 
