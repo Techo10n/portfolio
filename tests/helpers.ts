@@ -5,12 +5,12 @@ export const win = (page: Page, title: string) => page.getByRole("region", { nam
 const TAB_BAR = ["About", "Projects", "Experience", "Resume", "Contact"];
 
 /**
- * Opens an app the way a visitor would: desktop icons on desktop, the tab bar on phones.
+ * Opens an app the way a visitor would: the dock on desktop, the tab bar on phones.
  * Terminal isn't in the phone tab bar, so on phones it goes via the home screen.
  */
 export async function openApp(page: Page, label: string, isMobile: boolean) {
   if (!isMobile) {
-    await page.getByRole("navigation", { name: "Apps" }).getByRole("link", { name: label, exact: true }).click();
+    await page.getByRole("navigation", { name: "Dock" }).getByRole("button", { name: label, exact: true }).click();
   } else if (TAB_BAR.includes(label)) {
     await page.getByRole("navigation", { name: "Sections" }).getByRole("button", { name: label, exact: true }).click();
   } else {

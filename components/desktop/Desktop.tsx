@@ -6,7 +6,7 @@ import { site } from "@/lib/site";
 import Window from "./Window";
 import { DesktopContext } from "./context";
 import { homeRectStyle, oppositeHalf, snapRect, type Size, type SnapZone } from "./geometry";
-import { DesktopIcons, TabBar, TaskBar } from "./Navigation";
+import { DesktopIcons, Dock, TabBar } from "./Navigation";
 import { PROGRAMS, WINDOW_KEYS, keyForPath, type WindowKey } from "./programs";
 import { activeWindow, desktopReducer, initialDesktopState, type Rect, type WindowStatus } from "./state";
 
@@ -113,7 +113,7 @@ export default function Desktop({ programs, initial }: DesktopProps) {
         <main id="desktop" tabIndex={-1} aria-label="Desktop" className="relative flex-1 min-h-0 mx-2 md:mx-4 mt-2 mb-2 outline-none">
           <DesktopIcons onOpen={open} />
 
-          <div ref={stageRef} className={`absolute inset-0 md:left-28 pointer-events-none ${interacting ? "select-none" : ""}`}>
+          <div ref={stageRef} className={`absolute inset-0 pointer-events-none ${interacting ? "select-none" : ""}`}>
             {WINDOW_KEYS.filter((key) => state.windows[key].status !== "closed").map((key) => {
               const win = state.windows[key];
               const program = PROGRAMS[key];
@@ -179,7 +179,7 @@ export default function Desktop({ programs, initial }: DesktopProps) {
           </div>
         </main>
 
-        <TaskBar status={status} active={active} onOpen={open} onMinimize={(key) => dispatch({ type: "minimize", key })} />
+        <Dock status={status} active={active} onOpen={open} onMinimize={(key) => dispatch({ type: "minimize", key })} />
         <TabBar active={active} onOpen={open} />
       </div>
     </DesktopContext.Provider>

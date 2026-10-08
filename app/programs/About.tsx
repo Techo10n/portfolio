@@ -119,19 +119,11 @@ export default function About() {
 
       <section aria-labelledby="about-heading" className="mt-9 max-w-[68ch]">
         <h2 id="about-heading" className={sectionLabel}>About me</h2>
-        <div className="mt-3 space-y-3 text-[15px] leading-relaxed text-foreground/90">
-          <p>
-            Hey, I&apos;m Zechariah, though most people call me Zach or &ldquo;Zech.&rdquo; I&apos;m a junior at
-            Georgia Tech studying computer science with a minor in Korean, and I spent summer 2026 as a software
-            engineering intern at Capital One.
-          </p>
-          <p>
-            I love building things end to end, from mobile apps and web platforms to the design details that make
-            them feel right. I&apos;m happiest watching something I made come to life, and I want a career spent
-            creating something out of nothing.
-          </p>
-          <p>Outside of code, I edit videos and enjoy soccer, volleyball, and music.</p>
-        </div>
+        <p className="mt-3 text-[15px] leading-relaxed text-foreground/90">
+          Hey, I&apos;m Zechariah, and I&apos;m currently studying computer science at Georgia Institute of Technology
+          in Atlanta. My primary interests lie in software development, video editing, and web design. I love bringing
+          ideas to life, whether through interactive websites, polished videos, or elegant code.
+        </p>
       </section>
 
       <section aria-labelledby="skills-heading" className="mt-9">

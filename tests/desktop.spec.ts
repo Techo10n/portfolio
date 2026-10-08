@@ -131,10 +131,25 @@ for (const colorScheme of ["light", "dark"] as const) {
 test.describe("desktop windows", () => {
   test.skip(({ isMobile }) => isMobile, "floating windows are a desktop feature");
 
-  const taskbar = (page: import("@playwright/test").Page, title: string) =>
-    page.getByRole("navigation", { name: "Open windows" }).getByRole("button", { name: title, exact: true });
+  const dock = (page: import("@playwright/test").Page, title: string) =>
+    page.getByRole("navigation", { name: "Dock" }).getByRole("button", { name: title, exact: true });
 
-  test("each window opens in its own spot, clear of the desktop icons", async ({ page }) => {
+  test("About opens maximized; restoring it floats it", async ({ page }) => {
+    const desktop = (await page.locator("#desktop").boundingBox())!;
+    await expect.poll(async () => (await box(page, "About Me")).width).toBeGreaterThan(desktop.width - 2);
+    await win(page, "About Me").getByRole("button", { name: "Restore" }).click();
+    await expect.poll(async () => (await box(page, "About Me")).width).toBeLessThan(desktop.width - 100);
+  });
+
+  test.describe("from a floating About", () => {
+    test.beforeEach(async ({ page }) => {
+      await win(page, "About Me").getByRole("button", { name: "Restore" }).click();
+      await expect(win(page, "About Me").getByRole("button", { name: "Maximize" })).toBeVisible();
+      // Let the restore transition finish: About settles at its preferred 780px width.
+      await expect.poll(async () => Math.round((await box(page, "About Me")).width)).toBe(780);
+    });
+
+  test("each window opens in its own spot", async ({ page }) => {
     for (const label of ["Projects", "Experience", "Resume", "Contact", "Terminal"]) await openApp(page, label, false);
     const titles = ["About Me", "Projects", "Experience", "Resume", "Contact", "Terminal"];
     const boxes = await Promise.all(titles.map((t) => box(page, t)));
@@ -144,8 +159,6 @@ test.describe("desktop windows", () => {
         expect(apart, `${titles[i]} vs ${titles[j]}`).toBe(true);
       }
     }
-    const icons = (await page.getByRole("navigation", { name: "Apps" }).getByRole("list").boundingBox())!;
-    for (const b of boxes) expect(b.x).toBeGreaterThanOrEqual(icons.x + icons.width);
   });
 
   test("dragging the title bar moves the window", async ({ page }) => {
@@ -181,17 +194,17 @@ test.describe("desktop windows", () => {
     await expect(page).toHaveURL("/");
   });
 
-  test("minimize sends the window to the taskbar and restores it", async ({ page }) => {
+  test("minimize sends the window to the dock and restores it", async ({ page }) => {
     await win(page, "About Me").getByRole("button", { name: "Minimize" }).click();
     await expect(win(page, "About Me")).toBeHidden();
-    await expect(taskbar(page, "About Me")).toHaveAttribute("data-status", "minimized");
-    await taskbar(page, "About Me").click();
+    await expect(dock(page, "About")).toHaveAttribute("data-status", "minimized");
+    await dock(page, "About").click();
     await expect(win(page, "About Me")).toBeVisible();
-    await expect(taskbar(page, "About Me")).toHaveAttribute("data-status", "open");
+    await expect(dock(page, "About")).toHaveAttribute("data-status", "open");
   });
 
-  test("clicking the active window's taskbar button minimizes it", async ({ page }) => {
-    await taskbar(page, "About Me").click();
+  test("clicking the active window's dock button minimizes it", async ({ page }) => {
+    await dock(page, "About").click();
     await expect(win(page, "About Me")).toBeHidden();
   });
 
@@ -250,7 +263,7 @@ test.describe("desktop windows", () => {
     await openApp(page, "Projects", false);
     await openApp(page, "Resume", false);
     // Focus Projects, so it — not Resume, which was opened last — is the most recently focused.
-    await page.getByRole("navigation", { name: "Open windows" }).getByRole("button", { name: "Projects", exact: true }).click();
+    await page.getByRole("navigation", { name: "Dock" }).getByRole("button", { name: "Projects", exact: true }).click();
     const desktop = await stage(page);
 
     await dragTo(page, "About Me", desktop.x + 2, desktop.y + desktop.height / 2);
@@ -338,14 +351,15 @@ test.describe("desktop windows", () => {
     await expect.poll(async () => Math.round((await box(page, "About Me")).width)).toBe(Math.round(normal.width));
   });
 
-  test("the taskbar stays above windows", async ({ page }) => {
+  test("the dock stays above windows", async ({ page }) => {
     const about = await box(page, "About Me");
     await page.mouse.move(about.x + 200, about.y + 20);
     await page.mouse.down();
     await page.mouse.move(about.x + 200, about.y + 500, { steps: 6 });
     await page.mouse.up();
-    await taskbar(page, "About Me").click();
+    await dock(page, "About").click();
     await expect(win(page, "About Me")).toBeHidden();
+  });
   });
 });
 

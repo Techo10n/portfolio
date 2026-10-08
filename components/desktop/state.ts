@@ -40,10 +40,10 @@ export type DesktopAction =
 
 const closed: WindowState = { status: "closed", rect: null, maximized: false, restore: null, snapped: null };
 
-/** About is always open on load; a deep link opens its window on top. */
+/** About is always open on load, maximized; a deep link opens its window on top. */
 export function initialDesktopState(initial: WindowKey = "about"): DesktopState {
   const windows = Object.fromEntries(WINDOW_KEYS.map((k) => [k, closed])) as Record<WindowKey, WindowState>;
-  windows.about = { ...closed, status: "open" };
+  windows.about = { ...closed, status: "open", maximized: true };
   const zOrder: WindowKey[] = ["about"];
   if (initial !== "about") {
     windows[initial] = { ...closed, status: "open" };
