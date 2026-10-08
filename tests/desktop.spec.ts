@@ -145,8 +145,8 @@ test.describe("desktop windows", () => {
     test.beforeEach(async ({ page }) => {
       await win(page, "About Me").getByRole("button", { name: "Restore" }).click();
       await expect(win(page, "About Me").getByRole("button", { name: "Maximize" })).toBeVisible();
-      // Let the restore transition finish: About settles at its preferred 780px width.
-      await expect.poll(async () => Math.round((await box(page, "About Me")).width)).toBe(780);
+      // Let the restore transition finish: About settles at its preferred 820px width.
+      await expect.poll(async () => Math.round((await box(page, "About Me")).width)).toBe(820);
     });
 
   test("each window opens in its own spot", async ({ page }) => {

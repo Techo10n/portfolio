@@ -49,22 +49,28 @@ export function Dock({ status, active, onOpen, onMinimize }: NavProps & { onMini
     <nav aria-label="Dock" className="relative z-30 max-md:hidden flex justify-center pb-3 pt-1">
       <ul className="flex items-center gap-1 rounded-2xl border border-foreground/15 bg-background/60 backdrop-blur-xl px-1.5 py-1 shadow-lg shadow-black/10">
         {WINDOW_KEYS.map((key) => {
-          const { icon: Icon, label, title } = PROGRAMS[key];
+          const { icon: Icon, label } = PROGRAMS[key];
           const isActive = key === active;
           return (
             <li key={key}>
               <button
                 type="button"
                 data-status={status[key]}
+                aria-label={label}
                 aria-pressed={isActive}
-                title={isActive ? `Minimize ${title}` : status[key] === "closed" ? `Open ${title}` : `Show ${title}`}
                 onClick={() => (isActive ? onMinimize(key) : onOpen(key))}
-                className={`relative flex items-center gap-2 h-9 px-3 rounded-xl font-mono text-xs transition-colors cursor-pointer ${
-                  isActive ? "bg-foreground/15 text-foreground" : "text-foreground/75 hover:bg-foreground/8"
+                className={`group relative flex items-center justify-center w-11 h-11 rounded-xl transition-colors cursor-pointer ${
+                  isActive ? "bg-foreground/15 text-foreground" : "text-foreground/75 hover:bg-foreground/8 hover:text-foreground"
                 }`}
               >
-                <Icon aria-hidden="true" className="w-4 h-4 stroke-[1.5]" />
-                {label}
+                <Icon aria-hidden="true" className="w-5 h-5 stroke-[1.5]" />
+                {/* Name on hover or keyboard focus, like the macOS dock. */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute bottom-full mb-2.5 whitespace-nowrap rounded-md border border-foreground/15 bg-background px-2 py-1 font-mono text-xs text-foreground shadow-md opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+                >
+                  {label}
+                </span>
                 {status[key] !== "closed" && (
                   <span aria-hidden="true" className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-foreground/70" />
                 )}
