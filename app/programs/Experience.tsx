@@ -41,7 +41,7 @@ const experience: Job[] = [
       "Built websites and software for local clients, generating over $4,000 in freelance revenue.",
       <>Redesigned a regional nonprofit&apos;s Squarespace site, increasing site visits by 150% (<Link href="https://cwjfon.org">cwjfon.org</Link>).</>,
       <>Tailored a WordPress site for a lawyer with a focus on UX and simple client contact (<Link href="https://askin4baskin.attorney">askin4baskin.attorney</Link>).</>,
-      <>Launched a mobile-first Framer site for a local law office, boosting client inquiries by over 400% in three months (<Link href="https://bluemountainlawoffice.com">bluemountainlawoffice.com</Link>).</>,
+      <>Launched a mobile-first Framer site for a local law office, boosting client inquiries by over 400% in three months (<Link href="https://web.archive.org/web/20250710234233/https://www.bluemountainlawoffice.com/">archived</Link>; the attorney has since moved firms).</>,
     ],
   },
   {

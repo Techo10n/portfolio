@@ -10,6 +10,8 @@ type ProjectAction = {
 type Project = {
   title: string;
   description: string;
+  /** Caveat shown under the description, e.g. why a live link is gone. */
+  note?: string;
   /** Stack, from the resume or the project's vault page. */
   tags?: string[];
   period?: string;
@@ -103,7 +105,8 @@ const sections: ProjectSection[] = [
           "Mobile-first Framer site for a local law office, with service details and online appointment booking. Client inquiries rose over 400% in three months.",
         image: "/bml-screenshot.jpg",
         imagePosition: "center",
-        actions: [{ label: "View Site", href: "https://bluemountainlawoffice.com" }],
+        note: "The live site is offline: the attorney has since moved to a new firm.",
+        actions: [{ label: "View Archived Site", href: "https://web.archive.org/web/20250710234233/https://www.bluemountainlawoffice.com/" }],
       },
       {
         title: "CWJFON",
@@ -207,6 +210,7 @@ function ProjectCard({ project }: { project: Project }) {
         <p className={`leading-relaxed text-foreground/85 mt-2 ${featured ? "text-[15px] max-w-[70ch]" : "text-sm"}`}>
           {description}
         </p>
+        {project.note && <p className="text-xs leading-relaxed text-foreground/65 mt-2">{project.note}</p>}
         <Tags tags={project.tags} />
         <div className="mt-auto">
           <Actions actions={project.actions} />
