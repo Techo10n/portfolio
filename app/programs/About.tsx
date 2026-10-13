@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowRight, Award, BriefcaseBusiness, FileText, Mail, MapPin, Music } from "lucide-react";
+import { ArrowRight, BriefcaseBusiness, FileText, Globe, Mail, MapPin, Music } from "lucide-react";
 import { Github, Instagram, Linkedin, Youtube } from "@/components/brand-icons";
 import OpenWindowButton from "@/components/desktop/OpenWindowButton";
 import { site } from "@/lib/site";
@@ -28,16 +28,16 @@ const highlights = [
     window: "experience" as const,
   },
   {
-    icon: Award,
-    title: "3rd of 100+ interns",
-    body: "Capital One intern hackathon, with an AI data-loss prevention system spanning four surfaces.",
-    window: "experience" as const,
-  },
-  {
     icon: Music,
     title: "MusicBridge",
     body: "Cross-platform playlist sharing across Spotify, Apple Music, and YouTube Music. TestFlight beta with 20+ users.",
     window: "projects" as const,
+  },
+  {
+    icon: Globe,
+    title: "Freelance Web Designer & Developer",
+    body: "Sites and software for local clients since 2024: over $4,000 in revenue and a 150% jump in visits for a regional nonprofit.",
+    window: "experience" as const,
   },
 ];
 
@@ -117,7 +117,7 @@ export default function About() {
         </ul>
       </section>
 
-      <section aria-labelledby="about-heading" className="mt-9 max-w-[68ch]">
+      <section aria-labelledby="about-heading" className="mt-9">
         <h2 id="about-heading" className={sectionLabel}>About me</h2>
         <p className="mt-3 text-[15px] leading-relaxed text-foreground/90">
           Hey, I&apos;m Zechariah, and I&apos;m currently studying computer science at Georgia Institute of Technology

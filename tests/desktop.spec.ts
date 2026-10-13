@@ -145,8 +145,10 @@ test.describe("desktop windows", () => {
     test.beforeEach(async ({ page }) => {
       await win(page, "About Me").getByRole("button", { name: "Restore" }).click();
       await expect(win(page, "About Me").getByRole("button", { name: "Maximize" })).toBeVisible();
-      // Let the restore transition finish: About settles at its preferred 820px width.
+      // Let the restore transition finish. Width reaches 820px before the position settles, so wait
+      // on the slot's own transitions rather than its size.
       await expect.poll(async () => Math.round((await box(page, "About Me")).width)).toBe(820);
+      await win(page, "About Me").locator("..").evaluate((slot) => Promise.all(slot.getAnimations().map((a) => a.finished)));
     });
 
   test("each window opens in its own spot", async ({ page }) => {
