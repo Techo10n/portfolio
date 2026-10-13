@@ -75,7 +75,7 @@ const education = [
     details: [
       ["School Year:", "Junior"],
       ["GPA:", "3.85"],
-      ["Involvement:", "Big Data Big Impact (Digital Resources Manager)"],
+      ["Involvement:", "Big Data Big Impact (Digital Resources Manager), Korean Undergraduate Student Association (Social Media Manager)"],
       ["Relevant Courses:", "Artificial Intelligence, Combinatorics, Computer Organization and Programming, Data Structures & Algorithms, Linear Algebra, Multivariable Calculus, Object-Oriented Programming, Objects and Design"],
     ],
   },
