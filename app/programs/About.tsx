@@ -36,7 +36,7 @@ const highlights = [
   {
     icon: Globe,
     title: "Freelance Web Designer & Developer",
-    body: "Sites and software for local clients since 2024: over $4,000 in revenue and a 150% jump in visits for a regional nonprofit.",
+    body: "Sites and software for local clients since 2024: over $4,000 in revenue and a 400%+ increase in inquiries in three months for a local law office.",
     window: "experience" as const,
   },
 ];
