@@ -105,7 +105,7 @@ const sections: ProjectSection[] = [
           "Mobile-first Framer site for a local law office, with service details and online appointment booking. Client inquiries rose over 400% in three months.",
         image: "/bml-screenshot.jpg",
         imagePosition: "center",
-        note: "The live site is offline: the attorney has since moved to a new firm.",
+        note: "The live site is offline: the attorney has since moved to a new firm. The archived copy is static, so its flip cards and FAQ accordion no longer work.",
         actions: [{ label: "View Archived Site", href: "https://web.archive.org/web/20250710234233/https://www.bluemountainlawoffice.com/" }],
       },
       {
