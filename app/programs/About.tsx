@@ -75,7 +75,7 @@ export default function About() {
                   href={link}
                   aria-label={label}
                   title={label}
-                  target={link.startsWith("http") ? "_blank" : undefined}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-9 h-9 rounded-full hover:bg-foreground/8 transition-colors"
                 >
