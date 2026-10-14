@@ -114,8 +114,26 @@
     ]
   },
   "museaic": {
-    "cover": "/projects/museaic/welcome.webp",
-    "alt": "Museaic's welcome screen on iPhone: the museaic wordmark, \"Any song, to anyone, on any app,\" and sign-in options"
+    "cover": "/projects/museaic/app-screens-dark.webp",
+    "alt": "Three Museaic screens on iPhone in dark mode: the friends feed of shared songs and playlists, a playlist sent from Spotify ready to add to YouTube Music, and the connected streaming services",
+    "gallery": [
+      {
+        "src": "/projects/museaic/profile-dark.webp",
+        "alt": "A Museaic profile in dark mode: followers, shared count, a favorite song, and pinned playlists"
+      },
+      {
+        "src": "/projects/museaic/app-screens.webp",
+        "alt": "The same three Museaic screens in light mode: friends feed, a Spotify playlist ready for YouTube Music, and connected services"
+      },
+      {
+        "src": "/projects/museaic/profile.webp",
+        "alt": "A Museaic profile in light mode"
+      },
+      {
+        "src": "/projects/museaic/welcome-screen.webp",
+        "alt": "Museaic's welcome screen with Apple, Google, and email sign-in"
+      }
+    ]
   },
   "songscraper": {
     "cover": "/projects/songscraper/sign-in.webp",
