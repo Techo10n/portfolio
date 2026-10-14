@@ -51,7 +51,7 @@ export default function CaseStudy({ slug }: { slug: ProjectSlug }) {
   const text = body(slug);
 
   return (
-    <article className="w-full px-5 @xl:px-8 @3xl:px-12 py-6 @xl:py-8 pb-10">
+    <article className="w-full max-w-5xl px-5 @xl:px-8 @3xl:px-12 py-6 @xl:py-8 pb-10">
       {media?.cover && (
         <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-foreground/15 mb-6">
           <Image src={media.cover} alt={media.alt} fill sizes="(min-width: 768px) 760px, 100vw" className="object-cover" />

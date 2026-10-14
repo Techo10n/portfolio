@@ -1,1 +1,102 @@
-{}
+{
+  "portfolio": {
+    "cover": "/projects/portfolio/cover.webp",
+    "alt": "The portfolio's desktop: About Me, Projects, and Terminal windows open above the dock",
+    "gallery": [
+      {
+        "src": "/projects/portfolio/case-study.webp",
+        "alt": "A project's case study open in its own window, in light mode"
+      }
+    ]
+  },
+  "simpliearn": {
+    "cover": "/projects/simpliearn/cover.webp",
+    "alt": "SimpliEarn landing page: \"Turning Earnings Calls Into Actionable Insights\" with a field for pasting an earnings call link",
+    "gallery": [
+      {
+        "src": "/projects/simpliearn/demo-library.webp",
+        "alt": "SimpliEarn's demo library of earnings calls, including Apple, CVS, Alphabet, Shell, Tesla, and Walmart"
+      }
+    ]
+  },
+  "bdbi": {
+    "cover": "/projects/bdbi/cover.webp",
+    "alt": "Big Data Big Impact homepage hero: \"Empowering Minds Through Machine Learning and Big Data\"",
+    "gallery": [
+      {
+        "src": "/projects/bdbi/current-projects.webp",
+        "alt": "Homepage cards for Learn, Apply, and Network above the Our Current Projects section"
+      },
+      {
+        "src": "/projects/bdbi/projects-page.webp",
+        "alt": "The Our Projects page hero"
+      },
+      {
+        "src": "/projects/bdbi/approach.webp",
+        "alt": "The Our Approach section with Data Analysis & ML, Platform & Infrastructure, and Data Visualization cards"
+      }
+    ]
+  },
+  "empaithetic": {
+    "cover": "/projects/empaithetic/cover.webp",
+    "alt": "EmpAIthetic journal entry with an empathetic AI response shown beneath the writing",
+    "gallery": [
+      {
+        "src": "/projects/empaithetic/response.webp",
+        "alt": "A second journal entry about a chemistry test, with the AI's supportive reply"
+      }
+    ]
+  },
+  "vip-drone-detection": {
+    "cover": "/projects/vip-drone-detection/cover.webp",
+    "alt": "Thermal drone image of a basketball court with three people outlined by their labeled bounding boxes",
+    "gallery": [
+      {
+        "src": "/projects/vip-drone-detection/labels.webp",
+        "alt": "Thermal aerial image from the dataset with labeled bounding boxes around people"
+      }
+    ]
+  },
+  "blue-mountain-law": {
+    "cover": "/projects/blue-mountain-law/cover.webp",
+    "alt": "Blue Mountain Law, PLLC homepage hero over a forested mountain landscape",
+    "gallery": [
+      {
+        "src": "/projects/blue-mountain-law/why-choose.webp",
+        "alt": "The Why Choose Blue Mountain Law section with four value tiles"
+      }
+    ]
+  },
+  "inland-octopus": {
+    "cover": "/projects/inland-octopus/cover.webp",
+    "alt": "Illustrated octopus tentacles and a rainbow framing \"Walla Walla's premier purveyor of fun, foolishness, & always free gift wrapping since 2004\"",
+    "gallery": [
+      {
+        "src": "/projects/inland-octopus/exciting-events.webp",
+        "alt": "Polaroid-style photo card for Exciting Events over a cloudy sky"
+      },
+      {
+        "src": "/projects/inland-octopus/whacky-whatevers.webp",
+        "alt": "Polaroid-style photo cards for Whacky Whatevers and Fantasy Fits"
+      }
+    ]
+  },
+  "techolon": {
+    "cover": "/projects/techolon/fall.webp",
+    "alt": "Thumbnail for Fall, a Rocket League montage",
+    "gallery": [
+      {
+        "src": "/projects/techolon/counting-stars.webp",
+        "alt": "Thumbnail for Counting Stars, a Rocket League montage"
+      },
+      {
+        "src": "/projects/techolon/the-river.webp",
+        "alt": "Thumbnail for The River, a Rocket League montage"
+      },
+      {
+        "src": "/projects/techolon/cover.webp",
+        "alt": "The Techolon YouTube channel page, featuring the Fall Rocket League montage"
+      }
+    ]
+  }
+}

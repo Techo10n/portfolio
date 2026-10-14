@@ -4,8 +4,10 @@ import CopyButton from "@/components/CopyButton";
 
 const EMAIL = "zechariahfrierson@gmail.com";
 
-const circle =
-  "flex items-center justify-center w-8 h-8 shrink-0 rounded-full border border-foreground/25 hover:bg-foreground/10 transition-colors cursor-pointer";
+// Labeled pills when the row has room; icon-only circles when the labels would force a wrap.
+const button =
+  "flex items-center justify-center gap-1.5 h-8 w-8 @min-[28rem]:w-auto @min-[28rem]:px-3 shrink-0 rounded-full border border-foreground/25 text-sm hover:bg-foreground/10 transition-colors cursor-pointer";
+const label = "sr-only @min-[28rem]:not-sr-only";
 
 export default function Contact() {
   return (
@@ -15,16 +17,19 @@ export default function Contact() {
         Email is the fastest way to reach me. You can also send a message here and it&apos;ll land in my inbox.
       </p>
 
-      <div className="flex items-center gap-2 mt-4 rounded-xl border border-foreground/15 bg-foreground/[0.03] p-3 max-w-md">
-        {/* If it has to wrap, wrap after the @ rather than mid-word. */}
-        <span className="font-mono text-sm min-w-0 flex-1 [overflow-wrap:anywhere]">
-          {EMAIL.split("@")[0]}@<wbr />
-          {EMAIL.split("@")[1]}
-        </span>
-        <CopyButton value={EMAIL} label="Copy email address" className={circle} />
-        <a href={`mailto:${EMAIL}`} aria-label="Send an email" title="Send an email" className={circle}>
-          <Mail aria-hidden="true" className="w-4 h-4" />
-        </a>
+      <div className="@container mt-4 max-w-md">
+        <div className="flex items-center gap-2 rounded-xl border border-foreground/15 bg-foreground/[0.03] p-3">
+          {/* If it has to wrap, wrap after the @ rather than mid-word. */}
+          <span className="font-mono text-sm min-w-0 flex-1 [overflow-wrap:anywhere]">
+            {EMAIL.split("@")[0]}@<wbr />
+            {EMAIL.split("@")[1]}
+          </span>
+          <CopyButton value={EMAIL} label="Copy" className={button} labelClassName={label} />
+          <a href={`mailto:${EMAIL}`} title="Send an email" className={button}>
+            <Mail aria-hidden="true" className="w-4 h-4" />
+            <span className={label}>Email</span>
+          </a>
+        </div>
       </div>
 
       <div className="mt-8 max-w-md">

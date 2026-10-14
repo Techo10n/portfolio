@@ -86,7 +86,7 @@ const APPS: Record<AppKey, Program> = {
     icon: Mail,
     path: "/contact",
     scroll: true,
-    size: { w: 460, h: 520 },
+    size: { w: 540, h: 520 },
     home: { x: 0, y: 1 },
     inTabBar: true,
   },

@@ -1,12 +1,23 @@
 import { existsSync } from "node:fs";
 import { expect, test } from "./fixtures";
 import { openApp, win } from "./helpers";
+import { mediaFor } from "../content/media";
 import { PROJECT_SLUGS, PROJECTS } from "../content/projects";
 
 test("every project has a written case study", ({ isMobile }) => {
   test.skip(isMobile, "file check; one project is enough");
   const missing = PROJECT_SLUGS.filter((slug) => !existsSync(`content/case-studies/${slug}.md`));
   expect(missing).toEqual([]);
+});
+
+test("every project image in the media list exists", ({ isMobile }) => {
+  test.skip(isMobile, "file check; one project is enough");
+  const paths = PROJECT_SLUGS.flatMap((slug) => {
+    const media = mediaFor(slug);
+    return media ? [media.cover, ...(media.gallery ?? []).map((g) => g.src)].filter(Boolean) : [];
+  });
+  expect(paths.length).toBeGreaterThan(0);
+  expect(paths.filter((src) => !existsSync(`public${src}`))).toEqual([]);
 });
 
 test("clicking a project card opens its case study in its own window", async ({ page, isMobile }) => {

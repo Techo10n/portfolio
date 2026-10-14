@@ -44,7 +44,6 @@ function Tags({ tags }: { tags?: string[] }) {
 function ProjectCard({ project }: { project: Project }) {
   const { slug, title, description, period, featured } = project;
   const media = mediaFor(slug);
-  const image = media?.cover ?? project.image;
   return (
     // The whole card opens the case study: the title link stretches over it.
     <article
@@ -52,15 +51,14 @@ function ProjectCard({ project }: { project: Project }) {
         featured ? "border-foreground/35" : "border-foreground/15"
       }`}
     >
-      {image && (
+      {media?.cover && (
         <div className="relative aspect-[16/9] border-b border-foreground/10">
           <Image
-            src={image}
-            alt={media?.alt ?? `Screenshot of ${title}`}
+            src={media.cover}
+            alt={media.alt}
             fill
             sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
             className="object-cover"
-            style={{ objectPosition: media?.cover ? "center" : (project.imagePosition ?? "center") }}
           />
         </div>
       )}

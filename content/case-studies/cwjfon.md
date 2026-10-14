@@ -6,13 +6,7 @@ CWJFON is a Walla Walla–based nonprofit that provides accessible immigration l
 
 ## What I built
 
-A redesign of the organisation's Squarespace site. Today the site is organised around those audiences:
-
-- **Home:** the mission, vision and values up front, the network affiliation, and a land acknowledgement.
-- **What We Do:** community organizing and advocacy (legal clinics, community forums, Know Your Rights trainings, Family Preparedness workshops) and the immigration case types the legal team handles.
-- **Who We Are:** the organisation's background and its board.
-- **Contact**, **We Are Hiring** (leadership job postings), and **Donate** (online giving plus mail-in instructions).
-- A newsletter sign-up block on every page.
+A redesign of the organisation's Squarespace site, built around those audiences.
 
 ## Results
 
@@ -24,4 +18,4 @@ Squarespace.
 
 ## Status
 
-Live at [cwjfon.org](https://cwjfon.org) and maintained by the organisation.
+The organisation has changed the site since I handed it off, and I no longer maintain it, so [cwjfon.org](https://cwjfon.org) today doesn't reflect my redesign.

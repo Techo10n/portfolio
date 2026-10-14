@@ -3,13 +3,22 @@
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 
-/** Icon-only copy button; the label is its accessible name and tooltip. */
-export default function CopyButton({ value, label, className }: { value: string; label: string; className?: string }) {
+/** Copy button. `labelClassName` lets the caller hide the visible label (e.g. icon-only when narrow). */
+export default function CopyButton({
+  value,
+  label,
+  className,
+  labelClassName,
+}: {
+  value: string;
+  label: string;
+  className?: string;
+  labelClassName?: string;
+}) {
   const [copied, setCopied] = useState(false);
   return (
     <button
       type="button"
-      aria-label={label}
       title={copied ? "Copied" : label}
       className={className}
       onClick={async () => {
@@ -19,8 +28,8 @@ export default function CopyButton({ value, label, className }: { value: string;
       }}
     >
       {copied ? <Check aria-hidden="true" className="w-4 h-4" /> : <Copy aria-hidden="true" className="w-4 h-4" />}
-      <span aria-live="polite" className="sr-only">
-        {copied ? "Copied" : ""}
+      <span aria-live="polite" className={labelClassName}>
+        {copied ? "Copied" : label}
       </span>
     </button>
   );

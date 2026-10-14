@@ -39,8 +39,6 @@ export type Project = {
   /** Shown large, above everything else. */
   featured?: boolean;
   actions?: ProjectAction[];
-  image?: string;
-  imagePosition?: string;
 };
 
 export type ProjectSection = {
@@ -101,7 +99,7 @@ export const PROJECT_SECTIONS: ProjectSection[] = [
       {
         slug: "simpliearn",
         title: "SimpliEarn",
-        period: "Aug 2025 – Dec 2025",
+        period: "Jan 2025 – May 2025",
         tags: ["Next.js", "React", "Python", "Chart.js"],
         description:
           "AI-powered earnings call analysis platform. Built its sentiment graph, a 48-hour stock chart around each call, and the Next.js dashboard tying together the AI summary engine and a RAG chatbot.",
@@ -125,8 +123,6 @@ export const PROJECT_SECTIONS: ProjectSection[] = [
         tags: ["HackGT 11"],
         description:
           "AI-powered journaling app for expressing emotions and receiving support. Built for HackGT 11.",
-        image: "/empaithetic-screenshot.jpg",
-        imagePosition: "left",
         actions: [
           { label: "View Demo", href: "https://www.youtube.com/watch?v=G2bBY3_221M" },
           { label: "Source Code", href: "https://github.com/Techo10n/shaz" },
@@ -150,8 +146,6 @@ export const PROJECT_SECTIONS: ProjectSection[] = [
         tags: ["Framer"],
         description:
           "Mobile-first Framer site for a local law office, with service details and a consultation request form. Client inquiries rose over 400% in three months.",
-        image: "/bml-screenshot.jpg",
-        imagePosition: "center",
         note: "The live site is offline: the attorney has since moved to a new firm. The archived copy is static, so its flip cards and FAQ accordion no longer work.",
         actions: [{ label: "View Archived Site", href: "https://web.archive.org/web/20250710234233/https://www.bluemountainlawoffice.com/" }],
       },
@@ -161,6 +155,7 @@ export const PROJECT_SECTIONS: ProjectSection[] = [
         tags: ["Squarespace"],
         description:
           "Squarespace redesign for Central Washington Justice for Our Neighbors, a regional nonprofit, increasing site visits by 150%.",
+        note: "The live site has been changed since I handed it off, so it no longer reflects my redesign.",
         actions: [{ label: "View Site", href: "https://cwjfon.org" }],
       },
       {
@@ -199,8 +194,6 @@ export const PROJECT_SECTIONS: ProjectSection[] = [
         title: "Techolon",
         tags: ["Video editing"],
         description: "My personal YouTube channel where I post video game montages and edits.",
-        image: "/yt-screenshot.jpg",
-        imagePosition: "left",
         actions: [{ label: "View Channel", href: "https://www.youtube.com/@techolon" }],
       },
     ],
