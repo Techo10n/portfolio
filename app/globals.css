@@ -79,6 +79,19 @@
   }
 }
 
+/* An endless strip: the slides are rendered twice, so sliding left by half lands exactly on the start. */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-marquee {
+    animation: marquee var(--marquee-duration, 40s) linear infinite;
+  }
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import OpenWindowButton from "@/components/desktop/OpenWindowButton";
@@ -41,13 +42,37 @@ function Tags({ tags }: { tags?: string[] }) {
   );
 }
 
+/**
+ * Every image of a project, scrolling past endlessly. The slides are rendered twice so the strip can
+ * loop (see `.animate-marquee`); with reduced motion it holds still on the first image. Hovering the
+ * card pauses it.
+ */
+function Carousel({ images }: { images: { src: string; alt: string }[] }) {
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-foreground/[0.04]">
+      <ul
+        className="animate-marquee group-hover/card:[animation-play-state:paused] flex h-full w-max py-[6%]"
+        style={{ "--marquee-duration": `${images.length * 7}s` } as CSSProperties}
+      >
+        {[...images, ...images].map((image, i) => (
+          <li key={i} aria-hidden={i >= images.length} className="h-full pl-3">
+            <div className="relative h-full aspect-[16/9] overflow-hidden rounded-lg border border-foreground/10">
+              <Image src={image.src} alt={i < images.length ? image.alt : ""} fill sizes="(min-width: 768px) 40vw, 80vw" className="object-cover" />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function ProjectCard({ project }: { project: Project }) {
   const { slug, title, description, period, featured } = project;
   const media = mediaFor(slug);
   return (
     // The whole card opens the case study: the title link stretches over it.
     <article
-      className={`relative flex flex-col h-full overflow-hidden rounded-xl border bg-background transition-colors hover:border-foreground/45 ${
+      className={`group/card relative flex flex-col h-full overflow-hidden rounded-xl border bg-background transition-colors hover:border-foreground/45 ${
         featured ? "border-foreground/35 @3xl:flex-row" : "border-foreground/15"
       }`}
     >
@@ -58,13 +83,17 @@ function ProjectCard({ project }: { project: Project }) {
             featured ? "@3xl:w-1/2 @3xl:border-b-0 @3xl:border-r" : ""
           }`}
         >
-          <Image
-            src={media.cover}
-            alt={media.alt}
-            fill
-            sizes={featured ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"}
-            className="object-cover"
-          />
+          {featured && media.gallery?.length ? (
+            <Carousel images={[{ src: media.cover, alt: media.alt }, ...media.gallery]} />
+          ) : (
+            <Image
+              src={media.cover}
+              alt={media.alt}
+              fill
+              sizes={featured ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"}
+              className="object-cover"
+            />
+          )}
         </div>
       )}
       <div data-testid="card-body" className="flex flex-col flex-1 p-4 @xl:p-5">

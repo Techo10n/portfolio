@@ -66,3 +66,29 @@ test("case studies load directly from their URL", async ({ page, request }) => {
   }
   expect((await request.get("/projects/not-a-project")).status()).toBe(404);
 });
+
+test("gallery images open large and step through with the arrow keys", async ({ page }) => {
+  await page.goto("/projects/museaic");
+  const study = win(page, "Museaic");
+  const thumbs = study.getByRole("button", { name: /^View larger/ });
+  await thumbs.first().scrollIntoViewIfNeeded();
+  await thumbs.first().click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByText(/^1 \/ \d+$/)).toBeVisible();
+  await page.keyboard.press("ArrowRight");
+  await expect(dialog.getByText(/^2 \/ \d+$/)).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+});
+
+test("the featured card scrolls through all of its images, each shown once to screen readers", async ({ page }) => {
+  await page.goto("/projects");
+  const featured = win(page, "Projects").getByRole("article").first();
+  const images = featured.getByRole("img");
+  const slides = featured.locator(".animate-marquee > li");
+  const count = await slides.count();
+  expect(count).toBeGreaterThan(2);
+  // Rendered twice for the loop; the copies are hidden from assistive tech.
+  await expect(images).toHaveCount(count / 2);
+});

@@ -5,6 +5,7 @@ import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ArrowUpRight } from "lucide-react";
 import { PROJECTS, type ProjectSlug } from "@/content/projects";
+import Gallery from "@/components/Gallery";
 import { mediaFor } from "@/content/media";
 
 /** The case study's body, written in Markdown; null if it hasn't been written yet. */
@@ -100,13 +101,7 @@ export default function CaseStudy({ slug }: { slug: ProjectSlug }) {
       {media?.gallery?.length ? (
         <section aria-label="Gallery" className="mt-9">
           <h2 className={sectionLabel}>Gallery</h2>
-          <div className="grid grid-cols-1 @xl:grid-cols-2 gap-3 mt-3">
-            {media.gallery.map((image) => (
-              <div key={image.src} className="relative aspect-[16/10] overflow-hidden rounded-lg border border-foreground/15">
-                <Image src={image.src} alt={image.alt} fill sizes="(min-width: 768px) 380px, 100vw" className="object-cover" />
-              </div>
-            ))}
-          </div>
+          <Gallery images={media.gallery} />
         </section>
       ) : null}
     </article>
