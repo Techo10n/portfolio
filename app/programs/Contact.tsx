@@ -4,8 +4,8 @@ import CopyButton from "@/components/CopyButton";
 
 const EMAIL = "zechariahfrierson@gmail.com";
 
-const pill =
-  "inline-flex items-center gap-1.5 h-8 px-3 rounded-full border border-foreground/25 text-sm hover:bg-foreground/10 transition-colors cursor-pointer";
+const circle =
+  "flex items-center justify-center w-8 h-8 shrink-0 rounded-full border border-foreground/25 hover:bg-foreground/10 transition-colors cursor-pointer";
 
 export default function Contact() {
   return (
@@ -15,15 +15,16 @@ export default function Contact() {
         Email is the fastest way to reach me. You can also send a message here and it&apos;ll land in my inbox.
       </p>
 
-      <div className="flex flex-wrap items-center gap-2 mt-4 rounded-xl border border-foreground/15 bg-foreground/[0.03] p-3 max-w-md">
-        <span className="font-mono text-sm mr-auto break-all">{EMAIL}</span>
-        {/* One unit, so the buttons wrap together rather than splitting across lines. */}
-        <div className="flex gap-2">
-          <CopyButton value={EMAIL} label="Copy" className={pill} />
-          <a href={`mailto:${EMAIL}`} className={pill}>
-            <Mail aria-hidden="true" className="w-4 h-4" /> Email
-          </a>
-        </div>
+      <div className="flex items-center gap-2 mt-4 rounded-xl border border-foreground/15 bg-foreground/[0.03] p-3 max-w-md">
+        {/* If it has to wrap, wrap after the @ rather than mid-word. */}
+        <span className="font-mono text-sm min-w-0 flex-1 [overflow-wrap:anywhere]">
+          {EMAIL.split("@")[0]}@<wbr />
+          {EMAIL.split("@")[1]}
+        </span>
+        <CopyButton value={EMAIL} label="Copy email address" className={circle} />
+        <a href={`mailto:${EMAIL}`} aria-label="Send an email" title="Send an email" className={circle}>
+          <Mail aria-hidden="true" className="w-4 h-4" />
+        </a>
       </div>
 
       <div className="mt-8 max-w-md">
