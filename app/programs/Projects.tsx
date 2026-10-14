@@ -48,16 +48,21 @@ function ProjectCard({ project }: { project: Project }) {
     // The whole card opens the case study: the title link stretches over it.
     <article
       className={`relative flex flex-col h-full overflow-hidden rounded-xl border bg-background transition-colors hover:border-foreground/45 ${
-        featured ? "border-foreground/35" : "border-foreground/15"
+        featured ? "border-foreground/35 @3xl:flex-row" : "border-foreground/15"
       }`}
     >
       {media?.cover && (
-        <div className="relative aspect-[16/9] border-b border-foreground/10">
+        // The featured card puts its image beside the text once there's room, so it doesn't fill the window.
+        <div
+          className={`relative aspect-[16/9] shrink-0 border-b border-foreground/10 ${
+            featured ? "@3xl:w-1/2 @3xl:border-b-0 @3xl:border-r" : ""
+          }`}
+        >
           <Image
             src={media.cover}
             alt={media.alt}
             fill
-            sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
+            sizes={featured ? "(min-width: 768px) 50vw, 100vw" : "(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"}
             className="object-cover"
           />
         </div>
