@@ -17,10 +17,13 @@ export default function Contact() {
 
       <div className="flex flex-wrap items-center gap-2 mt-4 rounded-xl border border-foreground/15 bg-foreground/[0.03] p-3 max-w-md">
         <span className="font-mono text-sm mr-auto break-all">{EMAIL}</span>
-        <CopyButton value={EMAIL} label="Copy" className={pill} />
-        <a href={`mailto:${EMAIL}`} className={pill}>
-          <Mail aria-hidden="true" className="w-4 h-4" /> Email
-        </a>
+        {/* One unit, so the buttons wrap together rather than splitting across lines. */}
+        <div className="flex gap-2">
+          <CopyButton value={EMAIL} label="Copy" className={pill} />
+          <a href={`mailto:${EMAIL}`} className={pill}>
+            <Mail aria-hidden="true" className="w-4 h-4" /> Email
+          </a>
+        </div>
       </div>
 
       <div className="mt-8 max-w-md">
