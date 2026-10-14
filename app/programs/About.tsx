@@ -24,7 +24,7 @@ const highlights = [
   {
     icon: BriefcaseBusiness,
     title: "Software Engineering Intern, Capital One",
-    body: "Summer 2026. Built the company's first mobile AI solution on a multi-agent LangGraph framework.",
+    body: "Summer 2026. Built Tech Support, an AI-powered IT-support platform for Capital One's 80,000+ associates, targeting a 50% cut in support cycle time.",
     window: "experience" as const,
   },
   {
