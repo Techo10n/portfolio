@@ -112,5 +112,13 @@
         "alt": "Land acknowledgement beside a map of Washington marking the Ellensburg and Walla Walla offices"
       }
     ]
+  },
+  "museaic": {
+    "cover": "/projects/museaic/welcome.webp",
+    "alt": "Museaic's welcome screen on iPhone: the museaic wordmark, \"Any song, to anyone, on any app,\" and sign-in options"
+  },
+  "songscraper": {
+    "cover": "/projects/songscraper/sign-in.webp",
+    "alt": "SongScraper's sign-in screen on iPhone: the songscraper wordmark and \"Find the song in any reel\""
   }
 }
