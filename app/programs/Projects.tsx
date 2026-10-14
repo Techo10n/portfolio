@@ -1,6 +1,6 @@
-import type { CSSProperties } from "react";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
+import Carousel from "@/components/Carousel";
 import OpenWindowButton from "@/components/desktop/OpenWindowButton";
 import { caseStudyKey } from "@/components/desktop/programs";
 import { mediaFor } from "@/content/media";
@@ -42,30 +42,6 @@ function Tags({ tags }: { tags?: string[] }) {
   );
 }
 
-/**
- * Every image of a project, scrolling past endlessly. The slides are rendered twice so the strip can
- * loop (see `.animate-marquee`); with reduced motion it holds still on the first image. Hovering the
- * card pauses it.
- */
-function Carousel({ images }: { images: { src: string; alt: string }[] }) {
-  return (
-    <div className="absolute inset-0 overflow-hidden bg-foreground/[0.04]">
-      <ul
-        className="animate-marquee group-hover/card:[animation-play-state:paused] flex h-full w-max py-[6%]"
-        style={{ "--marquee-duration": `${images.length * 7}s` } as CSSProperties}
-      >
-        {[...images, ...images].map((image, i) => (
-          <li key={i} aria-hidden={i >= images.length} className="h-full pl-3">
-            <div className="relative h-full aspect-[16/9] overflow-hidden rounded-lg border border-foreground/10">
-              <Image src={image.src} alt={i < images.length ? image.alt : ""} fill sizes="(min-width: 768px) 40vw, 80vw" className="object-cover" />
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
 function ProjectCard({ project }: { project: Project }) {
   const { slug, title, description, period, featured } = project;
   const media = mediaFor(slug);
@@ -83,8 +59,8 @@ function ProjectCard({ project }: { project: Project }) {
             featured ? "@3xl:w-1/2 @3xl:border-b-0 @3xl:border-r" : ""
           }`}
         >
-          {featured && media.gallery?.length ? (
-            <Carousel images={[{ src: media.cover, alt: media.alt }, ...media.gallery]} />
+          {featured && media.strip && media.gallery?.length ? (
+            <Carousel images={media.gallery} background={media.background} />
           ) : (
             <Image
               src={media.cover}

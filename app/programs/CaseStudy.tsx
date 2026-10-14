@@ -5,6 +5,7 @@ import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ArrowUpRight } from "lucide-react";
 import { PROJECTS, type ProjectSlug } from "@/content/projects";
+import Carousel from "@/components/Carousel";
 import Gallery from "@/components/Gallery";
 import { mediaFor } from "@/content/media";
 
@@ -54,8 +55,12 @@ export default function CaseStudy({ slug }: { slug: ProjectSlug }) {
   return (
     <article className="w-full max-w-5xl mx-auto px-5 @xl:px-8 @3xl:px-12 py-6 @xl:py-8 pb-10">
       {media?.cover && (
-        <div className="relative aspect-[16/9] overflow-hidden rounded-xl border border-foreground/15 mb-6">
-          <Image src={media.cover} alt={media.alt} fill sizes="(min-width: 768px) 760px, 100vw" className="object-cover" />
+        <div className="group/card relative aspect-[16/9] overflow-hidden rounded-xl border border-foreground/15 mb-6">
+          {media.strip && media.gallery?.length ? (
+            <Carousel images={media.gallery} background={media.background} />
+          ) : (
+            <Image src={media.cover} alt={media.alt} fill sizes="(min-width: 768px) 760px, 100vw" className="object-cover" />
+          )}
         </div>
       )}
 

@@ -114,29 +114,69 @@
     ]
   },
   "museaic": {
-    "cover": "/projects/museaic/app-screens-dark.webp",
-    "alt": "Three Museaic screens on iPhone in dark mode: the friends feed of shared songs and playlists, a playlist sent from Spotify ready to add to YouTube Music, and the connected streaming services",
+    "cover": "/projects/museaic/dark-feed.webp",
+    "alt": "Museaic's friends feed in dark mode: songs and playlists friends have sent",
+    "strip": true,
+    "background": "#2a2724",
     "gallery": [
       {
-        "src": "/projects/museaic/profile-dark.webp",
-        "alt": "A Museaic profile in dark mode: followers, shared count, a favorite song, and pinned playlists"
+        "src": "/projects/museaic/dark-feed.webp",
+        "alt": "Museaic's friends feed in dark mode: songs and playlists friends have sent",
+        "w": 459,
+        "h": 1000
       },
       {
-        "src": "/projects/museaic/app-screens.webp",
-        "alt": "The same three Museaic screens in light mode: friends feed, a Spotify playlist ready for YouTube Music, and connected services"
+        "src": "/projects/museaic/dark-playlist.webp",
+        "alt": "A playlist sent from Spotify, ready to add to YouTube Music, in dark mode",
+        "w": 459,
+        "h": 1000
       },
       {
-        "src": "/projects/museaic/profile.webp",
-        "alt": "A Museaic profile in light mode"
+        "src": "/projects/museaic/dark-services.webp",
+        "alt": "Connected streaming services in dark mode: Spotify, Apple Music, and YouTube Music as primary",
+        "w": 459,
+        "h": 1000
       },
       {
-        "src": "/projects/museaic/welcome-screen.webp",
-        "alt": "Museaic's welcome screen with Apple, Google, and email sign-in"
+        "src": "/projects/museaic/dark-profile.webp",
+        "alt": "A Museaic profile in dark mode: followers, shared count, a favorite song, and pinned playlists",
+        "w": 459,
+        "h": 1000
+      },
+      {
+        "src": "/projects/museaic/light-feed.webp",
+        "alt": "Museaic's friends feed in light mode",
+        "w": 459,
+        "h": 1000
+      },
+      {
+        "src": "/projects/museaic/light-playlist.webp",
+        "alt": "A playlist sent from Spotify, ready to add to YouTube Music, in light mode",
+        "w": 459,
+        "h": 1000
+      },
+      {
+        "src": "/projects/museaic/light-services.webp",
+        "alt": "Connected streaming services in light mode",
+        "w": 459,
+        "h": 1000
+      },
+      {
+        "src": "/projects/museaic/light-profile.webp",
+        "alt": "A Museaic profile in light mode",
+        "w": 459,
+        "h": 1000
+      },
+      {
+        "src": "/projects/museaic/light-welcome.webp",
+        "alt": "Museaic's welcome screen with Apple, Google, and email sign-in",
+        "w": 459,
+        "h": 1000
       }
     ]
   },
   "songscraper": {
-    "cover": "/projects/songscraper/sign-in.webp",
+    "cover": "/projects/songscraper/sign-in-phone.webp",
     "alt": "SongScraper's sign-in screen on iPhone: the songscraper wordmark and \"Find the song in any reel\""
   }
 }
