@@ -29,7 +29,7 @@ const highlights = [
   },
   {
     icon: Music,
-    title: "MusicBridge",
+    title: "Museaic",
     body: "Cross-platform playlist sharing across Spotify, Apple Music, and YouTube Music. TestFlight beta with 20+ users.",
     window: "projects" as const,
   },

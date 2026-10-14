@@ -20,7 +20,7 @@ export const isApp = (key: WindowKey): key is AppKey => (APP_KEYS as readonly st
 type Program = {
   /** Window title bar text; also the window's accessible name. */
   title: string;
-  /** Desktop icon, taskbar, and tab bar label. */
+  /** Dock, home screen, and tab bar label. */
   label: string;
   icon: LucideIcon;
   /** URL for this window. About is the home page. */

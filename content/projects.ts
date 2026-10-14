@@ -3,7 +3,7 @@
  * /projects/<slug>, whose body is `content/case-studies/<slug>.md`.
  */
 export const PROJECT_SLUGS = [
-  "musicbridge",
+  "museaic",
   "songscraper",
   "notion-voice-assistant",
   "portfolio",
@@ -51,13 +51,13 @@ export const PROJECT_SECTIONS: ProjectSection[] = [
     title: "Personal Projects",
     projects: [
       {
-        slug: "musicbridge",
-        title: "MusicBridge",
+        slug: "museaic",
+        title: "Museaic",
         featured: true,
         period: "Jan 2025 – Present",
         tags: ["React Native", "Expo", "TypeScript", "Supabase"],
         description:
-          "Cross-platform playlist sharing app that maps tracks between Spotify, Apple Music, and YouTube Music, with OAuth for each service and Supabase for auth and data. TestFlight beta with 20+ users.",
+          "Cross-platform playlist sharing app that maps tracks between Spotify, Apple Music, and YouTube Music, with OAuth for each service and Supabase for auth and data. TestFlight beta with 20+ users. Previously, and still internally, called MusicBridge.",
         actions: [{ label: "Source Code", href: "https://github.com/Techo10n/musicbridge" }],
       },
       {
@@ -65,7 +65,7 @@ export const PROJECT_SECTIONS: ProjectSection[] = [
         title: "SongScraper",
         tags: ["Expo", "TypeScript", "Supabase"],
         description:
-          "iOS app that finds the songs in any Instagram reel, whether tagged in the audio, shown as on-screen text, or just audible. Spun out of MusicBridge's reel importer.",
+          "iOS app that finds the songs in any Instagram reel, whether tagged in the audio, shown as on-screen text, or just audible. Spun out of Museaic's reel importer.",
       },
       {
         slug: "notion-voice-assistant",
@@ -88,7 +88,7 @@ export const PROJECT_SECTIONS: ProjectSection[] = [
         tags: ["WXT", "React", "Express", "OpenAI"],
         description:
           "Chrome extension meant to estimate a product's shipping emissions while you shop and suggest greener alternatives at a similar price. The Amazon scraper, popup, and search-term API are built; the emissions math and alternatives search aren't yet.",
-        note: "On hold: not in active development, but I may pick it back up.",
+        note: "On hold: my friend who was the PM stepped away, and I haven't picked it back up solo yet.",
         actions: [{ label: "Source Code", href: "https://github.com/Techo10n/ecoshelf" }],
       },
     ],
@@ -122,7 +122,7 @@ export const PROJECT_SECTIONS: ProjectSection[] = [
         title: "EmpAIthetic",
         tags: ["HackGT 11"],
         description:
-          "AI-powered journaling app for expressing emotions and receiving support. Built for HackGT 11.",
+          "AI-powered journaling app for expressing emotions and receiving support. Built with a team of four at HackGT 11.",
         actions: [
           { label: "View Demo", href: "https://www.youtube.com/watch?v=G2bBY3_221M" },
           { label: "Source Code", href: "https://github.com/Techo10n/shaz" },
@@ -134,6 +134,7 @@ export const PROJECT_SECTIONS: ProjectSection[] = [
         tags: ["Python", "RT-DETR", "NVIDIA Jetson"],
         description:
           "Georgia Tech Vertically Integrated Projects team building drone-based detection. I set up the team repo and wrote the benchmark that measures our RT-DETR model's speed on an NVIDIA Jetson across four test sets.",
+        actions: [{ label: "Source Code", href: "https://github.com/Techo10n/vip-team-2-drone-detection" }],
       },
     ],
   },
@@ -155,8 +156,8 @@ export const PROJECT_SECTIONS: ProjectSection[] = [
         tags: ["Squarespace"],
         description:
           "Squarespace redesign for Central Washington Justice for Our Neighbors, a regional nonprofit, increasing site visits by 150%.",
-        note: "The live site has been changed since I handed it off, so it no longer reflects my redesign.",
-        actions: [{ label: "View Site", href: "https://cwjfon.org" }],
+        note: "The live site has changed since I handed it off, so this links an archived copy of my redesign. Its hero video didn't survive archiving.",
+        actions: [{ label: "View Archived Site", href: "https://web.archive.org/web/20251015132321/https://cwjfon.org/" }],
       },
       {
         slug: "askin4baskin",

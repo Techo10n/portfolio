@@ -1,10 +1,10 @@
 {
   "portfolio": {
-    "cover": "/projects/portfolio/cover.webp",
+    "cover": "/projects/portfolio/home.webp",
     "alt": "The portfolio's desktop: About Me, Projects, and Terminal windows open above the dock",
     "gallery": [
       {
-        "src": "/projects/portfolio/case-study.webp",
+        "src": "/projects/portfolio/museaic-case-study.webp",
         "alt": "A project's case study open in its own window, in light mode"
       }
     ]
@@ -96,6 +96,20 @@
       {
         "src": "/projects/techolon/cover.webp",
         "alt": "The Techolon YouTube channel page, featuring the Fall Rocket League montage"
+      }
+    ]
+  },
+  "cwjfon": {
+    "cover": "/projects/cwjfon/hero.webp",
+    "alt": "CWJFON homepage hero: the organisation's name over a frame from its background video of a Justice For Our Neighbors march",
+    "gallery": [
+      {
+        "src": "/projects/cwjfon/mission.webp",
+        "alt": "Mission section: a photo of a protester holding a \"We the People are all immigrants\" sign beside the mission statement"
+      },
+      {
+        "src": "/projects/cwjfon/land-acknowledgment.webp",
+        "alt": "Land acknowledgement beside a map of Washington marking the Ellensburg and Walla Walla offices"
       }
     ]
   }

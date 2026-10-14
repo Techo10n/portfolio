@@ -6,7 +6,7 @@ CWJFON is a Walla Walla–based nonprofit that provides accessible immigration l
 
 ## What I built
 
-A redesign of the organisation's Squarespace site, built around those audiences.
+A redesign of the organisation's Squarespace site, built around those audiences. The homepage opens on a full-screen background video of the organisation's community work under its name, followed by the mission alongside a photo, and a land acknowledgement beside a map of Washington marking its Ellensburg and Walla Walla offices.
 
 ## Results
 
@@ -18,4 +18,4 @@ Squarespace.
 
 ## Status
 
-The organisation has changed the site since I handed it off, and I no longer maintain it, so [cwjfon.org](https://cwjfon.org) today doesn't reflect my redesign.
+The organisation has changed the site since I handed it off, and I no longer maintain it, so [cwjfon.org](https://cwjfon.org) today doesn't reflect my redesign. An [archived copy](https://web.archive.org/web/20251015132321/https://cwjfon.org/) from October 2025 shows it, minus the hero video, which the archive didn't save.

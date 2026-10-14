@@ -1,4 +1,4 @@
-EcoShelf is a Chrome extension for online shopping. The goal is for it to estimate the emissions from shipping a product and recommend more sustainable alternatives at a similar price.
+EcoShelf is a Chrome extension for online shopping that I started with a friend, who was the project's PM. The goal is for it to estimate the emissions from shipping a product and recommend more sustainable alternatives at a similar price.
 
 ## Overview
 
@@ -31,4 +31,4 @@ The scraper starts collecting as soon as the page loads and stores the result, s
 
 ## Status
 
-On hold. EcoShelf isn't in active development, but I may pick it back up. The source is on [GitHub](https://github.com/Techo10n/ecoshelf).
+On hold. My friend stepped away from the project, and I haven't picked it back up on my own yet, but I may. The source is on [GitHub](https://github.com/Techo10n/ecoshelf).

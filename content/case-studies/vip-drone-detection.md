@@ -9,7 +9,7 @@ The project had two phases:
 
 ## My role
 
-In Spring 2026 I set up the team's repository. I also wrote the script we used to benchmark the model on the Jetson and the startup guide for running the Jetson during demos. Teammates contributed the dataset tooling: one wrote an image-augmentation and class-balancing script, and another added a thermal-camera dataset labelled for detecting people.
+In Fall 2025 I wrote tests for the team's flight code; the flight code itself was my teammates' work. In Spring 2026 I set up the team's repository. I also wrote the script we used to benchmark the model on the Jetson and the startup guide for running the Jetson during demos. Teammates contributed the dataset tooling: one wrote an image-augmentation and class-balancing script, and another added a thermal-camera dataset labelled for detecting people.
 
 ## What I built
 
@@ -40,4 +40,4 @@ The Fall 2025 work worked like this:
 
 ## Outcome
 
-By the end of Spring 2026, the detector was running on the Jetson for live demos, and the benchmark notebook gave frame-rate and detection counts for every test set.
+By the end of Spring 2026, the detector was running on the Jetson for live demos, and the benchmark notebook gave frame-rate and detection counts for every test set. The team's code is at [github.com/Techo10n/vip-team-2-drone-detection](https://github.com/Techo10n/vip-team-2-drone-detection).

@@ -36,5 +36,5 @@ Firebase provides Google authentication and stores users' entries in Firestore. 
 
 ## Outcome
 
-We shipped a working app by the end of HackGT 11. Watch the [demo video](https://www.youtube.com/watch?v=G2bBY3_221M), or see the source at [github.com/Techo10n/shaz](https://github.com/Techo10n/shaz).
+Our team of four shipped a working app by the end of HackGT 11. We didn't place in any track. Watch the [demo video](https://www.youtube.com/watch?v=G2bBY3_221M), or see the source at [github.com/Techo10n/shaz](https://github.com/Techo10n/shaz).
 

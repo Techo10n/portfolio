@@ -64,13 +64,13 @@ const COMMANDS: Record<string, CommandOutput> = {
   projects: [
     "Notable Projects:",
     "",
-    "  MusicBridge     - Cross-platform playlist sharing app",
+    "  Museaic         - Cross-platform playlist sharing app",
     "  SongScraper     - Finds the songs in any Instagram reel",
     "  SimpliEarn      - AI earnings call analysis platform",
     "  BDBI Website    - Big Data Big Impact's club site",
     "  EmpAIthetic     - AI-powered journaling app (HackGT 11)",
     "",
-    "Click on 'Projects' in the taskbar for more details!",
+    "Open Projects from the dock for more details!",
   ],
   education: [
     "Education:",

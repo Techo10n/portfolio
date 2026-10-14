@@ -1,10 +1,10 @@
-SongScraper is an iOS app that finds the songs in any Instagram reel. You paste or share a reel link, and it finds every song in the clip, whether the song is tagged in the reel's audio, shown as on-screen text, or just audible. I spun it out of MusicBridge's reel importer as its own app.
+SongScraper is an iOS app that finds the songs in any Instagram reel. You paste or share a reel link, and it finds every song in the clip, whether the song is tagged in the reel's audio, shown as on-screen text, or just audible. I spun it out of Museaic's reel importer as its own app.
 
 ## Overview
 
-The reel importer started as one feature inside [MusicBridge](https://github.com/Techo10n/musicbridge). It answered a complete question by itself ("what song is this?") and needed none of MusicBridge's account linking, sharing, or social features. So in August 2026 I moved it into a standalone app that can reach people who would never sign up for a music-sharing app. A month later I deleted MusicBridge's copy, and SongScraper became the only home for the pipeline.
+The reel importer started as one feature inside [Museaic](https://github.com/Techo10n/musicbridge). It answered a complete question by itself ("what song is this?") and needed none of Museaic's account linking, sharing, or social features. So in August 2026 I moved it into a standalone app that can reach people who would never sign up for a music-sharing app. A month later I deleted Museaic's copy, and SongScraper became the only home for the pipeline.
 
-The app does one thing. There are no streaming-service logins and no social features. Tapping a song that it identifies opens a [song.link](https://song.link) page, which takes you to the song on whatever service you use. That cuts out the OAuth, token refresh, and reconnect flows, which caused the most complexity and bugs in MusicBridge.
+The app does one thing. There are no streaming-service logins and no social features. Tapping a song that it identifies opens a [song.link](https://song.link) page, which takes you to the song on whatever service you use. That cuts out the OAuth, token refresh, and reconnect flows, which caused the most complexity and bugs in Museaic.
 
 ## What I built
 
