@@ -57,7 +57,7 @@ export const PROJECT_SECTIONS: ProjectSection[] = [
         period: "Jan 2025 – Present",
         tags: ["React Native", "Expo", "TypeScript", "Supabase"],
         description:
-          "Cross-platform playlist sharing app that maps tracks between Spotify, Apple Music, and YouTube Music, with OAuth for each service and Supabase for auth and data. TestFlight beta with 20+ users. Previously, and still internally, called MusicBridge.",
+          "Cross-platform playlist sharing app that maps tracks between Spotify, Apple Music, and YouTube Music, with OAuth for each service and Supabase for auth and data. TestFlight beta with 20+ users. Previously called MusicBridge.",
         actions: [{ label: "Source Code", href: "https://github.com/Techo10n/musicbridge" }],
       },
       {

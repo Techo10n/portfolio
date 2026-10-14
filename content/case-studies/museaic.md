@@ -1,4 +1,4 @@
-Museaic (previously, and still internally, called MusicBridge) is a cross-platform music sharing app. Someone on Spotify, Apple Music, or YouTube Music sends you a song or a playlist, and Museaic recreates it on whichever service you use. It's in TestFlight beta with 20+ users.
+Museaic (previously called MusicBridge) is a cross-platform music sharing app. Someone on Spotify, Apple Music, or YouTube Music sends you a song or a playlist, and Museaic recreates it on whichever service you use. It's in TestFlight beta with 20+ users.
 
 ## Overview
 
