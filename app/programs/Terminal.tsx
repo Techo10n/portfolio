@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useDesktop } from "@/components/desktop/context";
-import { WINDOW_KEYS, type WindowKey } from "@/components/desktop/programs";
+import { APP_KEYS, type AppKey } from "@/components/desktop/programs";
 
 type CommandOutput = string | string[];
 
@@ -125,8 +125,8 @@ export default function Terminal() {
     }
 
     if (command === "open") {
-      const target = parts[1] as WindowKey | undefined;
-      const known = WINDOW_KEYS.filter((k) => k !== "terminal");
+      const target = parts[1] as AppKey | undefined;
+      const known = APP_KEYS.filter((k) => k !== "terminal");
       if (target && (known as readonly string[]).includes(target)) {
         setHistory((h) => [...h, `guest@portfolio ~ % ${displayCmd}`, `Opening ${target}...`, ""]);
         open(target);

@@ -1,8 +1,21 @@
-import { BriefcaseBusiness, FileText, FolderOpen, Mail, Terminal, UserCircle, type LucideIcon } from "lucide-react";
+import { BookOpen, BriefcaseBusiness, FileText, FolderOpen, Mail, Terminal, UserCircle, type LucideIcon } from "lucide-react";
+import { PROJECT_SLUGS, PROJECTS, type ProjectSlug } from "@/content/projects";
 
-export const WINDOW_KEYS = ["about", "projects", "experience", "resume", "contact", "terminal"] as const;
+/** The apps: always in the dock and on the phone home screen. */
+export const APP_KEYS = ["about", "projects", "experience", "resume", "contact", "terminal"] as const;
 
-export type WindowKey = (typeof WINDOW_KEYS)[number];
+export type AppKey = (typeof APP_KEYS)[number];
+
+/** One case-study window per project, opened from its card. */
+export type CaseStudyKey = `project/${ProjectSlug}`;
+
+export type WindowKey = AppKey | CaseStudyKey;
+
+export const caseStudyKey = (slug: ProjectSlug): CaseStudyKey => `project/${slug}`;
+
+export const WINDOW_KEYS: readonly WindowKey[] = [...APP_KEYS, ...PROJECT_SLUGS.map(caseStudyKey)];
+
+export const isApp = (key: WindowKey): key is AppKey => (APP_KEYS as readonly string[]).includes(key);
 
 type Program = {
   /** Window title bar text; also the window's accessible name. */
@@ -26,7 +39,7 @@ type Program = {
   inTabBar: boolean;
 };
 
-export const PROGRAMS: Record<WindowKey, Program> = {
+const APPS: Record<AppKey, Program> = {
   about: {
     title: "About Me",
     label: "About",
@@ -88,6 +101,26 @@ export const PROGRAMS: Record<WindowKey, Program> = {
     inTabBar: false,
   },
 };
+
+export const PROGRAMS = {
+  ...APPS,
+  ...Object.fromEntries(
+    PROJECT_SLUGS.map((slug, i): [CaseStudyKey, Program] => [
+      caseStudyKey(slug),
+      {
+        title: PROJECTS[slug].title,
+        label: PROJECTS[slug].title,
+        icon: BookOpen,
+        path: `/projects/${slug}`,
+        scroll: true,
+        size: { w: 760, h: 620 },
+        // Cascade, so opening a few case studies doesn't stack them exactly on top of each other.
+        home: { x: 0.3 + (i % 5) * 0.1, y: 0.1 + (i % 5) * 0.15 },
+        inTabBar: false,
+      },
+    ]),
+  ),
+} as Record<WindowKey, Program>;
 
 export const keyForPath = (pathname: string): WindowKey | null => {
   const clean = pathname.replace(/\/+$/, "") || "/";

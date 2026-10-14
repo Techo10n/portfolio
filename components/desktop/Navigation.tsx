@@ -1,6 +1,6 @@
 "use client";
 
-import { PROGRAMS, WINDOW_KEYS, type WindowKey } from "./programs";
+import { APP_KEYS, PROGRAMS, WINDOW_KEYS, isApp, type WindowKey } from "./programs";
 import type { WindowStatus } from "./state";
 
 type NavProps = {
@@ -14,7 +14,7 @@ export function DesktopIcons({ onOpen }: Pick<NavProps, "onOpen">) {
   return (
     <nav aria-label="Apps" className="absolute inset-0 md:hidden flex items-start justify-center pt-6">
       <ul className="grid grid-cols-3 gap-x-6 gap-y-5">
-        {WINDOW_KEYS.map((key) => {
+        {APP_KEYS.map((key) => {
           const { icon: Icon, label, path } = PROGRAMS[key];
           return (
             <li key={key}>
@@ -48,11 +48,14 @@ export function Dock({ status, active, onOpen, onMinimize }: NavProps & { onMini
   return (
     <nav aria-label="Dock" className="relative z-30 max-md:hidden flex justify-center pb-3 pt-1">
       <ul className="flex items-center gap-1 rounded-2xl border border-foreground/15 bg-background/60 backdrop-blur-xl px-1.5 py-1 shadow-lg shadow-black/10">
-        {WINDOW_KEYS.map((key) => {
+        {/* Apps always; case studies only while open, after a divider, like a running app. */}
+        {WINDOW_KEYS.filter((k) => isApp(k) || status[k] !== "closed").map((key, i, shown) => {
           const { icon: Icon, label } = PROGRAMS[key];
           const isActive = key === active;
+          const firstCaseStudy = !isApp(key) && isApp(shown[i - 1]);
           return (
-            <li key={key}>
+            <li key={key} className={firstCaseStudy ? "flex items-center gap-1" : undefined}>
+              {firstCaseStudy && <span aria-hidden="true" className="w-px h-7 mx-1 bg-foreground/20" />}
               <button
                 type="button"
                 data-status={status[key]}
@@ -88,7 +91,7 @@ export function TabBar({ active, onOpen }: Omit<NavProps, "status">) {
   return (
     <nav aria-label="Sections" className="md:hidden border-t border-foreground/10 bg-background/80 backdrop-blur-xl pb-[env(safe-area-inset-bottom)]">
       <ul className="grid grid-cols-5">
-        {WINDOW_KEYS.filter((k) => PROGRAMS[k].inTabBar).map((key) => {
+        {APP_KEYS.filter((k) => PROGRAMS[k].inTabBar).map((key) => {
           const { icon: Icon, label } = PROGRAMS[key];
           const isActive = key === active;
           return (

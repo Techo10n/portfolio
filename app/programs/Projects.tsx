@@ -1,172 +1,9 @@
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
-
-
-type ProjectAction = {
-  label: string;
-  href: string;
-};
-
-type Project = {
-  title: string;
-  description: string;
-  /** Caveat shown under the description, e.g. why a live link is gone. */
-  note?: string;
-  /** Stack, from the resume or the project's vault page. */
-  tags?: string[];
-  period?: string;
-  /** Shown large, above everything else. */
-  featured?: boolean;
-  actions?: ProjectAction[];
-  image?: string;
-  imagePosition?: string;
-};
-
-type ProjectSection = {
-  title: string;
-  projects: Project[];
-};
-
-const sections: ProjectSection[] = [
-  {
-    title: "Personal Projects",
-    projects: [
-      {
-        title: "MusicBridge",
-        featured: true,
-        period: "Jan 2025 – Present",
-        tags: ["React Native", "Expo", "TypeScript", "Supabase"],
-        description:
-          "Cross-platform playlist sharing app that maps tracks between Spotify, Apple Music, and YouTube Music, with OAuth for each service and Supabase for auth and data. TestFlight beta with 20+ users.",
-        actions: [{ label: "Source Code", href: "https://github.com/Techo10n/musicbridge" }],
-      },
-      {
-        title: "SongScraper",
-        tags: ["Expo", "TypeScript", "Supabase"],
-        description:
-          "iOS app that finds the songs in any Instagram reel, whether tagged in the audio, shown as on-screen text, or just audible. Spun out of MusicBridge's reel importer.",
-      },
-      {
-        title: "Notion Voice Assistant",
-        tags: ["Vercel", "Claude API", "Notion API", "iOS Shortcuts"],
-        description:
-          "Dictate an assignment to an iOS Shortcut and it lands in my Notion database. A serverless function has Claude pull out the name, label, and deadline, checks them, and works out the priority from the due date.",
-      },
-      {
-        title: "This Website",
-        tags: ["Next.js", "TypeScript", "Tailwind CSS"],
-        description:
-          "A desktop-style portfolio with tiling, resizable windows, built with Next.js, TypeScript, and Tailwind CSS.",
-        actions: [{ label: "Source Code", href: "https://github.com/Techo10n/portfolio" }],
-      },
-      {
-        title: "EcoShelf",
-        tags: ["WXT", "React", "Express", "OpenAI"],
-        description:
-          "Chrome extension that estimates a product's shipping emissions while you shop and recommends more sustainable alternatives at a similar price.",
-        note: "On hold: not in active development, but I may pick it back up.",
-        actions: [{ label: "Source Code", href: "https://github.com/Techo10n/ecoshelf" }],
-      },
-    ],
-  },
-  {
-    title: "Clubs & Hackathons",
-    projects: [
-      {
-        title: "SimpliEarn",
-        period: "Aug 2025 – Dec 2025",
-        tags: ["Next.js", "React", "Python", "Chart.js"],
-        description:
-          "AI-powered earnings call analysis platform. Built its sentiment graph, a 48-hour stock chart around each call, and the Next.js dashboard tying together the AI summary engine and a RAG chatbot.",
-        actions: [{ label: "View Site", href: "https://simpli-earn-2.vercel.app" }],
-      },
-      {
-        title: "BDBI Website",
-        period: "Aug 2025 – Present",
-        tags: ["React", "Next.js", "TypeScript", "Vercel"],
-        description:
-          "Official site of Big Data Big Impact at Georgia Tech. As Digital Resources Manager, rebuilt it from Angular to React and Next.js and moved it to Vercel.",
-        actions: [{ label: "View Site", href: "https://gtbigdatabigimpact.com" }],
-      },
-      {
-        title: "EmpAIthetic",
-        tags: ["HackGT 11"],
-        description:
-          "AI-powered journaling app for expressing emotions and receiving support. Built for HackGT 11.",
-        image: "/empaithetic-screenshot.jpg",
-        imagePosition: "left",
-        actions: [
-          { label: "View Demo", href: "https://www.youtube.com/watch?v=G2bBY3_221M" },
-          { label: "Source Code", href: "https://github.com/Techo10n/shaz" },
-        ],
-      },
-      {
-        title: "VIP Drone Detection",
-        tags: ["Python", "DroneKit"],
-        description:
-          "Georgia Tech Vertically Integrated Projects team work on autonomous drones: a DroneKit detection loop, plus a simulated lawnmower-pattern search with a live web dashboard.",
-      },
-    ],
-  },
-  {
-    title: "Client Work",
-    projects: [
-      {
-        title: "Blue Mountain Law Office",
-        tags: ["Framer"],
-        description:
-          "Mobile-first Framer site for a local law office, with service details and online appointment booking. Client inquiries rose over 400% in three months.",
-        image: "/bml-screenshot.jpg",
-        imagePosition: "center",
-        note: "The live site is offline: the attorney has since moved to a new firm. The archived copy is static, so its flip cards and FAQ accordion no longer work.",
-        actions: [{ label: "View Archived Site", href: "https://web.archive.org/web/20250710234233/https://www.bluemountainlawoffice.com/" }],
-      },
-      {
-        title: "CWJFON",
-        tags: ["Squarespace"],
-        description:
-          "Squarespace redesign for Central Washington Justice for Our Neighbors, a regional nonprofit, increasing site visits by 150%.",
-        actions: [{ label: "View Site", href: "https://cwjfon.org" }],
-      },
-      {
-        title: "Askin4Baskin",
-        tags: ["WordPress"],
-        description: "WordPress site for a lawyer, focused on UX and simple client contact.",
-        actions: [{ label: "View Site", href: "https://askin4baskin.attorney" }],
-      },
-      {
-        title: "Inland Octopus",
-        tags: ["Next.js"],
-        description:
-          "Illustrated marketing site for a toy and novelty store, built around a hand-composed scene with procedurally generated clouds.",
-        note: "A prototype: it isn't deployed on Inland Octopus's own domain.",
-        actions: [
-          { label: "View Prototype", href: "https://inland-octopus.vercel.app" },
-          { label: "Source Code", href: "https://github.com/Techo10n/inland-octopus" },
-        ],
-      },
-    ],
-  },
-  {
-    title: "Other Ventures",
-    projects: [
-      {
-        title: "Flickariah",
-        tags: ["Photography"],
-        description: "My photography account on Instagram.",
-        actions: [{ label: "View Instagram", href: "https://www.instagram.com/flickariah/" }],
-      },
-      {
-        title: "Techolon",
-        tags: ["Video editing"],
-        description: "My personal YouTube channel where I post video game montages and edits.",
-        image: "/yt-screenshot.jpg",
-        imagePosition: "left",
-        actions: [{ label: "View Channel", href: "https://www.youtube.com/@techolon" }],
-      },
-    ],
-  },
-];
+import OpenWindowButton from "@/components/desktop/OpenWindowButton";
+import { caseStudyKey } from "@/components/desktop/programs";
+import { mediaFor } from "@/content/media";
+import { PROJECT_SECTIONS, type Project, type ProjectAction } from "@/content/projects";
 
 const sectionLabel = "font-mono text-xs uppercase tracking-widest text-foreground/60";
 
@@ -180,7 +17,8 @@ function Actions({ actions }: { actions?: ProjectAction[] }) {
           href={action.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 h-8 px-3 rounded-full border border-foreground/25 text-sm hover:bg-foreground/10 transition-colors"
+          // Above the card's stretched case-study link, so these still go where they say.
+          className="relative z-10 inline-flex items-center gap-1.5 h-8 px-3 rounded-full border border-foreground/25 bg-background text-sm hover:bg-foreground/10 transition-colors"
         >
           {action.label}
           <ArrowUpRight aria-hidden="true" className="w-3.5 h-3.5" />
@@ -204,10 +42,13 @@ function Tags({ tags }: { tags?: string[] }) {
 }
 
 function ProjectCard({ project }: { project: Project }) {
-  const { title, description, image, imagePosition, period, featured } = project;
+  const { slug, title, description, period, featured } = project;
+  const media = mediaFor(slug);
+  const image = media?.cover ?? project.image;
   return (
+    // The whole card opens the case study: the title link stretches over it.
     <article
-      className={`flex flex-col h-full overflow-hidden rounded-xl border bg-background ${
+      className={`relative flex flex-col h-full overflow-hidden rounded-xl border bg-background transition-colors hover:border-foreground/45 ${
         featured ? "border-foreground/35" : "border-foreground/15"
       }`}
     >
@@ -215,17 +56,24 @@ function ProjectCard({ project }: { project: Project }) {
         <div className="relative aspect-[16/9] border-b border-foreground/10">
           <Image
             src={image}
-            alt={`Screenshot of ${title}`}
+            alt={media?.alt ?? `Screenshot of ${title}`}
             fill
             sizes="(min-width: 1280px) 33vw, (min-width: 768px) 50vw, 100vw"
             className="object-cover"
-            style={{ objectPosition: imagePosition ?? "center" }}
+            style={{ objectPosition: media?.cover ? "center" : (project.imagePosition ?? "center") }}
           />
         </div>
       )}
       <div data-testid="card-body" className="flex flex-col flex-1 p-4 @xl:p-5">
         {featured && <p className={`${sectionLabel} mb-2`}>Featured</p>}
-        <h3 className={`font-semibold leading-snug ${featured ? "text-xl" : "text-base"}`}>{title}</h3>
+        <h3 className={`font-semibold leading-snug ${featured ? "text-xl" : "text-base"}`}>
+          <OpenWindowButton
+            window={caseStudyKey(slug)}
+            className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none focus-visible:after:rounded-xl focus-visible:after:ring-2 focus-visible:after:ring-foreground"
+          >
+            {title}
+          </OpenWindowButton>
+        </h3>
         {period && <p className="font-mono text-xs text-foreground/65 mt-1">{period}</p>}
         <p className={`leading-relaxed text-foreground/85 mt-2 ${featured ? "text-[15px] max-w-[70ch]" : "text-sm"}`}>
           {description}
@@ -241,7 +89,7 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 export default function Projects() {
-  const featured = sections.flatMap((s) => s.projects).filter((p) => p.featured);
+  const featured = PROJECT_SECTIONS.flatMap((s) => s.projects).filter((p) => p.featured);
   return (
     <div className="w-full px-5 @xl:px-8 @3xl:px-12 py-6 @xl:py-8 pb-10">
       <h1 className="font-mono text-2xl @xl:text-3xl font-extrabold tracking-tight">Projects</h1>
@@ -252,7 +100,7 @@ export default function Projects() {
         </div>
       ))}
 
-      {sections.map((section) => {
+      {PROJECT_SECTIONS.map((section) => {
         const projects = section.projects.filter((p) => !p.featured);
         const id = `${section.title.toLowerCase().replace(/[^a-z]+/g, "-")}-heading`;
         return (

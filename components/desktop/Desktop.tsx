@@ -7,7 +7,7 @@ import Window from "./Window";
 import { DesktopContext } from "./context";
 import { homeRectStyle, oppositeHalf, snapRect, type Size, type SnapZone } from "./geometry";
 import { DesktopIcons, Dock, TabBar } from "./Navigation";
-import { PROGRAMS, WINDOW_KEYS, keyForPath, type WindowKey } from "./programs";
+import { PROGRAMS, WINDOW_KEYS, isApp, keyForPath, type WindowKey } from "./programs";
 import { activeWindow, desktopReducer, initialDesktopState, type Rect, type WindowStatus } from "./state";
 
 type DesktopProps = {
@@ -156,10 +156,16 @@ export default function Desktop({ programs, initial }: DesktopProps) {
                     onFocus={() => dispatch({ type: "focus", key })}
                     onMinimize={() => dispatch({ type: "minimize", key })}
                     onToggleMaximize={() => dispatch({ type: "toggleMaximize", key })}
-                    onClose={() =>
-                      // Phones: closing an app returns to the home screen, like iOS; its state is kept.
-                      dispatch(window.matchMedia("(min-width: 768px)").matches ? { type: "close", key } : { type: "home" })
-                    }
+                    onClose={() => {
+                      if (window.matchMedia("(min-width: 768px)").matches) dispatch({ type: "close", key });
+                      // Phones: closing a case study goes back to Projects, where it was opened from.
+                      else if (!isApp(key)) {
+                        dispatch({ type: "close", key });
+                        open("projects");
+                      }
+                      // Closing an app returns to the home screen, like iOS; its state is kept.
+                      else dispatch({ type: "home" });
+                    }}
                   >
                     {programs[key]}
                   </Window>

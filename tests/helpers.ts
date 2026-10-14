@@ -24,3 +24,12 @@ export async function openApp(page: Page, label: string, isMobile: boolean) {
 }
 
 export const box = async (page: Page, title: string) => (await win(page, title).boundingBox())!;
+
+/**
+ * Waits for a window's move/resize transition to finish. Its width can reach the target a few
+ * frames before its position and height do, so polling on size alone measures it mid-slide.
+ */
+export const settled = (page: Page, title: string) =>
+  win(page, title)
+    .locator("..")
+    .evaluate((slot) => Promise.all(slot.getAnimations().map((a) => a.finished)));

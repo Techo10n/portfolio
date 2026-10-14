@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 import Desktop from "@/components/desktop/Desktop";
-import { PROGRAMS, WINDOW_KEYS, type WindowKey } from "@/components/desktop/programs";
+import { PROGRAMS, WINDOW_KEYS, caseStudyKey, keyForPath, type WindowKey } from "@/components/desktop/programs";
+import { PROJECT_SLUGS } from "@/content/projects";
 import { site } from "@/lib/site";
 import About from "../programs/About";
 import Projects from "../programs/Projects";
@@ -9,21 +11,21 @@ import Experience from "../programs/Experience";
 import Resume from "../programs/Resume";
 import Contact from "../programs/Contact";
 import Terminal from "../programs/Terminal";
+import CaseStudy from "../programs/CaseStudy";
 
 type Params = { params: Promise<{ slug?: string[] }> };
 
-// One static page per window: /, /projects, /experience, /resume, /contact, /terminal. Anything
-// else is a 404 via notFound(). (`dynamicParams = false` would also 404, but Next logs every such
+// One static page per window: /, /projects, /experience, ..., and /projects/<slug> for each case
+// study. Anything else is a 404 via notFound(). (`dynamicParams = false` would also 404, but Next logs every such
 // request as an internal NoFallbackError.)
 
 export function generateStaticParams() {
-  return WINDOW_KEYS.map((key) => ({ slug: key === "about" ? [] : [key] }));
+  return WINDOW_KEYS.map((key) => ({ slug: PROGRAMS[key].path.split("/").filter(Boolean) }));
 }
 
 const windowFor = async ({ params }: Params): Promise<WindowKey> => {
   const slug = (await params).slug;
-  if (!slug?.length) return "about";
-  const key = slug.length === 1 ? WINDOW_KEYS.find((k) => k !== "about" && k === slug[0]) : undefined;
+  const key = keyForPath(`/${slug?.join("/") ?? ""}`);
   if (!key) notFound();
   return key;
 };
@@ -64,7 +66,8 @@ export default async function Page(props: Params) {
           resume: <Resume />,
           contact: <Contact />,
           terminal: <Terminal />,
-        }}
+          ...Object.fromEntries(PROJECT_SLUGS.map((slug) => [caseStudyKey(slug), <CaseStudy key={slug} slug={slug} />])),
+        } as Record<WindowKey, ReactNode>}
       />
     </div>
   );

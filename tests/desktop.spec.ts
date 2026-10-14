@@ -1,5 +1,5 @@
 import { expect, test } from "./fixtures";
-import { box, openApp, win } from "./helpers";
+import { box, openApp, settled, win } from "./helpers";
 
 /** The area windows live in (the desktop minus the icon column). */
 const stage = async (page: import("@playwright/test").Page) =>
@@ -145,10 +145,8 @@ test.describe("desktop windows", () => {
     test.beforeEach(async ({ page }) => {
       await win(page, "About Me").getByRole("button", { name: "Restore" }).click();
       await expect(win(page, "About Me").getByRole("button", { name: "Maximize" })).toBeVisible();
-      // Let the restore transition finish. Width reaches 820px before the position settles, so wait
-      // on the slot's own transitions rather than its size.
       await expect.poll(async () => Math.round((await box(page, "About Me")).width)).toBe(820);
-      await win(page, "About Me").locator("..").evaluate((slot) => Promise.all(slot.getAnimations().map((a) => a.finished)));
+      await settled(page, "About Me");
     });
 
   test("each window opens in its own spot", async ({ page }) => {
@@ -223,6 +221,7 @@ test.describe("desktop windows", () => {
     await win(page, "About Me").getByRole("button", { name: "Maximize" }).click();
     const desktop = await stage(page);
     await expect.poll(async () => (await box(page, "About Me")).width).toBeGreaterThan(desktop.width - 2);
+    await settled(page, "About Me");
     const max = await box(page, "About Me");
     await page.mouse.move(max.x + max.width - 2, max.y + max.height - 2);
     await page.mouse.down();
@@ -237,6 +236,7 @@ test.describe("desktop windows", () => {
     const normal = await box(page, "About Me");
     await win(page, "About Me").getByRole("button", { name: "Maximize" }).click();
     await expect(win(page, "About Me").getByRole("button", { name: "Restore" })).toBeVisible();
+    await settled(page, "About Me");
     const max = await box(page, "About Me");
     await page.mouse.move(max.x + max.width / 2, max.y + 20);
     await page.mouse.down();
