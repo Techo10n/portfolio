@@ -47,11 +47,10 @@ const sections: ProjectSection[] = [
           "iOS app that finds the songs in any Instagram reel, whether tagged in the audio, shown as on-screen text, or just audible. Spun out of MusicBridge's reel importer.",
       },
       {
-        title: "EcoShelf",
-        tags: ["WXT", "React", "Express", "OpenAI"],
+        title: "Notion Voice Assistant",
+        tags: ["Vercel", "Claude API", "Notion API", "iOS Shortcuts"],
         description:
-          "Chrome extension that estimates a product's shipping emissions while you shop and recommends more sustainable alternatives at a similar price.",
-        actions: [{ label: "Source Code", href: "https://github.com/Techo10n/ecoshelf" }],
+          "Dictate an assignment to an iOS Shortcut and it lands in my Notion database. A serverless function has Claude pull out the name, label, and deadline, checks them, and works out the priority from the due date.",
       },
       {
         title: "This Website",
@@ -59,6 +58,14 @@ const sections: ProjectSection[] = [
         description:
           "A desktop-style portfolio with tiling, resizable windows, built with Next.js, TypeScript, and Tailwind CSS.",
         actions: [{ label: "Source Code", href: "https://github.com/Techo10n/portfolio" }],
+      },
+      {
+        title: "EcoShelf",
+        tags: ["WXT", "React", "Express", "OpenAI"],
+        description:
+          "Chrome extension that estimates a product's shipping emissions while you shop and recommends more sustainable alternatives at a similar price.",
+        note: "On hold: not in active development, but I may pick it back up.",
+        actions: [{ label: "Source Code", href: "https://github.com/Techo10n/ecoshelf" }],
       },
     ],
   },
@@ -93,6 +100,12 @@ const sections: ProjectSection[] = [
           { label: "Source Code", href: "https://github.com/Techo10n/shaz" },
         ],
       },
+      {
+        title: "VIP Drone Detection",
+        tags: ["Python", "DroneKit"],
+        description:
+          "Georgia Tech Vertically Integrated Projects team work on autonomous drones: a DroneKit detection loop, plus a simulated lawnmower-pattern search with a live web dashboard.",
+      },
     ],
   },
   {
@@ -126,8 +139,9 @@ const sections: ProjectSection[] = [
         tags: ["Next.js"],
         description:
           "Illustrated marketing site for a toy and novelty store, built around a hand-composed scene with procedurally generated clouds.",
+        note: "A prototype: it isn't deployed on Inland Octopus's own domain.",
         actions: [
-          { label: "View Site", href: "https://inland-octopus.vercel.app" },
+          { label: "View Prototype", href: "https://inland-octopus.vercel.app" },
           { label: "Source Code", href: "https://github.com/Techo10n/inland-octopus" },
         ],
       },
@@ -136,6 +150,12 @@ const sections: ProjectSection[] = [
   {
     title: "Other Ventures",
     projects: [
+      {
+        title: "Flickariah",
+        tags: ["Photography"],
+        description: "My photography account on Instagram.",
+        actions: [{ label: "View Instagram", href: "https://www.instagram.com/flickariah/" }],
+      },
       {
         title: "Techolon",
         tags: ["Video editing"],
