@@ -66,6 +66,7 @@ export const PROJECT_SECTIONS: ProjectSection[] = [
         tags: ["Expo", "TypeScript", "Supabase"],
         description:
           "iOS app that finds the songs in any Instagram reel, whether tagged in the audio, shown as on-screen text, or just audible. Spun out of Museaic's reel importer.",
+        actions: [{ label: "Source Code", href: "https://github.com/Techo10n/songscraper" }],
       },
       {
         slug: "notion-voice-assistant",
@@ -73,6 +74,7 @@ export const PROJECT_SECTIONS: ProjectSection[] = [
         tags: ["Vercel", "Claude API", "Notion API", "iOS Shortcuts"],
         description:
           "Dictate an assignment to an iOS Shortcut and it lands in my Notion database. A serverless function has Claude pull out the name, label, and deadline, checks them, and works out the priority from the due date.",
+        actions: [{ label: "Source Code", href: "https://github.com/Techo10n/notion-voice-assistant" }],
       },
       {
         slug: "portfolio",
