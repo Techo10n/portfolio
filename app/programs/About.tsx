@@ -53,7 +53,7 @@ export default function About() {
       {/* Who, what, where — and the three things a visitor most likely wants next. */}
       <div className="flex flex-col @xl:flex-row items-center @xl:items-start gap-5 @xl:gap-7">
         <Image
-          src="/pfp.jpg"
+          src="/avatar.jpg"
           alt="Zechariah Frierson"
           width={128}
           height={128}
