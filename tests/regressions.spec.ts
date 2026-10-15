@@ -56,6 +56,33 @@ test("terminal scrolls to the prompt as output grows", async ({ page, isMobile }
   await expect(input).toBeInViewport();
 });
 
+test("wrapped terminal rows continue under their text column", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "rows only wrap at phone width");
+  await page.goto("/");
+  await openApp(page, "Terminal", isMobile);
+  const input = win(page, "Terminal").getByRole("textbox", { name: "Terminal input" });
+  await input.fill("projects");
+  await input.press("Enter");
+  const row = win(page, "Terminal").getByText("Finds the songs in any Instagram reel");
+  const { starts, column } = await row.evaluate((el) => {
+    const text = el.firstChild!;
+    const range = document.createRange();
+    range.selectNodeContents(text);
+    // Leftmost x of each visual line.
+    const byLine = new Map<number, number>();
+    for (const r of range.getClientRects()) {
+      const top = Math.round(r.top);
+      byLine.set(top, Math.min(byLine.get(top) ?? Infinity, Math.round(r.left)));
+    }
+    const at = text.textContent!.indexOf("Finds");
+    range.setStart(text, at);
+    range.setEnd(text, at + 1);
+    return { starts: [...byLine.values()], column: Math.round(range.getBoundingClientRect().left) };
+  });
+  expect(starts.length).toBeGreaterThan(1);
+  for (const left of starts.slice(1)) expect(Math.abs(left - column)).toBeLessThanOrEqual(1);
+});
+
 test.describe("desktop only", () => {
   test.skip(({ isMobile }) => isMobile, "window sizing is desktop-only");
 

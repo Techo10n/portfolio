@@ -27,10 +27,8 @@ const COMMANDS: Record<string, CommandOutput> = {
   about: [
     "Hey, I'm Zechariah Frierson!",
     "",
-    "I'm a junior at Georgia Tech studying Computer Science with a minor in Korean.",
-    "Most recently I was a software engineering intern at Capital One, building",
-    "AI-powered support tools. I love web development, video editing, and creating",
-    "things that come to life on the screen.",
+    // One string per paragraph: the terminal wraps each line to the window width.
+    "I'm a junior at Georgia Tech studying Computer Science with a minor in Korean. Most recently I was a software engineering intern at Capital One, building AI-powered support tools. I love web development, video editing, and creating things that come to life on the screen.",
     "",
     "Type 'skills' to see what I work with, or 'contact' to get in touch!",
   ],
@@ -86,6 +84,14 @@ const COMMANDS: Record<string, CommandOutput> = {
   whoami: "guest@zechariah-portfolio",
   clear: [],
 };
+
+/**
+ * Where a wrapped line should continue: under the value column of an indented row
+ * ("  Museaic   - Cross-platform…" → after "- "), else under its leading spaces.
+ */
+function hangingIndent(line: string): number {
+  return /^\s+(?:\S.*?\s{2,}(?:- )?)?/.exec(line)?.[0].length ?? 0;
+}
 
 export default function Terminal() {
   const { open } = useDesktop();
@@ -206,6 +212,7 @@ export default function Terminal() {
           {history.map((line, idx) => (
             <div
               key={idx}
+              style={{ paddingLeft: `${hangingIndent(line)}ch`, textIndent: `-${hangingIndent(line)}ch` }}
               className={`w-full text-foreground whitespace-pre-wrap ${
                 line.startsWith("guest@portfolio") ? "text-foreground" : "text-foreground/80"
               }`}
