@@ -124,6 +124,13 @@ export default function About() {
           in Atlanta. My primary interests lie in software development, video editing, and web design. I love bringing
           ideas to life, whether through interactive websites, polished videos, or elegant code.
         </p>
+        <p className="mt-3 text-[15px] leading-relaxed text-foreground/90">
+          Outside of tech, I also love volleyball, soccer, photography, and traveling the world.
+        </p>
+        <p className="mt-3 text-[15px] leading-relaxed text-foreground/90">
+          I am obsessed with seeing my work come to life before my eyes, and I dream of working in a field that allows
+          me to create something out of nothing.
+        </p>
       </section>
 
       <section aria-labelledby="skills-heading" className="mt-9">
