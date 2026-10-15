@@ -66,7 +66,7 @@ test("close removes the window", async ({ page }) => {
 test("terminal keeps its history while other windows come and go", async ({ page, isMobile }) => {
   await openApp(page, "Terminal", isMobile);
   const input = win(page, "Terminal").getByRole("textbox", { name: "Terminal input" });
-  await input.fill("whoami");
+  await input.fill("/whoami");
   await input.press("Enter");
   await expect(win(page, "Terminal")).toContainText("guest@zechariah-portfolio");
 
@@ -80,7 +80,7 @@ test("terminal keeps its history while other windows come and go", async ({ page
 test("terminal can open windows", async ({ page, isMobile }) => {
   await openApp(page, "Terminal", isMobile);
   const input = win(page, "Terminal").getByRole("textbox", { name: "Terminal input" });
-  await input.fill("open projects");
+  await input.fill("/open projects");
   await input.press("Enter");
   await expect(win(page, "Projects")).toBeVisible();
   await expect(page).toHaveURL("/projects");
@@ -90,10 +90,10 @@ test("terminal clear empties the output", async ({ page, isMobile }) => {
   await openApp(page, "Terminal", isMobile);
   const terminal = win(page, "Terminal");
   const input = terminal.getByRole("textbox", { name: "Terminal input" });
-  await input.fill("help");
+  await input.fill("/help");
   await input.press("Enter");
   await expect(terminal).toContainText("Available commands:");
-  await input.fill("clear");
+  await input.fill("/clear");
   await input.press("Enter");
   await expect(terminal).not.toContainText("Available commands:");
 });
@@ -391,4 +391,17 @@ test.describe("phone", () => {
     await openApp(page, "Contact", true);
     await expect(win(page, "Contact").getByRole("textbox", { name: "Name" })).toHaveValue("Draft Person");
   });
+});
+
+test("terminal commands need a leading slash", async ({ page, isMobile }) => {
+  await openApp(page, "Terminal", isMobile);
+  const terminal = win(page, "Terminal");
+  const input = terminal.getByRole("textbox", { name: "Terminal input" });
+  await input.fill("help");
+  await input.press("Enter");
+  await expect(terminal).toContainText("Commands start with a slash. Try /help");
+  await expect(terminal).not.toContainText("Available commands:");
+  await input.fill("/constructor");
+  await input.press("Enter");
+  await expect(terminal).toContainText("Command not found: /constructor");
 });

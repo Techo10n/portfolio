@@ -11,18 +11,18 @@ const COMMANDS: Record<string, CommandOutput> = {
   help: [
     "Available commands:",
     "",
-    "  help      Show this help message",
-    "  about     Learn more about me",
-    "  skills    View my technical skills",
-    "  contact   Get contact information",
-    "  socials   View social media links",
-    "  projects  List my projects",
-    "  education View my education",
-    "  clear     Clear the terminal",
-    "  whoami    Display current user",
-    "  date      Show current date and time",
-    "  echo      Echo back your message",
-    "  open      Open a window: open projects, open resume, ...",
+    "  /help      Show this help message",
+    "  /about     Learn more about me",
+    "  /skills    View my technical skills",
+    "  /contact   Get contact information",
+    "  /socials   View social media links",
+    "  /projects  List my projects",
+    "  /education View my education",
+    "  /clear     Clear the terminal",
+    "  /whoami    Display current user",
+    "  /date      Show current date and time",
+    "  /echo      Echo back your message",
+    "  /open      Open a window: /open projects, /open resume, ...",
   ],
   about: [
     "Hey, I'm Zechariah Frierson!",
@@ -30,7 +30,7 @@ const COMMANDS: Record<string, CommandOutput> = {
     // One string per paragraph: the terminal wraps each line to the window width.
     "I'm a junior at Georgia Tech studying Computer Science with a minor in Korean. Most recently I was a software engineering intern at Capital One, building AI-powered support tools. I love web development, video editing, and creating things that come to life on the screen.",
     "",
-    "Type 'skills' to see what I work with, or 'contact' to get in touch!",
+    "Type /skills to see what I work with, or /contact to get in touch!",
   ],
   skills: [
     "Technical Skills:",
@@ -40,7 +40,7 @@ const COMMANDS: Record<string, CommandOutput> = {
     "  Backend:      Supabase, MongoDB, AWS, Vercel",
     "  Tools:        Git, Figma, Claude Code, MCP",
     "",
-    "Type 'projects' to see what I've built!",
+    "Type /projects to see what I've built!",
   ],
   contact: [
     "Contact Information:",
@@ -97,7 +97,7 @@ export default function Terminal() {
   const { open } = useDesktop();
   const [history, setHistory] = useState<string[]>([
     "Welcome to Zechariah's Portfolio Terminal!",
-    "Type 'help' to see available commands.",
+    "Type /help to see available commands.",
     "",
   ]);
   const [input, setInput] = useState("");
@@ -117,13 +117,25 @@ export default function Terminal() {
     const displayCmd = cmd.trim();
     const normalizedCmd = displayCmd.toLowerCase();
     const parts = normalizedCmd.split(/\s+/);
-    const command = parts[0];
+    const command = parts[0].slice(1);
 
     if (displayCmd === "") return;
 
     // Add to command history
     setCommandHistory((prev) => [...prev, displayCmd]);
     setHistoryIndex(-1);
+
+    // Commands are slash-prefixed; a bare one gets pointed at its slash form.
+    if (!parts[0].startsWith("/")) {
+      const known = Object.hasOwn(COMMANDS, parts[0]) || ["open", "date", "echo"].includes(parts[0]);
+      setHistory((h) => [
+        ...h,
+        `guest@portfolio ~ % ${displayCmd}`,
+        known ? `Commands start with a slash. Try /${parts[0]}` : "Commands start with a slash. Type /help for available commands.",
+        "",
+      ]);
+      return;
+    }
 
     if (command === "clear") {
       setHistory([]);
@@ -137,7 +149,7 @@ export default function Terminal() {
         setHistory((h) => [...h, `guest@portfolio ~ % ${displayCmd}`, `Opening ${target}...`, ""]);
         open(target);
       } else {
-        setHistory((h) => [...h, `guest@portfolio ~ % ${displayCmd}`, `Usage: open <${known.join(" | ")}>`, ""]);
+        setHistory((h) => [...h, `guest@portfolio ~ % ${displayCmd}`, `Usage: /open <${known.join(" | ")}>`, ""]);
       }
       return;
     }
@@ -161,13 +173,13 @@ export default function Terminal() {
       return;
     }
 
-    const output = COMMANDS[command];
+    const output = Object.hasOwn(COMMANDS, command) ? COMMANDS[command] : undefined;
     if (output === undefined) {
       setHistory((h) => [
         ...h,
         `guest@portfolio ~ % ${displayCmd}`,
-        `Command not found: ${command}`,
-        "Type 'help' for available commands.",
+        `Command not found: /${command}`,
+        "Type /help for available commands.",
         "",
       ]);
     } else if (Array.isArray(output)) {

@@ -50,7 +50,7 @@ test("terminal scrolls to the prompt as output grows", async ({ page, isMobile }
   await openApp(page, "Terminal", isMobile);
   const input = win(page, "Terminal").getByRole("textbox", { name: "Terminal input" });
   for (let i = 0; i < 6; i++) {
-    await input.fill("help");
+    await input.fill("/help");
     await input.press("Enter");
   }
   await expect(input).toBeInViewport();
@@ -61,7 +61,7 @@ test("wrapped terminal rows continue under their text column", async ({ page, is
   await page.goto("/");
   await openApp(page, "Terminal", isMobile);
   const input = win(page, "Terminal").getByRole("textbox", { name: "Terminal input" });
-  await input.fill("projects");
+  await input.fill("/projects");
   await input.press("Enter");
   const row = win(page, "Terminal").getByText("Finds the songs in any Instagram reel");
   const { starts, column } = await row.evaluate((el) => {
