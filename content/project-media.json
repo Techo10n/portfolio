@@ -204,5 +204,107 @@
         "h": 1000
       }
     ]
+  },
+  "notion-voice-assistant": {
+    "cover": "/projects/notion-voice-assistant/shortcut-cover.webp",
+    "alt": "The Add Task iOS Shortcut: dictated text goes to the Vercel function, then an alert shows the result and the new Notion page opens",
+    "gallery": [
+      {
+        "src": "/projects/notion-voice-assistant/shortcut-start.webp",
+        "alt": "The start of the Add Task Shortcut: current date, dictated text, and the request to the Vercel function",
+        "w": 459,
+        "h": 1000
+      },
+      {
+        "src": "/projects/notion-voice-assistant/shortcut-end.webp",
+        "alt": "The end of the Add Task Shortcut: on success it shows the message and opens the page URL, otherwise it shows the error",
+        "w": 459,
+        "h": 1000
+      }
+    ]
+  },
+  "askin4baskin": {
+    "cover": "/projects/askin4baskin/hero.webp",
+    "alt": "Baskin Legal's homepage hero: \"Answers, Accountability, Action\" beside the firm's logo over a map of Alabama and Florida",
+    "gallery": [
+      {
+        "src": "/projects/askin4baskin/hero.webp",
+        "alt": "Baskin Legal's homepage hero, with a Book a Free Consultation button",
+        "w": 1600,
+        "h": 848
+      },
+      {
+        "src": "/projects/askin4baskin/practice-areas.webp",
+        "alt": "The Practice Areas section: cards for car accidents, commercial vehicle accidents, slip and falls, and mass torts",
+        "w": 1600,
+        "h": 848
+      }
+    ]
+  },
+  "flickariah": {
+    "cover": "/projects/flickariah/shot-05.webp",
+    "alt": "Photo by Zechariah: a tower of the Golden Gate Bridge rising out of the fog, with the city behind",
+    "gallery": [
+      {
+        "src": "/projects/flickariah/shot-01.webp",
+        "alt": "Photo: cherry blossoms framing the Washington Monument against a deep blue sky",
+        "w": 1048,
+        "h": 698
+      },
+      {
+        "src": "/projects/flickariah/shot-02.webp",
+        "alt": "Photo: a boat strung with lights and an American flag on the water at dusk",
+        "w": 2000,
+        "h": 1332
+      },
+      {
+        "src": "/projects/flickariah/shot-03.webp",
+        "alt": "Photo: a cyclist pulling a wheelie down a tree-lined city street",
+        "w": 2000,
+        "h": 1332
+      },
+      {
+        "src": "/projects/flickariah/shot-04.webp",
+        "alt": "Photo: a person in a red cap walking through a sunlit courtyard beside a reflecting pool",
+        "w": 2000,
+        "h": 1332
+      },
+      {
+        "src": "/projects/flickariah/shot-05.webp",
+        "alt": "Photo: a tower of the Golden Gate Bridge rising out of the fog, with the city behind",
+        "w": 2000,
+        "h": 1332
+      },
+      {
+        "src": "/projects/flickariah/shot-06.webp",
+        "alt": "Photo: gondolas on a cable line against a pale sky",
+        "w": 2000,
+        "h": 1300
+      },
+      {
+        "src": "/projects/flickariah/shot-07.webp",
+        "alt": "Photo: a figure silhouetted on rocks as the sun sets over the water",
+        "w": 2000,
+        "h": 1332
+      },
+      {
+        "src": "/projects/flickariah/shot-08.webp",
+        "alt": "Photo: swimmers tossing a red ball in turquoise water",
+        "w": 2000,
+        "h": 1332
+      },
+      {
+        "src": "/projects/flickariah/shot-09.webp",
+        "alt": "Photo: a ferry crossing a lake beneath a cloud-capped volcano",
+        "w": 2000,
+        "h": 1332
+      },
+      {
+        "src": "/projects/flickariah/shot-10.webp",
+        "alt": "Photo: a marble statue of a man and a horse against a bright, cloudy sky",
+        "w": 2000,
+        "h": 1332
+      }
+    ]
   }
 }
