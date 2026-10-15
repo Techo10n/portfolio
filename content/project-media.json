@@ -176,7 +176,33 @@
     ]
   },
   "songscraper": {
-    "cover": "/projects/songscraper/sign-in-phone.webp",
-    "alt": "SongScraper's sign-in screen on iPhone: the songscraper wordmark and \"Find the song in any reel\""
+    "cover": "/projects/songscraper/home-and-results.webp",
+    "alt": "SongScraper on iPhone: the home screen noticing a reel link on the clipboard, and the song it found in that reel",
+    "gallery": [
+      {
+        "src": "/projects/songscraper/progress.webp",
+        "alt": "SongScraper working through a reel: reel metadata and audio fingerprint checked, now reading video frames",
+        "w": 459,
+        "h": 1000
+      },
+      {
+        "src": "/projects/songscraper/picker.webp",
+        "alt": "The first tap on a song asks whether to open it in Spotify, Apple Music, or YouTube Music",
+        "w": 459,
+        "h": 1000
+      },
+      {
+        "src": "/projects/songscraper/history.webp",
+        "alt": "Saved reel lists in History, with a prompt to create an account to keep them",
+        "w": 459,
+        "h": 1000
+      },
+      {
+        "src": "/projects/songscraper/signin.webp",
+        "alt": "SongScraper's sign-in screen, with an option to continue without an account",
+        "w": 459,
+        "h": 1000
+      }
+    ]
   }
 }
