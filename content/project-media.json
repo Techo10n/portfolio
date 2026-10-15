@@ -306,5 +306,19 @@
         "h": 1332
       }
     ]
+  },
+  "ecoshelf": {
+    "cover": "/projects/ecoshelf/cover.webp",
+    "alt": "The EcoShelf popup over an Amazon listing for an Owala water bottle, showing its price, rating, search term, and shipping details",
+    "gallery": [
+      {
+        "src": "/projects/ecoshelf/cutting-board.webp",
+        "alt": "EcoShelf in light mode on a bamboo cutting board listing: ships from Amazon, sold by ROYAL CRAFT WOOD, 4.1 pounds"
+      },
+      {
+        "src": "/projects/ecoshelf/produce-bags.webp",
+        "alt": "EcoShelf on a reusable produce bags listing, with where it ships from, who sells it, and its weight and size"
+      }
+    ]
   }
 }
